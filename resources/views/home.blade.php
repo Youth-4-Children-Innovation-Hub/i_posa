@@ -503,7 +503,7 @@
 
     <main id="main" class="main">
 
-        @yield('login')
+        @yield('contente')
         <!-- @yield('content') -->
 
 
