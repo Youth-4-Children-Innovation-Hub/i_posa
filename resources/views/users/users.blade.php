@@ -87,7 +87,7 @@
 
     <section class="section dashboard">
 
-        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add Region</button>
+        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add User</button>
 
         <div class="card" style="display:none;" id="add_region">
             <div class="card-body">
@@ -98,16 +98,23 @@
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" required>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" required>
                         </div>
                     </div>
+
+                 <!-- <div class="row mb-3">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control">
+                  </div>
+                </div> -->
 
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Nida</label>
@@ -117,23 +124,27 @@
                     </div>
 
 
-                    <div class="row mb-3">
-                        <label for="inputText" class="col-sm-2 col-form-label">Profile picture</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
+                   
+
+                <div class="row mb-3">
+                  <label for="inputNumber" class="col-sm-2 col-form-label">Profile picture</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" type="file" id="formFile">
+                  </div>
+                </div>
 
 
-
+                
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example">
+                            <select class="form-select" aria-label="Default select example" required>
                                 <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                @foreach($roles as $role)
+                                    <option value="1">{{ $role->role }}</option>
+                                @endforeach
+                                
+                            
                             </select>
                         </div>
                     </div>
