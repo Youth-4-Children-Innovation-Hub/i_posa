@@ -109,7 +109,7 @@
                             <select class="form-select" aria-label="Default select example" name="role" required>
                                 <option selected>Open this select menu</option>
                                 @foreach($roles as $role)
-                                    <option value="1">{{ $role->role }}</option>
+                                    <option value= "{{$role->id}}" >{{ $role->role }}</option>
                                 @endforeach
                                 
                             

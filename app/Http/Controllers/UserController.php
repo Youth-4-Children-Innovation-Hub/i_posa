@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 
 
@@ -20,15 +21,24 @@ class UserController extends Controller
     }
 
     public function Create(Request $request){
-         $user=new User();
-         $user->name=$request->name;
-         $user->email=$request->email;
-         $user->password=Hash::make($request->name."123");
-         $user->role_id=3;
-         $user->save();
+       
+        try{
 
-       // return "regions.regions";
-      // return redirect('users');
-        return redirect('users')->with('success', 'User added successfully.');
+            $user=new User();
+            $user->name=$request->name;
+            $user->email=$request->email;
+            $user->password=Hash::make($request->name."123");
+            $user->role_id=$request->input('role');
+               return redirect('users')->with('success', 'User added successfully.');
+      
+        }
+        catch(Exception $e){
+
+        }
+       
+         
+
+        
+        
     }
 }
