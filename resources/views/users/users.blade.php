@@ -61,18 +61,19 @@
                 <h5 class="card-title">Add User</h5>
 
                 <!-- General Form Elements -->
-                <form>
+                <form  method="POST" action="{{route('create_user')}}">
+                @csrf
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" required>
+                            <input type="text" class="form-control" name="name" required>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" required>
+                            <input type="text" class="form-control" name="email" required>
                         </div>
                     </div>
 
@@ -86,7 +87,7 @@
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Nida</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control">
+                            <input type="text" name="nida" class="form-control">
                         </div>
                     </div>
 
@@ -96,7 +97,7 @@
                 <div class="row mb-3">
                   <label for="inputNumber" class="col-sm-2 col-form-label">Profile picture</label>
                   <div class="col-sm-10">
-                    <input class="form-control" type="file" id="formFile">
+                    <input class="form-control" name="profile" type="file" id="formFile">
                   </div>
                 </div>
 
@@ -105,7 +106,7 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" required>
+                            <select class="form-select" aria-label="Default select example" name="role" required>
                                 <option selected>Open this select menu</option>
                                 @foreach($roles as $role)
                                     <option value="1">{{ $role->role }}</option>
