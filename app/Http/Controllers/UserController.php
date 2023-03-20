@@ -29,10 +29,11 @@ class UserController extends Controller
             $user->email=$request->email;
             $user->password=Hash::make($request->name."123");
             $user->role_id=$request->input('role');
+            $user->save();
                return redirect('users')->with('success', 'User added successfully.');
       
         }
-        catch(Exception $e){
+        catch(\Exception $e){
 
         }
        

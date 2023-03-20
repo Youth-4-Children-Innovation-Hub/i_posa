@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegionsController;
+use App\Http\Controllers\CenterController;
+
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
 
@@ -31,5 +33,9 @@ Route::post('/addusers',[UserController::class,'Create'])->name('create_user');
 
 Route::post('/addregions',[RegionsController::class,'Create'])->name('create_region');
 Route::get('regions',[RegionsController::class,'GetRegions']);
+
+Route::get('centers',[CenterController::class,'GetCenters']);
+Route::post('/addcenter',[CenterController::class,'Create'])->name('create_center');
+
 
 //Route::view('users','users.users');
