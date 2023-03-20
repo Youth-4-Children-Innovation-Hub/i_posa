@@ -27,56 +27,19 @@
             </tr>
         </thead>
         <tbody>
+            @foreach($regions as $region)
             <tr>
                 <th scope="row">1</th>
-                <td>Brandon Jacob</td>
-                <td>Designer</td>
+                <td>{{$region->region}}</td>
+                <td>{{ $region->name}}</td>
                 <td>28</td>
-                <td>2016-05-25</td>
+                <td>{{ $region->start_date}}</td>
                 <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
                 </td>
 
             </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Bridie Kessler</td>
-                <td>Developer</td>
-                <td>35</td>
-                <td>2014-12-05</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
-                </td>
+            @endforeach
 
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Ashleigh Langosh</td>
-                <td>Finance</td>
-                <td>45</td>
-                <td>2011-08-12</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
-                </td>
-
-            </tr>
-            <tr>
-                <th scope="row">4</th>
-                <td>Angus Grady</td>
-                <td>HR</td>
-                <td>34</td>
-                <td>2012-06-11</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
-                </td>
-
-            </tr>
-            <tr>
-                <th scope="row">5</th>
-                <td>Raheem Lehner</td>
-                <td>Dynamic Division Officer</td>
-                <td>47</td>
-                <td>2011-04-19</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
-                </td>
-
-            </tr>
         </tbody>
     </table>
 
@@ -92,11 +55,12 @@
                 <h5 class="card-title">Add Region</h5>
 
                 <!-- General Form Elements -->
-                <form>
-                    <div class="row mb-3">
+                <form method="POST" action="{{route('create_region')}}">
+                    @csrf
+                    <div class=" row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control">
+                            <input name="name" type="text" class="form-control">
                         </div>
                     </div>
 
@@ -104,11 +68,12 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Cordinator</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example">
+                            <select class="form-select" aria-label="Default select example" name="cordinator">
                                 <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                @foreach ($cordinators as $cordinator)
+                                <option value="{{$cordinator->id}}">{{$cordinator->name}}</option>
+                                @endforeach
+
                             </select>
                         </div>
                     </div>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RegionsController;
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
 
@@ -24,7 +25,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::view('regions','regions.regions');
+//Route::view('regions','regions.regions');
 Route::get('users',[UserController::class,'GetUsers']);
 Route::post('/addusers',[UserController::class,'Create'])->name('create_user');
+
+Route::post('/addregions',[RegionsController::class,'Create'])->name('create_region');
+Route::get('regions',[RegionsController::class,'GetRegions']);
+
 //Route::view('users','users.users');

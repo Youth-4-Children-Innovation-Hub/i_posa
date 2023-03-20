@@ -4,39 +4,44 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Region;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
-class rolesseeder extends Seeder
+class RegionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        //
+        $users=User::all();
+
         $data=[
             [
-                'role'=>'admin',
+                'name'=>'Arusha',
+                'cordinator_id'=>$users->random()->id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             
             ],
             [
-                'role'=>'regional cordinator',
+                'name'=>'Tanga',
+                'cordinator_id'=>$users->random()->id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            
             ],
             [
-                'role'=>'head of center',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
-            [
-                'role'=>'user',
+                'name'=>'Dar es salaam',
+                'cordinator_id'=>$users->random()->id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]
             ];
-        DB::table('roles')->insert($data);
+
+            DB::table('regions')->insert($data);
     }
 }
