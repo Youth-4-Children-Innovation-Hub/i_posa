@@ -266,7 +266,7 @@
                             <i class="bi bi-circle"></i><span>users</span>
                         </a>
                     </li>
-                    
+
 
                 </ul>
             </li><!-- End Forms Nav -->
@@ -282,7 +282,49 @@
                             <i class="bi bi-circle"></i><span>Regions</span>
                         </a>
                     </li>
-                    
+
+                </ul>
+            </li><!-- End Forms Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-journal-text"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/centers') }}">
+                            <i class="bi bi-circle"></i><span>Center</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Forms Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#courses-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-journal-text"></i><span>Course</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="courses-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/regions') }}">
+                            <i class="bi bi-circle"></i><span>Course</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Forms Nav -->
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#students-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-journal-text"></i><span>Students</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="students-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/regions') }}">
+                            <i class="bi bi-circle"></i><span>Students</span>
+                        </a>
+                    </li>
 
                 </ul>
             </li><!-- End Forms Nav -->
