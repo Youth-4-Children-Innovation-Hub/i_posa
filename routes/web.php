@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegionsController;
 use App\Http\Controllers\CenterController;
+use App\Http\Controllers\CourseController;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -36,6 +37,9 @@ Route::get('regions',[RegionsController::class,'GetRegions']);
 
 Route::get('centers',[CenterController::class,'GetCenters']);
 Route::post('/addcenter',[CenterController::class,'Create'])->name('create_center');
+
+Route::get('courses',[CourseController::class,'GetCourses']);
+Route::post('/addcourse',[CourseController::class,'Create'])->name('create_course');
 
 
 //Route::view('users','users.users');
