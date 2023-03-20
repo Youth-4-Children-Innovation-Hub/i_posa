@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->unsignedBigInteger('cordinator_id');
             $table->timestamps();
+
+            $table->foreign('cordinator_id')->references('id')->on('users');
+        
         });
     }
 

@@ -19,6 +19,7 @@ class rolesseeder extends Seeder
                 'role'=>'admin',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            
             ],
             [
                 'role'=>'regional cordinator',
