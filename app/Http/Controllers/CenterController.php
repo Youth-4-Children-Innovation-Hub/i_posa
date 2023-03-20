@@ -21,6 +21,7 @@ class CenterController extends Controller
                         ->get();
 
         return view('centers.centers',['heads'=>$hods, 'regions'=>$regions,'centers'=>$centers]);
+   
     }
 
     public function Create(Request $request){
