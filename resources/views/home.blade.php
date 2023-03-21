@@ -321,7 +321,7 @@
                 </a>
                 <ul id="students-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="{{ url('/regions') }}">
+                        <a href="{{ url('/students') }}">
                             <i class="bi bi-circle"></i><span>Students</span>
                         </a>
                     </li>

@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegionsController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\StudentController;
+
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -40,6 +42,9 @@ Route::post('/addcenter',[CenterController::class,'Create'])->name('create_cente
 
 Route::get('courses',[CourseController::class,'GetCourses']);
 Route::post('/addcourse',[CourseController::class,'Create'])->name('create_course');
+
+Route::get('students',[StudentController::class,'GetStudents']);
+Route::post('/addstudent',[StudentController::class,'Create'])->name('create_student');
 
 
 //Route::view('users','users.users');
