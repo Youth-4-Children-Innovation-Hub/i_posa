@@ -42,8 +42,10 @@
 
 
     <section class="section dashboard">
-
+        @can('is_hoc')
         <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add Region</button>
+
+        @endcan
 
         <div class="card" style="display:none;" id="add_region">
             <div class="card-body">
