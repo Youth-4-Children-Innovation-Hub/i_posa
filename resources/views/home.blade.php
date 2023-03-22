@@ -255,7 +255,7 @@
                 </a>
             </li><!-- End Dashboard Nav -->
 
-
+            @can('is_admin')
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -270,6 +270,8 @@
 
                 </ul>
             </li><!-- End Forms Nav -->
+
+            @endcan
 
 
             <li class="nav-item">
