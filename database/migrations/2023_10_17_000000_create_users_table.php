@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('national_id')->unique()->nullable();
             $table->unsignedBigInteger('role_id');
-            $table->unsignedBigInteger('region_id');
+           // $table->unsignedBigInteger('region_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -27,7 +27,7 @@ return new class extends Migration
 
             $table->foreign('role_id')->references('id')->on('roles');
     
-            $table->foreign('region_id')->references('id')->on('regions');
+           // $table->foreign('region_id')->references('id')->on('regions');
         
         });
     }

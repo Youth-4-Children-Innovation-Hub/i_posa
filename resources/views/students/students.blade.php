@@ -19,16 +19,29 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">Photo</th>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Phone</th>
-                <th scope="col">NID</th>
-                <th scope="col">Role</th>
-                <th scope="col">Profile picture</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Center</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
+            @foreach ($students as $student)
+            <tr>
+                <th scope="row">1</th>
+                <td> <img src="{{asset($student->profile_picture)}}" alt="Profile" width="30" height="30"
+                        class="rounded-circle"> </td>
+                <td>{{$student->name}}</td>
+                <td>{{$student->gender}}</td>
+                <td>{{$student->center}}</td>
+                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
+                </td>
+
+
+
+            </tr>
+            @endforeach
 
         </tbody>
     </table>
@@ -40,12 +53,28 @@
 
         <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add User</button>
 
+        @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+
+        @endif
+
+
+
+
+
+
         <div class="card" style="display:none;" id="add_region">
             <div class="card-body">
                 <h5 class="card-title">Add User</h5>
 
                 <!-- General Form Elements -->
-                <form method="POST" action="{{route('create_student')}}">
+                <form method="POST" action="{{route('create_student')}}" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
@@ -60,6 +89,14 @@
                             <input type="number" class="form-control" name="age" required>
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">NIDA</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="nida" required>
+                        </div>
+                    </div>
+
 
                     <!-- <div class="row mb-3">
                   <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
@@ -100,8 +137,8 @@
                         <div class="col-sm-10">
                             <select class="form-select" aria-label="Default select example" name="gender" required>
                                 <option selected>Open this select menu</option>
-                                <option value="">Female</option>
-                                <option value="">Male</option>
+                                <option value="F">Female</option>
+                                <option value="M">Male</option>
                             </select>
                         </div>
                     </div>
@@ -110,8 +147,10 @@
                         <label class="col-sm-2 col-form-label">Center</label>
                         <div class="col-sm-10">
                             <select class="form-select" aria-label="Default select example" name="center" required>
-                                <option value="">Female</option>
-                                <option value="">Male</option>
+                                <option selected>Open this select menu</option>
+                                @foreach($centers as $center)
+                                <option value="{{$center->id}}">{{$center->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -121,8 +160,11 @@
                         <div class="col-sm-10">
                             <select class="form-select" aria-label="Default select example" name="region" required>
                                 <option selected>Open this select menu</option>
-                                <option value="">Female</option>
-                                <option value="">Male</option>
+                                @foreach ($regions as $region )
+                                <option value="{{$region->id}}">{{$region->name}}</option>
+
+                                @endforeach
+
                             </select>
                         </div>
                     </div>

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('age');
             $table->string('gender');
+            $table->string('nida');
             $table->unsignedBigInteger('center_id');
             $table->unsignedBigInteger('region_id');
             $table->string('profile_picture');

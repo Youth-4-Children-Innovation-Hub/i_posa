@@ -30,14 +30,14 @@ class userseeder extends Seeder
                 'name' => 'John Doe',
                 'email' => 'johndoe@example.com',
                 'role_id'=> $roles->random()->id,
-                'region_id'=> $regions->random()->id,
+              //  'region_id'=> $regions->random()->id,
                 'password' => bcrypt('john123')
             ],
             [
                 'name' => 'Jane Doe',
                 'email' => 'janedoe@example.com',
                 'role_id'=> $roles->random()->id,
-                'region_id'=> $regions->random()->id,
+               // 'region_id'=> $regions->random()->id,
                 
                 'password' => bcrypt('jane123')
             ],
@@ -45,7 +45,7 @@ class userseeder extends Seeder
                 'name' => 'Michael Doe',
                 'email' => 'michaeldoe@example.com',
                 'role_id'=> $roles->random()->id,
-                'region_id'=> $regions->random()->id,
+              //  'region_id'=> $regions->random()->id,
                 'password' => bcrypt('michael123')
             ]
         ];
