@@ -11,8 +11,7 @@ class CenterController extends Controller
 {
     //
     public function GetCenters(){
-        $hods=User::where('role_id',3)
-        ->get();
+        $hods=User::where('role_id', 3)->get();
         $regions=Region::all();
 
         $centers=Center::select('centers.id AS id','centers.name','centers.created_at','regions.name AS regions','users.name AS hod')

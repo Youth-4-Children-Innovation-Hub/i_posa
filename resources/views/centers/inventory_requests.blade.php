@@ -9,7 +9,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Centers</li>
+                <li class="breadcrumb-item active">Inventory Requests</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -20,25 +20,22 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
-                <th scope="col">Head of Center</th>
-                <th scope="col">Number of students</th>
-                <th scope="col">Start Date</th>
+                <th scope="col">Number</th>
+                <th scope="col">Course</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($centers as $center )
+            @foreach($inventoryRequests as $inventoryRequest)
             <tr>
                 <th scope="row">1</th>
-
-                <td>{{$center->name}}</td>
-                <td>{{$center->hod}}</td>
-                <td></td>
-                <td>{{$center->created_at}}</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
+                <td>{{$inventoryRequest->name}}</td>
+                <td>{{ $inventoryRequest->number}}</td>
+                <td>{{ $inventoryRequest->course_name}}</td>
+                <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
                 </td>
-            </tr>
 
+            </tr>
             @endforeach
 
         </tbody>
@@ -48,17 +45,16 @@
 
 
     <section class="section dashboard">
-        @can('is_hoc')
-        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add Region</button>
-
+         @can('is_hoc')
+            <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Request New Inventory</button>
         @endcan
 
         <div class="card" style="display:none;" id="add_region">
             <div class="card-body">
-                <h5 class="card-title">Add Region</h5>
+                <h5 class="card-title">Request New Inventory</h5>
 
                 <!-- General Form Elements -->
-                <form method="POST" action="{{route('create_center')}}">
+                <form method="POST" action="{{route('create_inventory')}}">
                     @csrf
                     <div class=" row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
@@ -67,31 +63,20 @@
                         </div>
                     </div>
 
-
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Head of Center</label>
+                    <div class=" row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">Number</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" name="hod">
-                                <option selected>Open this select menu</option>
-                                @foreach ( $heads as $head )
-                                <option value="{{$head->id}}">{{$head->name}}</option>
-                                @endforeach
-                            </select>
+                            <input name="number" type="number" class="form-control">
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Regions</label>
+
+                    <div class=" row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">Course</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" name="region">
-                                <option selected>Open this select menu</option>
-                                @foreach ( $regions as $region )
-                                <option value="{{$region->id}}">{{$region->name}}</option>
-                                @endforeach
-                            </select>
+                            <input name="course" type="text" class="form-control">
                         </div>
                     </div>
-
 
 
                     <div class="row mb-3">
@@ -112,7 +97,7 @@
 </div>
 <script>
 function showDiv() {
-    var div = document.getElementById("add_region");
+    var div = document.getElementById("request_inventory");
     div.style.display = "block";
 }
 </script>
