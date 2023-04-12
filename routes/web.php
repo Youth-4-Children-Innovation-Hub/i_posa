@@ -7,7 +7,8 @@ use App\Http\Controllers\RegionsController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
-
+use App\Http\Controllers\DashboardController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -33,6 +34,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Route::view('regions','regions.regions');
 Route::get('users',[UserController::class,'GetUsers']);
 Route::post('/addusers',[UserController::class,'Create'])->name('create_user');
+Route::get('updateform/{id}',[UserController::class,'UpdateForm']);
+Route::post('updateuser',[UserController::class,'Update'])->name('update_user');
+
 
 Route::post('/addregions',[RegionsController::class,'Create'])->name('create_region');
 Route::get('regions',[RegionsController::class,'GetRegions']);
@@ -46,6 +50,6 @@ Route::post('/addcourse',[CourseController::class,'Create'])->name('create_cours
 Route::get('students',[StudentController::class,'GetStudents']);
 Route::post('/addstudent',[StudentController::class,'Create'])->name('create_student');
 
-Route::get('click_edit/{id}',[CourseController::class,'edit']);
-Route::post('/update/{id}',[CourseController::class,'update']);
+Route::get('dashboard',[DashboardController::class,'GetDashboard']);
+
 //Route::view('users','users.users');

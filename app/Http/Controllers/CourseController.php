@@ -12,7 +12,7 @@ class CourseController extends Controller
         $centers=Center::all();
         $courses=Course::select('courses.id','courses.name','centers.name AS center')
                         ->leftJoin('centers','courses.center_id','=','centers.id')
-                        ->get();
+                        ->paginate(10);
         return view('courses.courses',['centers'=>$centers,'courses'=>$courses]);
    
     }
