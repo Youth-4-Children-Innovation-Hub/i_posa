@@ -389,7 +389,7 @@
 
     </aside><!-- End Sidebar-->
 
-    <main id="main" class="main">
+    <main id="main" class="main py-1 my-1">
 
         @yield('contente')
         <!-- @yield('content') -->

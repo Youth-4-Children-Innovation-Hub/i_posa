@@ -34,6 +34,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Route::view('regions','regions.regions');
 Route::get('users',[UserController::class,'GetUsers']);
 Route::post('/addusers',[UserController::class,'Create'])->name('create_user');
+Route::get('updateform/{id}',[UserController::class,'UpdateForm']);
+Route::post('updateuser',[UserController::class,'Update'])->name('update_user');
+
 
 Route::post('/addregions',[RegionsController::class,'Create'])->name('create_region');
 Route::get('regions',[RegionsController::class,'GetRegions']);

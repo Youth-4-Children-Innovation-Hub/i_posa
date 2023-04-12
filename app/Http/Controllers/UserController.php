@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -14,10 +15,48 @@ class UserController extends Controller
 {
 
     public function GetUsers(){
+       
+        $roles=Role::all();
+        $users=User::select('users.id','users.name','users.phone_number','users.email','roles.role')
+                    ->leftJoin('roles','users.role_id','=','roles.id')
+                    ->paginate(10);
+        return view('users.users',['roles' => $roles,'users'=>$users]);
+    }
+
+    public function UpdateForm($id){
+        
+         $user=User::select('users.id','users.name','users.phone_number','users.email','roles.role','roles.id AS role_id')
+                    ->leftJoin('roles','users.role_id','=','roles.id')
+                    ->where('users.id',$id)
+                    ->first();
+                    
+    
         $roles=Role::all();
         $users=User::leftJoin('roles','users.role_id','=','roles.id')
                     ->paginate(10);
-        return view('users.users',['roles' => $roles,'users'=>$users]);
+       
+        return view('users.update_user',['user'=>$user,'roles' => $roles,'users'=>$users,'update_user'=>$user]);
+        
+       
+    }
+
+    public function Update(Request $request){
+        try{
+            $user=User::find($request->id);
+        $user->name=$request->name;
+        $user->email=$request->email;
+        $user->national_id=$request->nida;
+        $user->role_id=$request->role;
+        $user->save();
+        return redirect('users')->with('success', 'User added successfully.');
+      
+            
+        }
+        catch(Exception $e){
+            
+        }
+        
+        
     }
 
     public function Create(Request $request){
