@@ -20,7 +20,7 @@ class StudentController extends Controller
         $regions=Region::all();
         $students=Student::select('students.id','students.name AS name','students.gender','students.profile_picture','centers.name AS center')
                         ->leftJoin('centers','students.center_id','=','centers.id')
-                        ->get();
+                        ->paginate(10);
         return view('students.students',['centers'=>$centers,'regions'=>$regions,'students'=>$students]);
       //return Auth::User()->role_id;
     }

@@ -25,19 +25,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($courses as $course )
+
+            @foreach ($courses as $key=>$course )
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{$key+1}}</th>
                 <td>{{$course->name}}</td>
                 <td>{{$course->center}}</td>
                 <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
                 </td>
             </tr>
+
             @endforeach
 
         </tbody>
     </table>
-
 
 
 

@@ -16,7 +16,7 @@ class UserController extends Controller
     public function GetUsers(){
         $roles=Role::all();
         $users=User::leftJoin('roles','users.role_id','=','roles.id')
-                    ->get();
+                    ->paginate(10);
         return view('users.users',['roles' => $roles,'users'=>$users]);
     }
 

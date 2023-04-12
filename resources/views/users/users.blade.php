@@ -29,10 +29,10 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
-            
+            @foreach($users as $key=>$user)
+
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{$key+1}}</th>
                 <td> {{$user->name}}</td>
                 <td>{{$user->email}}</td>
                 <td>{{$user->phone}}</td>
@@ -43,11 +43,13 @@
                 </td>
 
             </tr>
-            
+
             @endforeach
-            
+
         </tbody>
     </table>
+
+    {{$users->onEachSide(1)->links()}}
 
 
 
@@ -61,8 +63,8 @@
                 <h5 class="card-title">Add User</h5>
 
                 <!-- General Form Elements -->
-                <form  method="POST" action="{{route('create_user')}}">
-                @csrf
+                <form method="POST" action="{{route('create_user')}}">
+                    @csrf
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
@@ -77,7 +79,7 @@
                         </div>
                     </div>
 
-                 <!-- <div class="row mb-3">
+                    <!-- <div class="row mb-3">
                   <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
                   <div class="col-sm-10">
                     <input type="password" class="form-control">
@@ -92,27 +94,27 @@
                     </div>
 
 
-                   
-
-                <div class="row mb-3">
-                  <label for="inputNumber" class="col-sm-2 col-form-label">Profile picture</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" name="profile" type="file" id="formFile">
-                  </div>
-                </div>
 
 
-                
+                    <div class="row mb-3">
+                        <label for="inputNumber" class="col-sm-2 col-form-label">Profile picture</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" name="profile" type="file" id="formFile">
+                        </div>
+                    </div>
+
+
+
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
                             <select class="form-select" aria-label="Default select example" name="role" required>
                                 <option selected>Open this select menu</option>
                                 @foreach($roles as $role)
-                                    <option value= "{{$role->id}}" >{{ $role->role }}</option>
+                                <option value="{{$role->id}}">{{ $role->role }}</option>
                                 @endforeach
-                                
-                            
+
+
                             </select>
                         </div>
                     </div>

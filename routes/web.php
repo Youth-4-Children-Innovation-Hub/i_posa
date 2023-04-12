@@ -7,7 +7,8 @@ use App\Http\Controllers\RegionsController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
-
+use App\Http\Controllers\DashboardController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -46,5 +47,6 @@ Route::post('/addcourse',[CourseController::class,'Create'])->name('create_cours
 Route::get('students',[StudentController::class,'GetStudents']);
 Route::post('/addstudent',[StudentController::class,'Create'])->name('create_student');
 
+Route::get('dashboard',[DashboardController::class,'GetDashboard']);
 
 //Route::view('users','users.users');
