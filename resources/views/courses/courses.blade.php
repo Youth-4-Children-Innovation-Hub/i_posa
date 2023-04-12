@@ -31,7 +31,7 @@
                 <th scope="row">{{$key+1}}</th>
                 <td>{{$course->name}}</td>
                 <td>{{$course->center}}</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
+                <td> <a type="button" href="click_edit/{{$course->id}}" class="btn btn-outline-primary btn-sm">Update</a>
                 </td>
             </tr>
 
@@ -44,13 +44,13 @@
 
     <section class="section dashboard">
         @can('is_hoc')
-        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add Region</button>
+        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add Course</button>
 
         @endcan
 
         <div class="card" style="display:none;" id="add_region">
             <div class="card-body">
-                <h5 class="card-title">Add Region</h5>
+                <h5 class="card-title">Add Course</h5>
 
                 <!-- General Form Elements -->
                 <form method="POST" action="{{route('create_course')}}">
@@ -64,7 +64,7 @@
 
 
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Cordinator</label>
+                        <label class="col-sm-2 col-form-label">Center</label>
                         <div class="col-sm-10">
                             <select class="form-select" aria-label="Default select example" name="center">
                                 <option selected>Open this select menu</option>
@@ -72,6 +72,55 @@
                                 <option value="{{$center->id}}">{{$center->name}}</option>
                                 @endforeach
                             </select>
+                           
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Submit</label>
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+
+                        </div>
+                    </div>
+
+                </form><!-- End General Form Elements -->
+
+            </div>
+        </div>
+
+
+    </section>
+
+    <section class="section dashboard">
+        
+
+        <div class="card" style="display:none;" id="update_region">
+            <div class="card-body">
+                <h5 class="card-title">Update Course</h5>
+
+                <!-- General Form Elements -->
+                <form method="POST" action="{{route('create_course')}}">
+                    @csrf
+                    <div class=" row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input name="name" type="text" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Center</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" name="center">
+                                <option selected>Open this select menu</option>
+                                @foreach ($centers as $center )
+                                <option value="{{$center->id}}">{{$center->name}}</option>
+                                @endforeach
+                            </select>
+                           
                         </div>
                     </div>
 
@@ -95,6 +144,10 @@
 <script>
 function showDiv() {
     var div = document.getElementById("add_region");
+    div.style.display = "block";
+}
+function update(){
+    var div =document.getElementById("update_region")
     div.style.display = "block";
 }
 </script>
