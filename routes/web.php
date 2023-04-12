@@ -46,5 +46,6 @@ Route::post('/addcourse',[CourseController::class,'Create'])->name('create_cours
 Route::get('students',[StudentController::class,'GetStudents']);
 Route::post('/addstudent',[StudentController::class,'Create'])->name('create_student');
 
-
+Route::get('click_edit/{id}',[CourseController::class,'edit']);
+Route::post('/update/{id}',[CourseController::class,'update']);
 //Route::view('users','users.users');
