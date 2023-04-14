@@ -7,7 +7,7 @@ use App\Http\Controllers\RegionsController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
-
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\DashboardController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -58,3 +58,9 @@ Route::get('click_edit/{id}',[CourseController::class,'edit']);
 Route::post('/update/{id}',[CourseController::class,'update']);
 //Route::view('users','users.users');
 
+//Inventory
+Route::get('inventory', [InventoryController::class, 'getInventory']);
+
+
+Route::get('requestInventory', [InventoryController::class, 'getInventoryRequest']);
+Route::post('/create_inventory_request', [InventoryController::class, 'store'])->name('create_inventory');
