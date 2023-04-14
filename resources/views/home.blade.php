@@ -300,6 +300,22 @@
                     </li>
 
                 </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/inventory') }}">
+                            <i class="bi bi-circle"></i><span>Inventory List</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/requestInventory') }}">
+                            <i class="bi bi-circle"></i><span>Inventory Requests</span>
+                        </a>
+                    </li>
+
+                </ul>
             </li><!-- End Forms Nav -->
 
             <li class="nav-item">
