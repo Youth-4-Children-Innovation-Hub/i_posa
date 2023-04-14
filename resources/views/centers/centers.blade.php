@@ -27,9 +27,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($centers as $center )
+            @foreach ($centers as $key=>$center )
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{$key+1}}</th>
 
                 <td>{{$center->name}}</td>
                 <td>{{$center->hod}}</td>
@@ -43,6 +43,8 @@
 
         </tbody>
     </table>
+
+    {{$centers->onEachSide(1)->links()}}
 
 
 

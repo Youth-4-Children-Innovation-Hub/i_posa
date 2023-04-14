@@ -17,7 +17,7 @@ class CenterController extends Controller
         $centers=Center::select('centers.id AS id','centers.name','centers.created_at','regions.name AS regions','users.name AS hod')
                         ->leftJoin('regions','centers.region_id','=','regions.id')
                         ->leftJoin('users','centers.hod_id','=','users.id')
-                        ->get();
+                        ->paginate(10);
 
         return view('centers.centers',['heads'=>$hods, 'regions'=>$regions,'centers'=>$centers]);
    

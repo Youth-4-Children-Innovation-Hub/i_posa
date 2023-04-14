@@ -27,9 +27,10 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($regions as $region)
+
+            @foreach($regions as $key=>$region)
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{$key+1}}</th>
                 <td>{{$region->region}}</td>
                 <td>{{ $region->name}}</td>
                 <td>28</td>
@@ -38,10 +39,14 @@
                 </td>
 
             </tr>
+
             @endforeach
+
 
         </tbody>
     </table>
+    {{$regions->onEachSide(1)->links()}}
+
 
 
 
