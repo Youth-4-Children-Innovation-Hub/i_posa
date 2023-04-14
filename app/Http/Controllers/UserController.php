@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\password;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 
@@ -66,13 +68,24 @@ class UserController extends Controller
             $user=new User();
             $user->name=$request->name;
             $user->email=$request->email;
-            $user->password=Hash::make($request->name."123");
+            $generated_password=Hash::make($request->name."123");
+            $user->password=$generated_password;
             $user->role_id=$request->input('role');
             $user->save();
-               return redirect('users')->with('success', 'User added successfully.');
-      
+            try{
+                Mail::to($request->email)
+                   ->send(new password($request->name."123",$request->name));
+               // ->send(new password());
+              return redirect('users')->with('success', 'User added successfully.');
+     
+            }
+            catch(\Exception $e){
+                return $e->getMessage();
+            }
+          
         }
         catch(\Exception $e){
+            return $e->getMessage();
 
         }
        
