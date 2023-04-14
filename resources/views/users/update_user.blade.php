@@ -2,7 +2,7 @@
 @section('contente')
 
 
-<div class="container m-0 p-0">
+<div class="container m-auto p-0">
 
     <div class="pagetitle">
         <h1>Users</h1>
@@ -21,10 +21,8 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
-                <th scope="col">Phone</th>
-                <th scope="col">NID</th>
                 <th scope="col">Role</th>
-                <th scope="col">Profile picture</th>
+                <th scope="col">Role</th>
             </tr>
         </thead>
         <tbody>
@@ -34,8 +32,6 @@
                 <th scope="row">{{$key+1}}</th>
                 <td> {{$user->name}}</td>
                 <td>{{$user->email}}</td>
-                <td>{{$user->phone}}</td>
-                <td>{{$user->national_id}}</td>
                 <td>{{$user->role}}</td>
                 <td></td>
             </tr>
@@ -87,12 +83,7 @@
           </div>
         </div> -->
 
-                    <div class="row mb-3">
-                        <label for="inputText" class="col-sm-2 col-form-label">Nida</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="nida" class="form-control" value="{{$update_user->national_id}}">
-                        </div>
-                    </div>
+
 
 
 

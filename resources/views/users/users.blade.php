@@ -2,7 +2,7 @@
 @section('contente')
 
 
-<div class="container m-0 p-0">
+<div class="container mx-auto p-0">
 
     <div class="pagetitle">
         <h1>Users</h1>
@@ -15,16 +15,13 @@
     </div><!-- End Page Title -->
 
 
-    <table class="table table-striped">
+    <table class="table table-striped mx-auto ">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
-                <th scope="col">Phone</th>
-                <th scope="col">NID</th>
                 <th scope="col">Role</th>
-                <th scope="col">Profile picture</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -35,10 +32,8 @@
                 <th scope="row">{{$key+1}}</th>
                 <td> {{$user->name}}</td>
                 <td>{{$user->email}}</td>
-                <td>{{$user->phone}}</td>
-                <td>{{$user->national_id}}</td>
                 <td>{{$user->role}}</td>
-                <td></td>
+
                 <td> <a href="updateform/{{$user->id}}"> <button type="button" class="btn btn-outline-primary btn-sm"
                             onclick="showDiv('update_user' )">UPDATE</button>
                     </a>
@@ -89,12 +84,7 @@
                   </div>
                 </div> -->
 
-                    <div class="row mb-3">
-                        <label for="inputText" class="col-sm-2 col-form-label">Nida</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="nida" class="form-control">
-                        </div>
-                    </div>
+
 
 
 
@@ -112,7 +102,7 @@
                         <label class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
                             <select class="form-select" aria-label="Default select example" name="role" required>
-                                <option selected>Open this select menu</option>
+                                <option selected="selected" hidden="hidden">Open this select menu</option>
                                 @foreach($roles as $role)
                                 <option value="{{$role->id}}">{{ $role->role }}</option>
                                 @endforeach
