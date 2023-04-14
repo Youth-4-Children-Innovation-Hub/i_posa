@@ -31,7 +31,7 @@ class InventoryController extends Controller
 
 
         // $inventoryRequests = InventoryRequest::all();
-        return view('centers.inventory_requests', compact('inventoryRequests'));
+        return view('centers.inventory_requests', compact('inventoryRequests')); 
     }
 
     public function store(){
