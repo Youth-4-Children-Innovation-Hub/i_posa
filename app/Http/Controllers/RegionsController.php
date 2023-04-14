@@ -17,7 +17,7 @@ class RegionsController extends Controller
 
         $regions=Region::select('regions.id AS id','regions.name AS region','users.name','regions.created_at AS start_date')
                        -> leftJoin('users','users.id','=','regions.cordinator_id')
-                        ->get();
+                        ->paginate(10);
         return view('regions.regions',['cordinators'=>$cordinators,'regions'=>$regions]);
                             
     }

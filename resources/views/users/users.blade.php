@@ -2,10 +2,10 @@
 @section('contente')
 
 
-<div class="container">
+<div class="container m-0 p-0">
 
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Users</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -29,40 +29,45 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
-            
+            @foreach($users as $key=>$user)
+
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{$key+1}}</th>
                 <td> {{$user->name}}</td>
                 <td>{{$user->email}}</td>
                 <td>{{$user->phone}}</td>
                 <td>{{$user->national_id}}</td>
                 <td>{{$user->role}}</td>
                 <td></td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">UPDATE</button>
+                <td> <a href="updateform/{{$user->id}}"> <button type="button" class="btn btn-outline-primary btn-sm"
+                            onclick="showDiv('update_user' )">UPDATE</button>
+                    </a>
                 </td>
-
             </tr>
-            
+
+
             @endforeach
-            
+
         </tbody>
     </table>
 
+    {{$users->onEachSide(1)->links()}}
 
 
 
-    <section class="section dashboard">
 
-        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add User</button>
+    <section class=" section dashboard">
+
+        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv('add_region' )">Add
+            User</button>
 
         <div class="card" style="display:none;" id="add_region">
             <div class="card-body">
                 <h5 class="card-title">Add User</h5>
 
                 <!-- General Form Elements -->
-                <form  method="POST" action="{{route('create_user')}}">
-                @csrf
+                <form method="POST" action="{{route('create_user')}}">
+                    @csrf
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
@@ -77,7 +82,7 @@
                         </div>
                     </div>
 
-                 <!-- <div class="row mb-3">
+                    <!-- <div class="row mb-3">
                   <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
                   <div class="col-sm-10">
                     <input type="password" class="form-control">
@@ -92,27 +97,110 @@
                     </div>
 
 
-                   
-
-                <div class="row mb-3">
-                  <label for="inputNumber" class="col-sm-2 col-form-label">Profile picture</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" name="profile" type="file" id="formFile">
-                  </div>
-                </div>
 
 
-                
+                    <!-- <div class="row mb-3">
+                        <label for="inputNumber" class="col-sm-2 col-form-label">Profile picture</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" name="profile" type="file" id="formFile">
+                        </div>
+                    </div> -->
+
+
+
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
                             <select class="form-select" aria-label="Default select example" name="role" required>
                                 <option selected>Open this select menu</option>
                                 @foreach($roles as $role)
-                                    <option value= "{{$role->id}}" >{{ $role->role }}</option>
+                                <option value="{{$role->id}}">{{ $role->role }}</option>
                                 @endforeach
-                                
-                            
+
+
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Submit Button</label>
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Submit Form</button>
+
+                        </div>
+                    </div>
+
+                </form><!-- End General Form Elements -->
+
+            </div>
+        </div>
+
+
+    </section>
+
+
+    <!-- update user -->
+    <section class="section dashboard">
+
+        <div class="card" style="display:none;" id="update_user">
+            <div class="card-body">
+                <h5 class="card-title">Update user</h5>
+
+                <!-- General Form Elements -->
+                <form method="POST" action="{{route('create_user')}}">
+                    @csrf
+                    <div class="row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="email" required>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row mb-3">
+          <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control">
+          </div>
+        </div> -->
+
+                    <div class="row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">Nida</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="nida" class="form-control">
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="row mb-3">
+                        <label for="inputNumber" class="col-sm-2 col-form-label">Profile
+                            picture</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" name="profile" type="file" id="formFile">
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Role</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" name="role" required>
+                                <option selected>Open this select menu</option>
+                                @foreach($roles as $role)
+                                <option value="{{$role->id}}">{{ $role->role }}</option>
+                                @endforeach
+
+
                             </select>
                         </div>
                     </div>
@@ -135,10 +223,16 @@
     </section>
 </div>
 <script>
-function showDiv() {
-    var div = document.getElementById("add_region");
+function showDiv(id) {
+    var div = document.getElementById(id);
     div.style.display = "block";
 }
+
+// function showUpdate() {
+//     var div = document.getElementById("update_user");
+//     div.style.display = "block";
+
+// }
 </script>
 
 @endsection

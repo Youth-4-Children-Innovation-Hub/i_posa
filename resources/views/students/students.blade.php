@@ -19,7 +19,6 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Photo</th>
                 <th scope="col">Name</th>
                 <th scope="col">Gender</th>
                 <th scope="col">Center</th>
@@ -27,11 +26,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($students as $student)
+            @foreach ($students as $key=>$student)
             <tr>
-                <th scope="row">1</th>
-                <td> <img src="{{asset($student->profile_picture)}}" alt="Profile" width="30" height="30"
-                        class="rounded-circle"> </td>
+                <th scope="row">{{$key+1}}</th>
                 <td>{{$student->name}}</td>
                 <td>{{$student->gender}}</td>
                 <td>{{$student->center}}</td>
@@ -45,6 +42,7 @@
 
         </tbody>
     </table>
+
 
 
 
