@@ -51,7 +51,7 @@
             <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add New Inventory</button>
         @endcan
 
-        <div class="card" style="display:none;" id="add_region">
+        <div class="card" style="display:none;" id="add_inventory_list">
             <div class="card-body">
                 <h5 class="card-title">Add New Inventory</h5>
 
