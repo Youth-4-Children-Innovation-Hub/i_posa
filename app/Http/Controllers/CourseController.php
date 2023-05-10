@@ -9,11 +9,19 @@ use Illuminate\Support\Facades\DB;
 class CourseController extends Controller
 {
     public function GetCourses(){
+        $userData = auth()->user();
+        $id = $userData->id;
+        $userRole= DB::table('users')
+                        ->join('roles', 'users.role_id', '=', 'roles.id')
+                        ->where('users.id', $id)
+                        ->select('roles.role')
+                        ->first();
+       
         $centers=Center::all();
         $courses=Course::select('courses.id','courses.name','centers.name AS center')
                         ->leftJoin('centers','courses.center_id','=','centers.id')
                         ->paginate(10);
-        return view('courses.courses',['centers'=>$centers,'courses'=>$courses]);
+        return view('courses.courses',['centers'=>$centers,'courses'=>$courses,'userData'=>$userData, 'userRole'=>$userRole]);
    
     }
 

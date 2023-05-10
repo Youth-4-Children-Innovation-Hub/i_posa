@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 
 
@@ -16,12 +17,20 @@ class StudentController extends Controller
 {
     //
     public function GetStudents(){
+      $userData = auth()->user();
+      $id = $userData->id;
+      $userRole= DB::table('users')
+                      ->join('roles', 'users.role_id', '=', 'roles.id')
+                      ->where('users.id', $id)
+                      ->select('roles.role')
+                      ->first();
+
         $centers=Center::all();
         $regions=Region::all();
         $students=Student::select('students.id','students.name AS name','students.gender','students.profile_picture','centers.name AS center')
                         ->leftJoin('centers','students.center_id','=','centers.id')
                         ->paginate(10);
-        return view('students.students',['centers'=>$centers,'regions'=>$regions,'students'=>$students]);
+        return view('students.students',['centers'=>$centers,'regions'=>$regions,'students'=>$students,'userData'=>$userData,'userRole'=>$userRole]);
       //return Auth::User()->role_id;
     }
 

@@ -1,10 +1,11 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use DB;
 
 class LoginController extends Controller
 {
@@ -26,7 +27,22 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
+
+    public function authenticated(Request $request, $userData)
+{   
+    $id = $userData->id;
+        $userRole= DB::table('users')
+                        ->join('roles', 'users.role_id', '=', 'roles.id')
+                        ->where('users.id', $id)
+                        ->select('roles.role')
+                        ->first();
+    return view('home')->with('userData', $userData)->with('userRole', $userRole);
+    
+ 
+  
+}
+
 
     /**
      * Create a new controller instance.
