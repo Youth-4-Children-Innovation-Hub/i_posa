@@ -9,6 +9,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\userProfileController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 
@@ -64,3 +65,7 @@ Route::get('inventory', [InventoryController::class, 'getInventory']);
 
 Route::get('requestInventory', [InventoryController::class, 'getInventoryRequest']);
 Route::post('/create_inventory_request', [InventoryController::class, 'store'])->name('create_inventory');
+
+Route::get('/user_profile', [userProfileController::class, 'index']);
+Route::post('/edit_profile', [userProfileController::class, 'edit']);
+Route::post('/change_password', [userProfileController::class, 'changePass']);
