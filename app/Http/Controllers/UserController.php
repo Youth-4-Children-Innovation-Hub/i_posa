@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use DB;
 
 
 
@@ -17,12 +18,19 @@ class UserController extends Controller
 {
 
     public function GetUsers(){
-       
+        $userData = auth()->user();
+        $id = $userData->id;
+        $userRole= DB::table('users')
+                        ->join('roles', 'users.role_id', '=', 'roles.id')
+                        ->where('users.id', $id)
+                        ->select('roles.role')
+                        ->first();
+        
         $roles=Role::all();
         $users=User::select('users.id','users.name','users.phone_number','users.email','roles.role')
                     ->leftJoin('roles','users.role_id','=','roles.id')
                     ->paginate(10);
-        return view('users.users',['roles' => $roles,'users'=>$users]);
+        return view('users.users',['roles' => $roles,'users'=>$users,'userData'=>$userData,'userRole'=>$userRole]);
     }
 
     public function UpdateForm($id){
