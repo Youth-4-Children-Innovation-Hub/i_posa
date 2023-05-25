@@ -35,7 +35,7 @@
                 <td>{{$center->hod}}</td>
                 <td></td>
                 <td>{{$center->created_at}}</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
+                <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
                 </td>
             </tr>
 

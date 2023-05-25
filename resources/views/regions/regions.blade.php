@@ -35,7 +35,7 @@
                 <td>{{ $region->name}}</td>
                 <td>28</td>
                 <td>{{ $region->start_date}}</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
+                <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
                 </td>
 
             </tr>
