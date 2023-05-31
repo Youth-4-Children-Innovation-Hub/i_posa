@@ -11,7 +11,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\userProfileController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-
+use App\Http\Controllers\DistrictController;
+use App\Models\District;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -45,6 +46,12 @@ Route::get('search_user',[UserController::class,'Search']);
 
 Route::post('/addregions',[RegionsController::class,'Create'])->name('create_region');
 Route::get('regions',[RegionsController::class,'GetRegions']);
+
+Route::get('districts',[DistrictController::class,'GetDistricts']);
+Route::post('create_district',[DistrictController::class,'Create'])->name('create_district');
+Route::get('search_district',[DistrictController::class,'Search']);
+
+
 
 Route::get('centers',[CenterController::class,'GetCenters']);
 Route::post('/addcenter',[CenterController::class,'Create'])->name('create_center');

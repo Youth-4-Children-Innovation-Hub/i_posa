@@ -7,7 +7,9 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Region;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
+
+
 
 class RegionsController extends Controller
 {
