@@ -21,8 +21,6 @@
                 <th scope="col">#</th>
                 <th scope="col">Region</th>
                 <th scope="col">Cordinator</th>
-                <th scope="col">Centers</th>
-                <th scope="col">Start Date</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -33,8 +31,6 @@
                 <th scope="row">{{$key+1}}</th>
                 <td>{{$region->region}}</td>
                 <td>{{ $region->name}}</td>
-                <td>28</td>
-                <td>{{ $region->start_date}}</td>
                 <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
                 </td>
 
@@ -75,7 +71,8 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Cordinator</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" name="cordinator">
+                            <select class="selectpicker" aria-label="Default select example" name="cordinator"
+                                data-width=100% data-live-search="true">
                                 <option selected>Open this select menu</option>
                                 @foreach ($cordinators as $cordinator)
                                 <option value="{{$cordinator->id}}">{{$cordinator->name}}</option>
