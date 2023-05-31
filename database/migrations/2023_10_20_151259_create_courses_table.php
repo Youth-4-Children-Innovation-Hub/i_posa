@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('center_id');
             $table->timestamps();
-            $table->foreign('center_id')->references('id')->on('centers');
-          
+           
         });
     }
 

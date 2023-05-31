@@ -22,7 +22,7 @@ class UserController extends Controller
 
     public function GetUsers(){
         if($_GET){
-            $number=$_GET['number'];
+            $number=10;
         
         }
         else{

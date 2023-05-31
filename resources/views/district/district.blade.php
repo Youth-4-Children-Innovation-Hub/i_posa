@@ -94,7 +94,7 @@
 
 
 
-    <!-- model add user -->
+    <!-- model add district -->
 
     <div class="modal fade" id="CreateModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -172,7 +172,7 @@
 
             </div>
         </div>
-    </div><!-- End of model add user-->
+    </div><!-- End of model add district-->
 
 
 

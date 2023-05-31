@@ -324,6 +324,22 @@
                 </ul>
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
+                        <a href="{{ url('/centers') }}">
+                            <i class="bi bi-circle"></i><span>Courses</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/centers') }}">
+                            <i class="bi bi-circle"></i><span>Teachers</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
                         <a href="{{ url('/inventory') }}">
                             <i class="bi bi-circle"></i><span>Inventory List</span>
                         </a>
