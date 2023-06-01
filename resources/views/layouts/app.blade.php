@@ -64,6 +64,16 @@
         margin-left: 5px;
         border-radius: 15px;
     }
+
+    #paginate {
+        background-color: white;
+    }
+
+    #paginate button {
+        border: solid 0px white;
+        background-color: orange;
+        color: white;
+    }
     </style>
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

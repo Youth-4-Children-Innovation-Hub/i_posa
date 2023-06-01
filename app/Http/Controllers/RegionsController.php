@@ -13,7 +13,22 @@ use Illuminate\Support\Facades\DB;
 
 class RegionsController extends Controller
 {
-    public function GetRegions(){
+    public function GetRegions(Request $request){
+        if(!$request->session()->exists('pagination_number')){
+            $request->session()->put('pagination_number',3);
+           
+           }
+            if($_GET){
+                
+                if(isset($_GET['number'])){
+                    $number=  $_GET['number'];
+                    $request->session()->put('pagination_number',$_GET['number']);
+          
+                 }
+              
+              
+            }
+          
         $userData = auth()->user();
         $id = $userData->id;
         $userRole= DB::table('users')
@@ -26,8 +41,8 @@ class RegionsController extends Controller
 
         $regions=Region::select('regions.id AS id','regions.name AS region','users.name','regions.created_at AS start_date')
                        -> leftJoin('users','users.id','=','regions.cordinator_id')
-                        ->paginate(10);
-        return view('regions.regions',['cordinators'=>$cordinators,'regions'=>$regions, 'userData'=>$userData, 'userRole'=>$userRole]);
+                        ->paginate($request->session()->get('pagination_number'));
+        return view('regions.regions',['cordinators'=>$cordinators,'regions'=>$regions, 'userData'=>$userData, 'userRole'=>$userRole,'paginate'=>$request->session()->get('pagination_number')]);
                             
     }
 
@@ -44,5 +59,32 @@ class RegionsController extends Controller
             
         }
        
+    }
+
+    public function Search(){
+        $querry= $_GET['search_querry'];
+
+        if($querry!=null){
+            $userData = auth()->user();
+        $id = $userData->id;
+        $userRole= DB::table('users')
+                        ->join('roles', 'users.role_id', '=', 'roles.id')
+                        ->where('users.id', $id)
+                        ->select('roles.role')
+                        ->first();
+        $cordinators=User::where('role_id',2)
+                            ->get();
+
+        $regions=Region::select('regions.id AS id','regions.name AS region','users.name','regions.created_at AS start_date')
+                       -> leftJoin('users','users.id','=','regions.cordinator_id')
+                       ->where('regions.name','LIKE','%'.$querry.'%')
+                       ->orWhere('users.name','LIKE','%'.$querry.'%')
+                        ->paginate(10);
+        return view('regions.regions',['cordinators'=>$cordinators,'regions'=>$regions, 'userData'=>$userData, 'userRole'=>$userRole]);
+       
+        }
+        else{
+            return redirect('regions');
+        }
     }
 }

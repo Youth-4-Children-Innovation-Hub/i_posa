@@ -29,10 +29,13 @@
 
 
                 <li>
-                    <div class="my-1 d-flex">
-                        <label for="exampleFormControlSelect1 mx-1">Show</label>
-                        <form method="GET" action="{{url('/users')}}">
+                    <div class="my-1 d-flex" id="paginate">
+                        <form method="GET" action="{{url('/districts')}}">
                             <select class="" name="number" id="exampleFormControlSelect1">
+                                @if (isset($paginate))
+                                <option value="{{$paginate}}">{{$paginate}}</option>
+
+                                @endif
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -43,10 +46,15 @@
                                 <option value="8">8</option>
                                 <option value="9">9</option>
                                 <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
                             </select>
+                            <button type="submit">Show</button>
 
                         </form>
-                        <label for="exampleFormControlSelect1 mx-1">Entries</label>
 
                     </div>
 

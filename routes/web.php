@@ -46,6 +46,8 @@ Route::get('search_user',[UserController::class,'Search']);
 
 Route::post('/addregions',[RegionsController::class,'Create'])->name('create_region');
 Route::get('regions',[RegionsController::class,'GetRegions']);
+Route::get('search_region',[RegionsController::class,'Search']);
+
 
 Route::get('districts',[DistrictController::class,'GetDistricts']);
 Route::post('create_district',[DistrictController::class,'Create'])->name('create_district');

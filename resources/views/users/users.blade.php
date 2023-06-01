@@ -29,10 +29,13 @@
 
 
                 <li>
-                    <div class="my-1 d-flex">
-                        <label for="exampleFormControlSelect1 mx-1">Show</label>
+                    <div class="my-1 d-flex" id="paginate">
                         <form method="GET" action="{{url('/users')}}">
                             <select class="" name="number" id="exampleFormControlSelect1">
+                                @if (isset($paginate))
+                                <option value="{{$paginate}}">{{$paginate}}</option>
+
+                                @endif
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -43,10 +46,16 @@
                                 <option value="8">8</option>
                                 <option value="9">9</option>
                                 <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
                             </select>
+                            <button type="submit">Show</button>
+                            <!-- <label for=" exampleFormControlSelect1 mx-1">Show</label> -->
 
                         </form>
-                        <label for="exampleFormControlSelect1 mx-1">Entries</label>
 
                     </div>
 
@@ -153,9 +162,11 @@
                                 <div class="col-sm-10">
                                     <select class="selectpicker" aria-label="Default select example" name="role"
                                         required data-width=100% data-live-search="true">
-                                        <option selected="selected" hidden="hidden">Open this select menu</option>
+                                        <option selected="selected" hidden="hidden">
+                                            Open this select menu</option>
                                         @foreach($roles as $role)
-                                        <option value="{{$role->id}}">{{ $role->role }}</option>
+                                        <option value="{{$role->id}}">
+                                            {{ $role->role }}</option>
                                         @endforeach
 
 
@@ -233,7 +244,8 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Submit Button</label>
                         <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Submit Form</button>
+                            <button type="submit" class="btn btn-primary">Submit
+                                Form</button>
 
                         </div>
                     </div>

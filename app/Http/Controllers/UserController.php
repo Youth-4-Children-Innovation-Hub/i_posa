@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -17,18 +19,27 @@ use Illuminate\Support\Str;
 
 
 
+
 class UserController extends Controller
 {
 
-    public function GetUsers(){
+    public function GetUsers(Request $request){
+        
+       if(!$request->session()->exists('pagination_number')){
+        $request->session()->put('pagination_number',3);
+       
+       }
         if($_GET){
-            $number=10;
-        
+            
+            if(isset($_GET['number'])){
+                $number=  $_GET['number'];
+                $request->session()->put('pagination_number',$_GET['number']);
+      
+             }
+          
+          
         }
-        else{
-            $number=10;
-        
-        }
+       
        
         $userData = auth()->user();
         $id = $userData->id;
@@ -43,9 +54,9 @@ class UserController extends Controller
             $users=User::select('users.id','users.name','users.phone_number','users.email','roles.role')
             ->leftJoin('roles','users.role_id','=','roles.id')
             ->orderBy('users.created_at','DESC')
-            ->paginate($number);
+            ->paginate($request->session()->get('pagination_number'));
        
-        return view('users.users',['roles' => $roles,'users'=>$users,'userData'=>$userData,'userRole'=>$userRole]);
+        return view('users.users',['roles' => $roles,'users'=>$users,'userData'=>$userData,'userRole'=>$userRole,'paginate'=>$request->session()->get('pagination_number')]);
    
     }
 
