@@ -69,3 +69,4 @@ Route::post('/create_inventory_request', [InventoryController::class, 'store'])-
 Route::get('/user_profile', [userProfileController::class, 'index']);
 Route::post('/edit_profile', [userProfileController::class, 'edit']);
 Route::post('/change_password', [userProfileController::class, 'changePass']);
+Route::post('/change_profile_picture', [userProfileController::class, 'changeProfilePicture']);

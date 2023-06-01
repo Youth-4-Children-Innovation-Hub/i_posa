@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Picture;
 
 class userProfileController extends Controller
 {
@@ -46,14 +47,27 @@ class userProfileController extends Controller
         if($new_password == $renewpassword){
           $renewpassword = Hash::make($renewpassword);
           DB::update('update users set password = ? where id = ?' ,[$renewpassword, $user_id]);
-          return redirect()->back();
+          return redirect()->back()->with('message', 'Password is successfully changed.');
         } else{
-          echo 'hell no';
+          return redirect()->back()->with('error', 'New password confirmation failed. Try again');
         }
     }
     else{
-      echo 'Your old password is invalid  ';
+      return redirect()->back()->with('error2', 'old password is wrong, try again');
     }
+
+    }
+
+    public function changeProfilePicture(Request $request){
+      $request->validate([
+        'picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+      $user_id = auth()->user()->id;
+      $photo_name =$request->file('picture')->getClientOriginalName();
+      $path = $request->file('picture')->storeAs('images', $photo_name, 'public');
+      $total_path = '/storage/'.$path;
+      DB::update('update users set profile_photo = ? where id = ?' ,[$total_path, $user_id]);
+      return redirect()->back();
 
     }
 
