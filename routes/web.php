@@ -13,6 +13,8 @@ use App\Http\Controllers\userProfileController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\DistrictController;
 use App\Models\District;
+use App\Http\Controllers\TeachersController;
+use App\Models\Teacher;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -58,8 +60,12 @@ Route::get('search_district',[DistrictController::class,'Search']);
 Route::get('centers',[CenterController::class,'GetCenters']);
 Route::post('/addcenter',[CenterController::class,'Create'])->name('create_center');
 
-Route::get('courses',[CourseController::class,'GetCourses']);
+Route::get('courses',[CourseController::class,'GetCenterCourses']);
 Route::post('/addcourse',[CourseController::class,'Create'])->name('create_course');
+Route::post('/addnewcourse',[CourseController::class,'CreateNew'])->name('create_new_course');
+
+Route::get('teachers',[TeachersController::class,'GetTeachers']);
+Route::post('addteacher',[TeachersController::class,'Create'])->name('create_teacher');
 
 Route::get('students',[StudentController::class,'GetStudents']);
 Route::post('/addstudent',[StudentController::class,'Create'])->name('create_student');
