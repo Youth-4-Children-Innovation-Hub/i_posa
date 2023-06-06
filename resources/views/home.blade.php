@@ -13,12 +13,13 @@
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div><!-- End Logo -->
 
-        <div class="search-bar">
+        <!-- <div class="search-bar">
             <form class="search-form d-flex align-items-center" method="POST" action="#">
                 <input type="text" name="query" placeholder="Search" title="Enter search keyword">
                 <button type="submit" title="Search"><i class="bi bi-search"></i></button>
             </form>
-        </div><!-- End Search Bar -->
+        </div> -->
+        <!-- End Search Bar -->
 
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
@@ -173,14 +174,15 @@
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+
                         <img src="{{ asset($userData->profile_photo) }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
                         <span class="d-none d-md-block dropdown-toggle ps-2">{{$userData->name}}</span>
                     </a><!-- End Profile Iamge Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <h6>{{$userData->name}}</h6>
-                            <span>{{$userRole->role}}</span>   
+                            <h6>{{ Auth::user()->name }}</h6>
+                            <span>{{ Auth::user()->role->role }}</span>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -288,6 +290,26 @@
                 </ul>
             </li><!-- End Forms Nav -->
 
+            <!-- districti level -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#districts-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-journal-text"></i><span>Districts</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="districts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/regions') }}">
+                            <i class="bi bi-circle"></i><span>Districts</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <!-- end of district level -->
+
+
+
+
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -359,12 +381,6 @@
                 </a>
             </li><!-- End Profile Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-faq.html">
-                    <i class="bi bi-question-circle"></i>
-                    <span>F.A.Q</span>
-                </a>
-            </li><!-- End F.A.Q Page Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="pages-contact.html">
@@ -373,33 +389,9 @@
                 </a>
             </li><!-- End Contact Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-register.html">
-                    <i class="bi bi-card-list"></i>
-                    <span>Register</span>
-                </a>
-            </li><!-- End Register Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-login.html">
-                    <i class="bi bi-box-arrow-in-right"></i>
-                    <span>Login</span>
-                </a>
-            </li><!-- End Login Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-error-404.html">
-                    <i class="bi bi-dash-circle"></i>
-                    <span>Error 404</span>
-                </a>
-            </li><!-- End Error 404 Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-blank.html">
-                    <i class="bi bi-file-earmark"></i>
-                    <span>Blank</span>
-                </a>
-            </li><!-- End Blank Page Nav -->
 
         </ul>
 

@@ -35,7 +35,7 @@
                 <td>{{$center->hod}}</td>
                 <td></td>
                 <td>{{$center->created_at}}</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Small</button>
+                <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
                 </td>
             </tr>
 
@@ -73,7 +73,8 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Head of Center</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" name="hod">
+                            <select class="selectpicker" aria-label="Default select example" name="hod" data-width=100%
+                                data-live-search="true">
                                 <option selected>Open this select menu</option>
                                 @foreach ( $heads as $head )
                                 <option value="{{$head->id}}">{{$head->name}}</option>
@@ -85,7 +86,8 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Regions</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" name="region">
+                            <select class="selectpicker" aria-label="Default select example" name="region"
+                                data-width=100% data-live-search="true">
                                 <option selected>Open this select menu</option>
                                 @foreach ( $regions as $region )
                                 <option value="{{$region->id}}">{{$region->name}}</option>
@@ -93,6 +95,8 @@
                             </select>
                         </div>
                     </div>
+
+
 
 
 
@@ -113,6 +117,11 @@
     </section>
 </div>
 <script>
+$(document).ready(function() {
+    $('.selectpicker').selectpicker('');
+})
+
+
 function showDiv() {
     var div = document.getElementById("add_region");
     div.style.display = "block";

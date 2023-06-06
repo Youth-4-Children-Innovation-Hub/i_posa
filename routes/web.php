@@ -28,7 +28,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 
 Auth::routes();
@@ -39,6 +39,8 @@ Route::get('users',[UserController::class,'GetUsers']);
 Route::post('/addusers',[UserController::class,'Create'])->name('create_user');
 Route::get('updateform/{id}',[UserController::class,'UpdateForm']);
 Route::post('updateuser',[UserController::class,'Update'])->name('update_user');
+Route::get('search_user',[UserController::class,'Search']);
+
 
 
 Route::post('/addregions',[RegionsController::class,'Create'])->name('create_region');

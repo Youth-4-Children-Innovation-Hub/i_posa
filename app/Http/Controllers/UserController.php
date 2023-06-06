@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use DB;
+
+
+
 
 
 
@@ -18,6 +21,15 @@ class UserController extends Controller
 {
 
     public function GetUsers(){
+        if($_GET){
+            $number=$_GET['number'];
+        
+        }
+        else{
+            $number=10;
+        
+        }
+       
         $userData = auth()->user();
         $id = $userData->id;
         $userRole= DB::table('users')
@@ -27,10 +39,14 @@ class UserController extends Controller
                         ->first();
         
         $roles=Role::all();
-        $users=User::select('users.id','users.name','users.phone_number','users.email','roles.role')
-                    ->leftJoin('roles','users.role_id','=','roles.id')
-                    ->paginate(10);
+        
+            $users=User::select('users.id','users.name','users.phone_number','users.email','roles.role')
+            ->leftJoin('roles','users.role_id','=','roles.id')
+            ->orderBy('users.created_at','DESC')
+            ->paginate($number);
+       
         return view('users.users',['roles' => $roles,'users'=>$users,'userData'=>$userData,'userRole'=>$userRole]);
+   
     }
 
     public function UpdateForm($id){
@@ -101,5 +117,34 @@ class UserController extends Controller
 
         
         
+    }
+
+    public function Search(){
+        $querry= $_GET['search_querry'];
+
+        if($querry!=null){
+            $userData = auth()->user();
+            $id = $userData->id;
+            $userRole= DB::table('users')
+                            ->join('roles', 'users.role_id', '=', 'roles.id')
+                            ->where('users.id', $id)
+                            ->select('roles.role')
+                            ->first();
+            
+            $roles=Role::all();
+            $users=User::select('users.id','users.name','users.phone_number','users.email','roles.role')
+                        ->leftJoin('roles','users.role_id','=','roles.id')
+                        ->where('name','LIKE','%'.$querry.'%')
+                        ->orWhere('email','LIKE','%'.$querry.'%')
+                        ->orWhere('role','LIKE','%'.$querry.'%')
+                        ->orderBy('users.created_at','DESC')
+                        ->paginate(5);
+            return view('users.users',['roles' => $roles,'users'=>$users,'userData'=>$userData,'userRole'=>$userRole]);
+       
+        }
+        else{
+            return redirect('users');
+        }
+      
     }
 }
