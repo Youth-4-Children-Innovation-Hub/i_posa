@@ -18,8 +18,8 @@
 
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-              <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+ <!-- jau ni path ndani ya src i think. kwa le tuishie hapa. -->
+              <img src="{{ asset($userData->profile_photo)}}" alt="Profile" class="rounded-circle" style="width: 100px; height: 100px;">
               <h2>{{$userData['name']}}</h2>
               <h3>{{$userRole->role}}</h3>
             </div>
@@ -46,7 +46,20 @@
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
                 </li>
 
+                <li class="nav-item"> 
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#change-profile-picture">Change profile picture</button>
+                </li>
+
               </ul>
+              @if (session('message'))
+                               <h5 class="alert alert-success mb-2">{{ session('message')}}</h5>
+                  @endif
+              @if (session('error'))
+                               <h5 class="alert alert-danger mb-2">{{ session('error')}}</h5>
+                  @endif    
+                  @if (session('error2'))
+                               <h5 class="alert alert-danger mb-2">{{ session('error2')}}</h5>
+                  @endif    
               <div class="tab-content pt-2">
 
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
@@ -80,17 +93,7 @@
                   <!-- Profile Edit Form -->
                   <form method="POST" action="{{url('/edit_profile')}}">
                   @csrf
-                    <div class="row mb-3">
-                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
-                      <div class="col-md-8 col-lg-9">
-                        <img src="assets/img/profile-img.jpg" alt="Profile">
-                        <div class="pt-2">
-                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
-                        </div>
-                      </div>
-                    </div>
-
+                    
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
                       <div class="col-md-8 col-lg-9">
@@ -149,7 +152,7 @@
                     </div>
 
                     <div class="row mb-3">
-                      <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                      <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="renewpassword" type="password" class="form-control" id="renewPassword" required="">
                       </div>
@@ -157,6 +160,39 @@
 
                     <div class="text-center">
                       <button type="submit" class="btn btn-primary">Change Password</button>
+                    </div>
+                  </form><!-- End Change Password Form -->
+
+                </div>
+                
+                <div class="tab-pane fade pt-3" id="change-profile-picture">
+                  <!-- Change Password Form -->
+                  
+                  <form method="POST" action="{{url('/change_profile_picture')}}" enctype="multipart/form-data">
+                  @csrf
+                  <div class="row mb-3">
+                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label"></label>
+                      <div class="col-md-8 col-lg-9">
+                        
+                        <img src="{{ asset($userData->profile_photo)}}" alt="Profile" style="width: 120px; height: 120px;">
+                        <div class="pt-2">
+                     
+                          <label for="inputNumber" class="col-sm-6 col-form-label">Picture Upload</label>
+                          <div class="row mb-3">
+                 
+                          <div class="col-sm-7">
+                            <input class="form-control" type="file" name="picture" id="formFile">
+                          </div>
+                          </div>
+                          <div class="row mb-3">
+                  
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Change Picture</button>
+                         </div>
+                          </div>
+                        
+                        </div>
+                      </div>
                     </div>
                   </form><!-- End Change Password Form -->
 
