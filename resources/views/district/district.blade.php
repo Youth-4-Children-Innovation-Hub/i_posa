@@ -9,8 +9,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Centers</li>
-
+                <li class="breadcrumb-item active">Districts</li>
                 <li class="mx-3 py-0">
                     <div class="search mx-auto">
                         <form action="{{url('/search_district')}}" method="GET">
@@ -63,7 +62,7 @@
                 </li>
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
-                        data-bs-target="#CreateModal">Add Center</button>
+                        data-bs-target="#CreateModal">Add District</button>
 
                 </li>
 
@@ -76,45 +75,43 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Head of Center</th>
                 <th scope="col">District</th>
+                <th scope="col">Cordinator</th>
                 <th scope="col">Region</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($centers as $key=>$center )
+            @foreach($districts as $key=>$district)
             <tr>
                 <th scope="row">{{$key+1}}</th>
-
-                <td>{{$center->name}}</td>
-                <td>{{$center->hod}}</td>
-                <td>{{$center->district}}</td>
-                <td>{{$center->region}}</td>
+                <td>{{$district->name}}</td>
+                <td>{{ $district->cordinator}}</td>
+                <td>{{ $district->region}}</td>
                 <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
                 </td>
+
             </tr>
 
             @endforeach
 
+
+
         </tbody>
     </table>
 
-    {{$centers->onEachSide(1)->links()}}
 
 
-
-    <!-- model add center-->
+    <!-- model add district -->
 
     <div class="modal fade" id="CreateModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Center</h5>
+                    <h5 class="modal-title">Add District</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{route('create_center')}}">
+                <form method="POST" action="{{route('create_district')}}">
                     @csrf
 
                     <div class="modal-body">
@@ -123,38 +120,43 @@
                             <div class="card-body">
 
                                 <!-- General Form Elements -->
-
-                                <div class=" row mb-3">
+                                <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                     <div class="col-sm-10">
-                                        <input name="name" type="text" class="form-control">
+                                        <input type="text" class="form-control" name="name" required>
                                     </div>
                                 </div>
 
-
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Head of Center</label>
+                                    <label class="col-sm-2 col-form-label">Region</label>
                                     <div class="col-sm-10">
-                                        <select class="selectpicker" aria-label="Default select example" name="hod"
-                                            data-width=100% data-live-search="true">
-                                            <option selected>Open this select menu</option>
-                                            @foreach ( $heads as $head )
-                                            <option value="{{$head->id}}">{{$head->name}}</option>
+                                        <select class="selectpicker" aria-label="Default select example"
+                                            name="region_id" required data-width=100% data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Open this select menu
+                                            </option>
+                                            @foreach($regions as $region)
+                                            <option value="{{$region->id}}">{{ $region->name }}</option>
                                             @endforeach
+
+
                                         </select>
                                     </div>
                                 </div>
 
 
+
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">District</label>
+                                    <label class="col-sm-2 col-form-label">Cordinator</label>
                                     <div class="col-sm-10">
-                                        <select class="selectpicker" aria-label="Default select example" name="district"
-                                            data-width=100% data-live-search="true">
-                                            <option selected>Open this select menu</option>
-                                            @foreach ( $districts as $district )
-                                            <option value="{{$district->id}}">{{$district->name}}</option>
+                                        <select class="selectpicker" aria-label="Default select example"
+                                            name="cordinator_id" required data-width=100% data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Open this select menu
+                                            </option>
+                                            @foreach($cordinators as $cordinator)
+                                            <option value="{{$cordinator->id}}">{{ $cordinator->name }}</option>
                                             @endforeach
+
+
                                         </select>
                                     </div>
                                 </div>
@@ -178,13 +180,10 @@
 
             </div>
         </div>
-    </div><!-- End of model add center-->
+    </div><!-- End of model add district-->
 
 
 
 </div>
-<script>
-
-</script>
 
 @endsection

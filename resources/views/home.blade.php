@@ -297,7 +297,7 @@
                 </a>
                 <ul id="districts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="{{ url('/regions') }}">
+                        <a href="{{ url('/districts') }}">
                             <i class="bi bi-circle"></i><span>Districts</span>
                         </a>
                     </li>
@@ -318,6 +318,22 @@
                     <li>
                         <a href="{{ url('/centers') }}">
                             <i class="bi bi-circle"></i><span>Center</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/courses') }}">
+                            <i class="bi bi-circle"></i><span>Courses</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/teachers') }}">
+                            <i class="bi bi-circle"></i><span>Teachers</span>
                         </a>
                     </li>
 
