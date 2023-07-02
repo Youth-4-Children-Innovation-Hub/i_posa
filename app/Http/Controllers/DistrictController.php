@@ -9,6 +9,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -16,23 +17,23 @@ use Illuminate\Support\Facades\DB;
 
 class DistrictController extends Controller
 {
-    
+
     public function GetDistricts(Request $request){
         if(!$request->session()->exists('pagination_number')){
             $request->session()->put('pagination_number',3);
-           
+
            }
             if($_GET){
-                
+
                 if(isset($_GET['number'])){
                     $number=  $_GET['number'];
                     $request->session()->put('pagination_number',$_GET['number']);
-          
+
                  }
-              
-              
+
+
             }
-          
+        $userData = Auth::user();
         $districts=District::select('districts.Id','districts.name','regions.name AS region','users.name AS cordinator')
                             ->leftJoin('regions','districts.region_id','=','regions.id')
                             ->leftJoin('users','districts.cordinator_id','=','users.id')
@@ -43,8 +44,13 @@ class DistrictController extends Controller
                                 ->first();
         $users=User::where('role_id',$district_cordinator_id->id)
                     ->get();
-        return view('district.district',['cordinators'=>$users,'regions'=>$regions,'districts'=>$districts,'paginate'=>$request->session()->get('pagination_number')]);
-      
+        return view('district.district',[
+            'cordinators'=>$users,
+            'regions'=>$regions,
+            'districts'=>$districts,
+            'userData' =>   $userData,
+            'paginate'=>$request->session()->get('pagination_number')]);
+
     }
 
     public function Create (Request $request){
@@ -55,12 +61,12 @@ class DistrictController extends Controller
             $district->region_id=$request->region_id;
             $district->save();
             return redirect('districts')->with('success', 'User added successfully.');
-      
+
         }
         catch(Exception $e){
-            
+
         }
-      
+
     }
 
     public function Search()
@@ -87,6 +93,6 @@ return view('district.district',['cordinators'=>$users,'regions'=>$regions,'dist
                 return redirect('districts');
             }
 
-        
+
     }
 }

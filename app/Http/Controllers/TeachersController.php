@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 class TeachersController extends Controller
 {
     public function GetTeachers(){
+        $userData = Auth::user();
         $teachers=Teacher::orderBy('created_at','DESC')
                             ->get();
-        return view('centers.teachers',['teachers'=>$teachers]);
+        return view('centers.teachers',['teachers'=>$teachers, 'userData' => $userData]);
     }
 
     public function Create(Request $request){
@@ -27,8 +28,8 @@ class TeachersController extends Controller
             $teacher->created_by=Auth::user()->id;
             $teacher->save();
             return redirect('teachers');
-            
-    
+
+
         }
         catch(Exception $e){
             return $e->getMessage();

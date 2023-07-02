@@ -10,6 +10,7 @@ use App\Models\Teacher;
 use Exception;
 
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -19,6 +20,7 @@ class CourseController extends Controller
         $courses=Course::all();
         $teachers=Teacher::all();
         $centers=Center::all();
+        $userData = Auth::user();
 
         $centercourses=CourseCenter::select('courses.name AS course','teachers.name AS teacher','centers.name AS center')
                                     ->leftJoin('teachers','teachers.id','=','course_centers.teacher_id')
@@ -26,7 +28,13 @@ class CourseController extends Controller
                                     ->leftJoin('centers','centers.id','=','course_centers.center_id')
                                     ->orderBy('course_centers.created_at','DESC')
                                     ->get();
-        return view('courses.courses',['teachers'=>$teachers,'courses'=>$courses,'centers'=>$centers,'centercourses'=>$centercourses]);
+        return view('courses.courses',
+            ['teachers'=>$teachers,
+            'courses'=>$courses,
+                'centers'=>$centers,
+                'centercourses'=>$centercourses,
+                'userData' =>   $userData
+            ]);
     }
     public function Create(Request $request){
         try{
@@ -38,7 +46,7 @@ class CourseController extends Controller
             return redirect('courses');
         }
         catch (Exception $e){
-            
+
         }
     }
     public function CreateNew(Request $request){
@@ -47,11 +55,11 @@ class CourseController extends Controller
             $course->name=$request->name;
             $course->save();
              return redirect('courses');
-        } 
-        catch(Exception $e){
-            
         }
-        
+        catch(Exception $e){
+
+        }
+
     }
     // public function GetCourses(){
     //     $userData = auth()->user();
@@ -61,13 +69,13 @@ class CourseController extends Controller
     //                     ->where('users.id', $id)
     //                     ->select('roles.role')
     //                     ->first();
-       
+
     //     $centers=Center::all();
     //     $courses=Course::select('courses.id','courses.name','centers.name AS center')
     //                     ->leftJoin('centers','courses.center_id','=','centers.id')
     //                     ->paginate(10);
     //     return view('courses.courses',['centers'=>$centers,'courses'=>$courses,'userData'=>$userData, 'userRole'=>$userRole]);
-   
+
     // }
 
     // public function Create(Request $request){
@@ -77,12 +85,12 @@ class CourseController extends Controller
     //     $course->center_id=$request->center;
     //     $course->save();
     //     return redirect('courses')->with('success', 'User added successfully.');
-     
+
     //     }
     //     catch(\Exception $e){
-            
+
     //     }
-        
+
     // }
 
     // public function edit($id){
@@ -90,14 +98,14 @@ class CourseController extends Controller
     //     $courses=Course::select('courses.id','courses.name','centers.name AS center')
     //                     ->leftJoin('centers','courses.center_id','=','centers.id')
     //                     ->get();
-                                  
+
     //                     // $currentCenter = DB::table('centers')->where('id', $id)->value('name');
     //                     $currentCenter = DB::table('centers')
     //                     ->join('courses', 'centers.id', '=', 'courses.center_id')
     //                     ->where('courses.id', $id)
     //                     ->select('centers.name', 'centers.id')
     //                     ->first();
-        
+
 
     //                     // $currentCenter = DB::table('centers')
     //                     // ->join('courses', 'centers.id', '=', 'courses.center_id')
@@ -105,11 +113,11 @@ class CourseController extends Controller
     //                     // ->select('centers.id')
     //                     // ->first()
     //                     // ->name;
-    
-               
+
+
     //    $courseEdit = DB::select('select id, name, center_id from courses where id = ?', [$id]);
     //    return view('editCourse', ['courseEdit'=>$courseEdit, 'centers'=>$centers,'courses'=>$courses, 'currentCenter'=>$currentCenter]);
-    
+
     // }
 
     // public function update(Request $request,$id){

@@ -1,426 +1,269 @@
 @extends('home')
 @section('contente')
 
-
-<section class="section">
-    <div class="row">
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Line Chart</h5>
-
-                    <!-- Line Chart -->
-                    <canvas id="lineChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#lineChart'), {
-                            type: 'line',
-                            data: {
-                                labels: ['January', 'February', 'March', 'April', 'May', 'June',
-                                    'July', 'August'
-                                ],
-                                datasets: [{
-                                    label: 'Line Chart',
-                                    data: [65, 59, 80, 81, 56, 55, 40, 100],
-                                    fill: false,
-                                    borderColor: 'rgb(75, 192, 192)',
-                                    tension: 0.1
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
+    <section class="section">
+        <div class="card" id="dashboard-summary">
+            <div class="summary-card">
+                <div>
+                    <i class="bi bi-book"></i>
+                </div>
+                <div>
+                    <h4>Courses</h4>
+                    <p>{{$coursesCount}}</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div>
+                    <i class="bi bi-house"></i>
+                </div>
+                <div>
+                    <h4>Centers</h4>
+                    <p>{{$centersCount}}</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div>
+                    <i class="bi bi-person"></i>
+                </div>
+                <div>
+                    <h4>Students</h4>
+                    <p>{{$studentsCount}}</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div>
+                    <i class="bi bi-person-fill-gear"></i>
+                </div>
+                <div>
+                    <h4>Teachers</h4>
+                    <p>{{$teachersCount}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Line Chart -->
+                        <h5 class="font-weight-bold ">Gender distribution across regions</h5>
+                        <div id="lineChart" style="max-height: 700px; height: 700px"></div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                // Initialize the echarts instance based on the prepared dom
+                                var myChart = echarts.init(document.getElementById('lineChart'));
+                                var data = {{\Illuminate\Support\Js::from($regionDistribution)}};
+                                var regions = []
+                                var females = []
+                                var males = []
+                                for(const row of data){
+                                    regions.push(row.region)
+                                    females.push(row.female)
+                                    males.push(row.male)
                                 }
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Line CHart -->
 
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Bar CHart</h5>
-
-                    <!-- Bar Chart -->
-                    <canvas id="barChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#barChart'), {
-                            type: 'bar',
-                            data: {
-                                labels: ['January', 'February', 'March', 'April', 'May', 'June',
-                                    'July'
-                                ],
-                                datasets: [{
-                                    label: 'Bar Chart',
-                                    data: [65, 59, 80, 81, 56, 55, 40],
-                                    backgroundColor: [
-                                        'rgba(255, 99, 132, 0.2)',
-                                        'rgba(255, 159, 64, 0.2)',
-                                        'rgba(255, 205, 86, 0.2)',
-                                        'rgba(75, 192, 192, 0.2)',
-                                        'rgba(54, 162, 235, 0.2)',
-                                        'rgba(153, 102, 255, 0.2)',
-                                        'rgba(201, 203, 207, 0.2)'
-                                    ],
-                                    borderColor: [
-                                        'rgb(255, 99, 132)',
-                                        'rgb(255, 159, 64)',
-                                        'rgb(255, 205, 86)',
-                                        'rgb(75, 192, 192)',
-                                        'rgb(54, 162, 235)',
-                                        'rgb(153, 102, 255)',
-                                        'rgb(201, 203, 207)'
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Bar CHart -->
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Pie Chart</h5>
-
-                    <!-- Pie Chart -->
-                    <canvas id="pieChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#pieChart'), {
-                            type: 'pie',
-                            data: {
-                                labels: [
-                                    'Red',
-                                    'Blue',
-                                    'Yellow'
-                                ],
-                                datasets: [{
-                                    label: 'My First Dataset',
-                                    data: [300, 50, 100],
-                                    backgroundColor: [
-                                        'rgb(255, 99, 132)',
-                                        'rgb(54, 162, 235)',
-                                        'rgb(255, 205, 86)'
-                                    ],
-                                    hoverOffset: 4
-                                }]
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Pie CHart -->
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Doughnut Chart</h5>
-
-                    <!-- Doughnut Chart -->
-                    <canvas id="doughnutChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#doughnutChart'), {
-                            type: 'doughnut',
-                            data: {
-                                labels: [
-                                    'Red',
-                                    'Blue',
-                                    'Yellow'
-                                ],
-                                datasets: [{
-                                    label: 'My First Dataset',
-                                    data: [300, 50, 100],
-                                    backgroundColor: [
-                                        'rgb(255, 99, 132)',
-                                        'rgb(54, 162, 235)',
-                                        'rgb(255, 205, 86)'
-                                    ],
-                                    hoverOffset: 4
-                                }]
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Doughnut CHart -->
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Radar Chart</h5>
-
-                    <!-- Radar Chart -->
-                    <canvas id="radarChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#radarChart'), {
-                            type: 'radar',
-                            data: {
-                                labels: [
-                                    'Eating',
-                                    'Drinking',
-                                    'Sleeping',
-                                    'Designing',
-                                    'Coding',
-                                    'Cycling',
-                                    'Running'
-                                ],
-                                datasets: [{
-                                    label: 'First Dataset',
-                                    data: [65, 59, 90, 81, 56, 55, 40],
-                                    fill: true,
-                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                    borderColor: 'rgb(255, 99, 132)',
-                                    pointBackgroundColor: 'rgb(255, 99, 132)',
-                                    pointBorderColor: '#fff',
-                                    pointHoverBackgroundColor: '#fff',
-                                    pointHoverBorderColor: 'rgb(255, 99, 132)'
-                                }, {
-                                    label: 'Second Dataset',
-                                    data: [28, 48, 40, 19, 96, 27, 100],
-                                    fill: true,
-                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                    borderColor: 'rgb(54, 162, 235)',
-                                    pointBackgroundColor: 'rgb(54, 162, 235)',
-                                    pointBorderColor: '#fff',
-                                    pointHoverBackgroundColor: '#fff',
-                                    pointHoverBorderColor: 'rgb(54, 162, 235)'
-                                }]
-                            },
-                            options: {
-                                elements: {
-                                    line: {
-                                        borderWidth: 3
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Radar CHart -->
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Polar Area Chart</h5>
-
-                    <!-- Polar Area Chart -->
-                    <canvas id="polarAreaChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#polarAreaChart'), {
-                            type: 'polarArea',
-                            data: {
-                                labels: [
-                                    'Red',
-                                    'Green',
-                                    'Yellow',
-                                    'Grey',
-                                    'Blue'
-                                ],
-                                datasets: [{
-                                    label: 'My First Dataset',
-                                    data: [11, 16, 7, 3, 14],
-                                    backgroundColor: [
-                                        'rgb(255, 99, 132)',
-                                        'rgb(75, 192, 192)',
-                                        'rgb(255, 205, 86)',
-                                        'rgb(201, 203, 207)',
-                                        'rgb(54, 162, 235)'
-                                    ]
-                                }]
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Polar Area Chart -->
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Stacked Bar Chart</h5>
-
-                    <!-- Stacked Bar Chart -->
-                    <canvas id="stakedBarChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#stakedBarChart'), {
-                            type: 'bar',
-                            data: {
-                                labels: ['January', 'February', 'March', 'April', 'May', 'June',
-                                    'July'
-                                ],
-                                datasets: [{
-                                        label: 'Dataset 1',
-                                        data: [-75, -15, 18, 48, 74],
-                                        backgroundColor: 'rgb(255, 99, 132)',
-                                    },
-                                    {
-                                        label: 'Dataset 2',
-                                        data: [-11, -1, 12, 62, 95],
-                                        backgroundColor: 'rgb(75, 192, 192)',
-                                    },
-                                    {
-                                        label: 'Dataset 3',
-                                        data: [-44, -5, 22, 35, 62],
-                                        backgroundColor: 'rgb(255, 205, 86)',
-                                    },
-                                ]
-                            },
-                            options: {
-                                plugins: {
+                                // Specify the configuration items and data for the chart
+                                var option = {
                                     title: {
-                                        display: true,
-                                        text: 'Chart.js Bar Chart - Stacked'
+                                        text: ''
                                     },
-                                },
-                                responsive: true,
-                                scales: {
-                                    x: {
-                                        stacked: true,
-                                    },
-                                    y: {
-                                        stacked: true
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Stacked Bar Chart -->
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Bubble Chart</h5>
-
-                    <!-- Bubble Chart -->
-                    <canvas id="bubbleChart" style="max-height: 400px;"></canvas>
-                    <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                        new Chart(document.querySelector('#bubbleChart'), {
-                            type: 'bubble',
-                            data: {
-                                labels: ['January', 'February', 'March', 'April', 'May', 'June',
-                                    'July'
-                                ],
-                                datasets: [{
-                                        label: 'Dataset 1',
-                                        data: [{
-                                                x: 20,
-                                                y: 30,
-                                                r: 15
-                                            },
-                                            {
-                                                x: 40,
-                                                y: 10,
-                                                r: 10
-                                            },
-                                            {
-                                                x: 15,
-                                                y: 37,
-                                                r: 12
-                                            },
-                                            {
-                                                x: 32,
-                                                y: 42,
-                                                r: 33
-                                            }
-                                        ],
-                                        borderColor: 'rgb(255, 99, 132)',
-                                        backgroundColor: 'rgba(255, 99, 132, 0.5)'
-                                    },
-                                    {
-                                        label: 'Dataset 2',
-                                        data: [{
-                                                x: 40,
-                                                y: 25,
-                                                r: 22
-                                            },
-                                            {
-                                                x: 24,
-                                                y: 47,
-                                                r: 11
-                                            },
-                                            {
-                                                x: 65,
-                                                y: 11,
-                                                r: 14
-                                            },
-                                            {
-                                                x: 11,
-                                                y: 55,
-                                                r: 8
-                                            }
-                                        ],
-                                        borderColor: 'rgb(75, 192, 192)',
-                                        backgroundColor: 'rgba(75, 192, 192, 0.5)'
-                                    }
-                                ]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
+                                    tooltip: {},
                                     legend: {
-                                        position: 'top',
+                                        data: ['female', 'male']
                                     },
-                                    title: {
-                                        display: true,
-                                        text: 'Chart.js Bubble Chart'
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    </script>
-                    <!-- End Bubble Chart -->
+                                    xAxis: [{
+                                        data: regions
+                                    }],
+                                    yAxis: [{
+                                        type: "value"
+                                    }],
+                                    series: [
+                                        {
+                                            name: 'female',
+                                            type: 'bar',
+                                            data: females
+                                        },
+                                        {
+                                            name: 'male',
+                                            type: 'bar',
+                                            data: males
+                                        }
+                                    ]
+                                };
 
+                                // Display the chart using the configuration items and data just specified.
+                                myChart.setOption(option);
+                            })
+                        </script>
+                        <!-- End Line CHart -->
+
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
-</section>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Line Chart -->
+                        <h5 class="font-weight-bold ">Students' Age Distribution</h5>
+                        <div id="studentAgeChart" style="max-height: 700px; height: 700px"></div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                // Initialize the echarts instance based on the prepared dom
+                                var myChart = echarts.init(document.getElementById('studentAgeChart'));
+                                var data = {{\Illuminate\Support\Js::from($ageDistribution)}};
+                                var ages = []
+                                var ageCount = []
+                                for(const key in data){
+                                    ages.push(key)
+                                    ageCount.push(data[key])
+
+                                }
+
+                                // Specify the configuration items and data for the chart
+                                var option = {
+                                    title: {
+                                        text: ''
+                                    },
+                                    tooltip: {},
+                                    legend: {
+                                        data: ['students count']
+                                    },
+                                    xAxis: [{
+                                        data: ages
+                                    }],
+                                    yAxis: [{
+                                        type: "value"
+                                    }],
+                                    series: [
+                                        {
+                                            name: 'students count',
+                                            type: 'bar',
+                                            data: ageCount
+                                        }
+                                    ]
+                                };
+
+                                // Display the chart using the configuration items and data just specified.
+                                myChart.setOption(option);
+                            })
+                        </script>
+                        <!-- End Line CHart -->
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Line Chart -->
+                        <h5 class="font-weight-bold ">Student attendance per course distribution</h5>
+                        <div id="coursesChart" style="max-height: 700px; height: 700px"></div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                // Initialize the echarts instance based on the prepared dom
+                                var myChart = echarts.init(document.getElementById('coursesChart'));
+                                var data = {{\Illuminate\Support\Js::from($coursesDistribution)}};
+                                var courses = []
+                                var studentsCount = []
+                                for(const row of data){
+                                    courses.push(row.name)
+                                    studentsCount.push(row.students_count)
+
+                                }
+
+                                // Specify the configuration items and data for the chart
+                                var option = {
+                                    title: {
+                                        text: ''
+                                    },
+                                    tooltip: {},
+                                    legend: {
+                                        data: ['students count']
+                                    },
+                                    xAxis: [{
+                                        data: courses
+                                    }],
+                                    yAxis: [{
+                                        type: "value"
+                                    }],
+                                    series: [
+                                        {
+                                            name: 'students count',
+                                            type: 'bar',
+                                            data: studentsCount
+                                        }
+                                    ]
+                                };
+
+                                // Display the chart using the configuration items and data just specified.
+                                myChart.setOption(option);
+                            })
+                        </script>
+                        <!-- End Line CHart -->
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="font-weight-bold ">Centers Distribution  across regions</h5>
+                        <div id="centersChart" style="max-height: 700px; height: 700px"></div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                var myChart = echarts.init(document.getElementById('centersChart'));
+                                var data = {{\Illuminate\Support\Js::from($centersDistribution)}};
+                                var regions = []
+                                for(region of data){
+                                    regions.push({
+                                        name: region.name,
+                                        value: region.centers_count
+                                    })
+                                }
+                                option = {
+                                    title: {
+                                        text: '',
+                                        subtext: '',
+                                        left: ''
+                                    },
+                                    tooltip: {
+                                        trigger: 'item'
+                                    },
+                                    legend: {
+
+                                    },
+                                    series: [
+                                        {
+                                            name: 'Access From',
+                                            type: 'pie',
+                                            radius: '50%',
+                                            data: regions,
+                                            emphasis: {
+                                                itemStyle: {
+                                                    shadowBlur: 10,
+                                                    shadowOffsetX: 0,
+                                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                };
+                                myChart.setOption(option);
+
+                            })
+                            // Display the chart using the configuration items and data just specified.
+
+
+                        </script>
+                        <!-- End Pie CHart -->
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
 @endsection
