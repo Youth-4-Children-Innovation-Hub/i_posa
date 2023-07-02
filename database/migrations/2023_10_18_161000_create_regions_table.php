@@ -16,9 +16,8 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->unsignedBigInteger('cordinator_id');
             $table->timestamps();
-
             $table->foreign('cordinator_id')->references('id')->on('users');
-        
+
         });
     }
 

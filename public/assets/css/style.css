@@ -1258,3 +1258,57 @@ h6 {
   font-size: 13px;
   color: #012970;
 }
+
+#dashboard-summary {
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-column-gap: 40px;
+    align-content: center;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#dashboard-summary .summary-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    border-right: 1px solid #F2F1F7;
+}
+
+#dashboard-summary .summary-card div:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: #4154f1;
+    border-radius: 10px;
+}
+
+#dashboard-summary .summary-card div:first-child i {
+    font-size: 24px;
+    color: #fff;
+}
+
+#dashboard-summary .summary-card div:last-child {
+    display: flex;
+    box-sizing: border-box;
+    padding-top: 30px;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#dashboard-summary .summary-card div:last-child h4 {
+    font-size: 12px;
+    font-weight: 400;
+    color: #012970;
+}
+
+#dashboard-summary .summary-card div:last-child p {
+    font-weight: 900;
+    font-size: 20px;
+}
