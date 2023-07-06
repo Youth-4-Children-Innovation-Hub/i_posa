@@ -13,4 +13,9 @@ class Center extends Model
         'region_id',
         'hod_id'
     ];
+
+    public function student()
+    {
+        return $this->hasMany(Student::class);
+    }
 }

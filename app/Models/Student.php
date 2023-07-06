@@ -19,4 +19,8 @@ class Student extends Model
         'center_id',
         'region_id'
     ];
+
+    public function center() {
+        return $this->hasOne(Center::class);
+    }
 }

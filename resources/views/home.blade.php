@@ -14,11 +14,11 @@
         </div><!-- End Logo -->
 
         <!-- <div class="search-bar">
-            <form class="search-form d-flex align-items-center" method="POST" action="#">
-                <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-            </form>
-        </div> -->
+                                <form class="search-form d-flex align-items-center" method="POST" action="#">
+                                    <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                                </form>
+                            </div> -->
         <!-- End Search Bar -->
 
         <nav class="header-nav ms-auto">
@@ -175,8 +175,9 @@
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
 
-                        <img src="{{ asset($userData->profile_photo) }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">{{$userData->name}}</span>
+                        <img src="{{ asset($userData->profile_photo) }}" alt="Profile" class="rounded-circle"
+                            style="width: 40px; height: 40px;">
+                        <span class="d-none d-md-block dropdown-toggle ps-2">{{ $userData->name }}</span>
                     </a><!-- End Profile Iamge Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -189,7 +190,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="{{url('/user_profile')}}">
+                            <a class="dropdown-item d-flex align-items-center" href="{{ url('/user_profile') }}">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -219,14 +220,14 @@
                         </li>
 
                         <!-- <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Log Out</span>
-                            </a>
-                        </li> -->
+                                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                                    <i class="bi bi-box-arrow-right"></i>
+                                                    <span>Log Out</span>
+                                                </a>
+                                            </li> -->
                         <li>
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                                        document.getElementById('logout-form').submit();">
                                 <i class="bi bi-box-arrow-right"></i>
 
                                 {{ __('Logout') }}
@@ -257,7 +258,7 @@
                 </a>
             </li><!-- End Dashboard Nav -->
 
-            @can('is_admin')
+            @canany(['is_admin','is_user'])
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -268,13 +269,11 @@
                             <i class="bi bi-circle"></i><span>users</span>
                         </a>
                     </li>
-
-
                 </ul>
             </li><!-- End Forms Nav -->
+            @endcanany
 
-            @endcan
-
+            @canany(['is_reg_cordinator','is_user'])
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
@@ -289,7 +288,8 @@
 
                 </ul>
             </li><!-- End Forms Nav -->
-
+            @endcanany
+            @canany(['is_reg_cordinator','is_user'])
             <!-- districti level -->
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#districts-nav" data-bs-toggle="collapse" href="#">
@@ -304,10 +304,8 @@
 
                 </ul>
             </li>
-
             <!-- end of district level -->
-
-
+            @endcanany
 
 
             <li class="nav-item">
@@ -322,53 +320,35 @@
                     </li>
 
                 </ul>
+
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="{{ url('/courses') }}">
                             <i class="bi bi-circle"></i><span>Courses</span>
                         </a>
                     </li>
-
                 </ul>
+
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="{{ url('/teachers') }}">
                             <i class="bi bi-circle"></i><span>Teachers</span>
                         </a>
                     </li>
-
                 </ul>
+
+
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="{{ url('/inventory') }}">
                             <i class="bi bi-circle"></i><span>Inventory List</span>
                         </a>
                     </li>
-
                 </ul>
-                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/requestInventory') }}">
-                            <i class="bi bi-circle"></i><span>Inventory Requests</span>
-                        </a>
-                    </li>
 
-                </ul>
+
             </li><!-- End Forms Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#courses-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Course</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="courses-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/courses') }}">
-                            <i class="bi bi-circle"></i><span>Course</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </li><!-- End Forms Nav -->
 
 
             <li class="nav-item">
@@ -387,16 +367,14 @@
 
 
 
-
             <li class="nav-heading">Pages</li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{url('/user_profile')}}">
+                <a class="nav-link collapsed" href="{{ url('/user_profile') }}">
                     <i class="bi bi-person"></i>
                     <span>Profile</span>
                 </a>
             </li><!-- End Profile Page Nav -->
-
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="pages-contact.html">

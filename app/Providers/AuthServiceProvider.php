@@ -26,17 +26,25 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        Gate::define('is_admin',function(User $user){
-            return $user->role_id==1;
-        });
-        
-        Gate::define('is_reg_cordinator', function(User $user){
-            return $user->role_id==2|| $user->role_id==1;
+        Gate::before(function (User $user) {
+            if ($user->role_id == 1 ) {
+                return true;
+            }
         });
 
-        Gate::define('is_hoc', function(User $user){
-            return $user->role_id==3 || $user->role_id==1 ;
+        Gate::define('is_admin', function (User $user) {
+            return $user->role_id == 1;
         });
-    
-}
+
+        Gate::define('is_reg_cordinator', function (User $user) {
+            return $user->role_id == 2 ;
+        });
+
+        Gate::define('is_hoc', function (User $user) {
+            return $user->role_id == 3 ;
+        });
+        Gate::define('is_user', function (User $user) {
+            return $user->role_id == 4 ;
+        });
+    }
 }

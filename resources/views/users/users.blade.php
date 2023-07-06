@@ -102,8 +102,9 @@
 
             <!-- updateform/{{$user->id}} -->
             <td>
-                <button type="button" class="btn btn-outline-primary btn-sm py-0" data-bs-toggle="modal"
+                <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
                     data-bs-target="#UpdateModal">Update</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm py-0 delBtn" value="{{ $user->id }}">Delete</button>
             </td>
 
         </tr>
@@ -148,15 +149,6 @@
                                 </div>
                             </div>
 
-
-
-
-
-
-
-
-
-
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Role</label>
                                 <div class="col-sm-10">
@@ -168,15 +160,9 @@
                                         <option value="{{$role->id}}">
                                             {{ $role->role }}</option>
                                         @endforeach
-
-
                                     </select>
                                 </div>
                             </div>
-
-
-
-
                         </div>
                     </div>
 
@@ -209,17 +195,19 @@
 
                 @csrf
                 <div class="modal-body">
+
+                    <input type="hidden" name="user_id" id="user_id">
                     <div class="row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="name" required value="">
+                            <input type="text" class="form-control" name="name" id="name" required value="">
                         </div>
                     </div>
 
                     <div class=" row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="email" required value="">
+                            <input type="text" class="form-control" name="email" id="email" required value="">
                         </div>
                     </div>
                     <input type="text" class="form-control" style="display:none;" name="id" value="">
@@ -227,14 +215,13 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" name="role" required>
+                            <select class="form-select" aria-label="Default select example" name="role" id="role" required>
                                 <option value="" selected="selected" hidden="hidden">
 
                                 </option>
                                 @foreach($roles as $role)
-                                <option value="">{{ $role->role }}</option>
+                                <option value="{{$role->id }}">{{ $role->role }}</option>
                                 @endforeach
-
 
                             </select>
                         </div>
@@ -242,10 +229,10 @@
 
 
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Submit Button</label>
+                        <label class="col-sm-2 col-form-label">Update</label>
                         <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Submit
-                                Form</button>
+                            <button type="submit" class="btn btn-primary">Update
+                                </button>
 
                         </div>
                     </div>
@@ -280,4 +267,58 @@
 // }
 </script>
 
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).on('click', '.editBtn', function() {
+            var id = $(this).val();
+            console.log(id);
+            $.ajax({
+                type: "GET",
+                url: "/edit_user/" + id,
+                success: function(response) {
+                    console.log(response);
+                    $('#user_id').val(id);
+                    $('#name').val(response.user.name);
+                    $('#email').val(response.user.email);
+                    $('#role').val(response.user.role_id);
+                    $('#role').selectpicker('refresh');
+
+                    },
+
+            });
+        });
+
+        $('.delBtn').on('click', function() {
+            var confirmation = confirm('Are you sure you want to delete this user?');
+            if (confirmation) {
+                // delete it
+                var user = $(this).val();
+                console.log(user);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/delete_user',
+                    data: {
+                        id: user
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr);
+                        console.log(status);
+                        console.log(error);
+                    }
+                });
+            } else {
+                //canceled
+            }
+        });
+    </script>
 @endsection
