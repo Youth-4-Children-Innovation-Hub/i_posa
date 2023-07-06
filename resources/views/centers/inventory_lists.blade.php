@@ -1,7 +1,5 @@
 @extends('home')
 @section('contente')
-
-
 <div class="container">
 
     <div class="pagetitle">
@@ -27,36 +25,45 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($inventory_lists as $inventory_list)
+            @php
+            $i = 1;
+            @endphp
+            @foreach ($inventory_lists as $inventory_list)
             <tr>
-                <th scope="row">1</th>
-                <td>{{$inventory_list->name}}</td>
-                <td>{{ $inventory_list->number}}</td>
-                <td>{{ $inventory_list->course_name}}</td>
-                <td>{{ $inventory_list->condition}}</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
+                <th scope="row">{{ $i }}</th>
+                <td>{{ $inventory_list->name }}</td>
+                <td>{{ $inventory_list->number }}</td>
+                <td>{{ $inventory_list->course_name }}</td>
+                <td>{{ $inventory_list->condition }}</td>
+                @can('is_hoc')
+                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
+                        data-bs-target="#EditModal" value="{{ $inventory_list->id }}">Update</button>
+                    <button type="button" value="{{ $inventory_list->id }}"
+                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                 </td>
+                @endcan
+
 
             </tr>
+            @php
+            $i++;
+            @endphp
             @endforeach
 
         </tbody>
     </table>
 
-
-
-
     <section class="section dashboard">
-        @can('is_hoc')
-            <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add New Inventory</button>
-        @endcan
+        @canany(['is_reg_cordinator','is_hoc'])
+        <button type="submit" class="btn btn-outline-warning my-4" onclick="showDiv()">Add New Inventory</button>
+        @endcanany
 
         <div class="card" style="display:none;" id="add_inventory_list">
             <div class="card-body">
                 <h5 class="card-title">Add New Inventory</h5>
 
                 <!-- General Form Elements -->
-                <form method="POST" action="{{route('create_inventory')}}">
+                <form method="POST" action="{{ route('create_inventory') }}">
                     @csrf
                     <div class=" row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
@@ -76,7 +83,13 @@
                     <div class=" row mb-3">
                         <label for="inputText" class="col-sm-2 col-form-label">Course</label>
                         <div class="col-sm-10">
-                            <input name="course" type="text" class="form-control">
+                            <select class="form-control selectpicker" data-mdb-container="#exampleModal"
+                                data-mdb-filter="true" name="course">
+                                @foreach ($courses as $course)
+                                <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                @endforeach
+
+                            </select>
                         </div>
                     </div>
 
@@ -104,11 +117,132 @@
 
     </section>
 </div>
+
+<div class="modal fade" id="EditModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Center Course</h5>
+            </div>
+            <form method="POST" action="{{ route('update_inventory') }}">
+                @csrf
+
+                <div class="modal-body">
+                    <div class="" id="add_region">
+                        <div class="card-body">
+                            <!-- General Form Elements -->
+                            <form method="POST" action="{{ route('update_inventory') }}">
+                                @csrf
+
+                                <input type="hidden" name="inv_id" id="inv_id">
+                                <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input name="name" id="name" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Number</label>
+                                    <div class="col-sm-10">
+                                        <input name="number" type="number" id="number" class="form-control">
+                                    </div>
+                                </div>
+                                <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Course</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control selectpicker" id="course"
+                                            data-mdb-container="#exampleModal" data-mdb-filter="true" name="course">
+                                            @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Condition</label>
+                                    <div class="col-sm-10">
+                                        <input name="condition" type="text" id="condition" class="form-control">
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update </button>
+
+                </div>
+
+            </form><!-- End General Form Elements -->
+
+        </div>
+    </div>
+</div><!-- End of model add new  course-->
 <script>
 function showDiv() {
     var div = document.getElementById("add_inventory_list");
     div.style.display = "block";
 }
 </script>
+@endsection
 
+
+@section('scripts')
+<script>
+$(document).on('click', '.editBtn', function() {
+    var id = $(this).val();
+    console.log(id);
+    $.ajax({
+        type: "GET",
+        url: "/edit_inventory/" + id,
+        success: function(response) {
+            console.log(response);
+            $('#course').val(response.inventory.course_id);
+            $('#course').selectpicker('refresh');
+            $('#inv_id').val(id);
+            $('#condition').val(response.inventory.condition);
+            $('#name').val(response.inventory.name);
+            $('#number').val(response.inventory.number);
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+
+    });
+});
+
+$('.delBtn').on('click', function() {
+    var confirmation = confirm('Are you sure you want to delete this course?');
+    if (confirmation) {
+        // delete it
+        var inventory = $(this).val();
+        console.log(inventory);
+
+        $.ajax({
+            type: 'POST',
+            url: '/delete_inventory',
+            data: {
+                id: inventory
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+            }
+        });
+    } else {
+        //canceled
+    }
+});
+</script>
 @endsection

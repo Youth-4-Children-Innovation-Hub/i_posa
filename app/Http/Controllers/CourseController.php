@@ -16,50 +16,51 @@ use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
-    public function GetCenterCourses(){
-        $courses=Course::all();
-        $teachers=Teacher::all();
-        $centers=Center::all();
+    public function GetCenterCourses()
+    {
+        $courses = Course::all();
+        $teachers = Teacher::all();
+        $centers = Center::all();
         $userData = Auth::user();
 
-        $centercourses=CourseCenter::select('courses.name AS course','teachers.name AS teacher','centers.name AS center')
-                                    ->leftJoin('teachers','teachers.id','=','course_centers.teacher_id')
-                                    ->leftJoin('courses','courses.id','=','course_centers.course_id')
-                                    ->leftJoin('centers','centers.id','=','course_centers.center_id')
-                                    ->orderBy('course_centers.created_at','DESC')
-                                    ->get();
-        return view('courses.courses',
-            ['teachers'=>$teachers,
-            'courses'=>$courses,
-                'centers'=>$centers,
-                'centercourses'=>$centercourses,
+        $centercourses = CourseCenter::select('course_centers.id', 'courses.name AS course', 'teachers.name AS teacher', 'centers.name AS center')
+            ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+            ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+            ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+            ->orderBy('course_centers.created_at', 'DESC')
+            ->get();
+        return view(
+            'courses.courses',
+            [
+                'teachers' => $teachers,
+                'courses' => $courses,
+                'centers' => $centers,
+                'centercourses' => $centercourses,
                 'userData' =>   $userData
-            ]);
+            ]
+        );
     }
-    public function Create(Request $request){
-        try{
-            $coursecenter=new CourseCenter();
-            $coursecenter->course_id=$request->course_id;
-            $coursecenter->teacher_id=$request->teacher_id;
-            $coursecenter->center_id=$request->center_id;
+    public function Create(Request $request)
+    {
+        try {
+            $coursecenter = new CourseCenter();
+            $coursecenter->course_id = $request->course_id;
+            $coursecenter->teacher_id = $request->teacher_id;
+            $coursecenter->center_id = $request->center_id;
             $coursecenter->save();
             return redirect('courses');
-        }
-        catch (Exception $e){
-
+        } catch (Exception $e) {
         }
     }
-    public function CreateNew(Request $request){
-        try{
-            $course=new Course();
-            $course->name=$request->name;
+    public function CreateNew(Request $request)
+    {
+        try {
+            $course = new Course();
+            $course->name = $request->name;
             $course->save();
-             return redirect('courses');
+            return redirect('courses');
+        } catch (Exception $e) {
         }
-        catch(Exception $e){
-
-        }
-
     }
     // public function GetCourses(){
     //     $userData = auth()->user();
@@ -128,4 +129,44 @@ class CourseController extends Controller
 
     //     return redirect('courses');
     // }
+
+    public function updateCourse(Request $request)
+    {
+        $coursecenter = CourseCenter::find($request->course_center_id);
+
+        try {
+            $coursecenter->course_id = $request->course_id;
+            $coursecenter->teacher_id = $request->teacher_id;
+            $coursecenter->center_id = $request->center_id;
+
+            $coursecenter->save();
+
+            return redirect('courses')->with('success', "Course Center Updated Successiful");
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect('courses');
+        }
+    }
+
+    public function deleteCourse(Request $request)
+    {
+        $course_center = CourseCenter::find($request->id);
+
+        if($course_center->delete()){
+            return response()->json(['status' => true]);
+        }
+
+        return response()->json(['status' => false]);
+
+    }
+
+    public function editCourse($id)
+    {
+        $course = CourseCenter::find($id);
+        return response()->json([
+            "status" => 200,
+            "course_centers" => $course,
+        ]);
+
+    }
 }

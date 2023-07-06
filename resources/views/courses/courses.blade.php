@@ -1,17 +1,15 @@
 @extends('home')
 @section('contente')
-
-
 <div class="container">
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Courses</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Courses</li>
                 <li class="mx-3 py-0">
                     <div class="search mx-auto">
-                        <form action="{{url('/search_district')}}" method="GET">
+                        <form action="{{ url('/search_district') }}" method="GET">
                             <input id="search_text" type="text" placeholder="Search" name="search_querry">
                             <button type="submit">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -29,11 +27,10 @@
 
                 <li>
                     <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{url('/districts')}}">
+                        <form method="GET" action="{{ url('/districts') }}">
                             <select class="" name="number" id="exampleFormControlSelect1">
                                 @if (isset($paginate))
-                                <option value="{{$paginate}}">{{$paginate}}</option>
-
+                                <option value="{{ $paginate }}">{{ $paginate }}</option>
                                 @endif
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -64,11 +61,12 @@
                         data-bs-target="#CreateNewCenterCourseModal">Add Center course</button>
 
                 </li>
+                @can('is_reg_cordinator')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateNewCourseModal">Add New course</button>
-
                 </li>
+                @endcan
 
             </ol>
         </nav>
@@ -82,24 +80,29 @@
                 <th scope="col">Course</th>
                 <th scope="col">Teacher</th>
                 <th scope="col">Center</th>
+                @can('is_hoc')
+
                 <th scope="col">Action</th>
+                @endcan
             </tr>
         </thead>
         <tbody>
-            @foreach($centercourses as $key=>$centercourses)
+            @foreach ($centercourses as $key => $centercourses)
             <tr>
-                <th scope="row">{{$key+1}}</th>
-                <td>{{$centercourses->course}}</td>
-                <td>{{ $centercourses->teacher}}</td>
-                <td>{{ $centercourses->center}}</td>
-                <td> <button type="button" class="btn btn-outline-primary btn-sm">Update</button>
+                <th scope="row">{{ $key + 1 }}</th>
+                <td>{{ $centercourses->course }}</td>
+                <td>{{ $centercourses->teacher }}</td>
+                <td>{{ $centercourses->center }}</td>
+                @can('is_hoc')
+                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
+                        value="{{ $centercourses->id }}" data-bs-toggle="modal"
+                        data-bs-target="#EditNewCenterCourseModal">Update</button>
+                    <button type="button" value="{{ $centercourses->id }}"
+                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                 </td>
-
+                @endcan
             </tr>
-
             @endforeach
-
-
 
         </tbody>
     </table>
@@ -112,7 +115,7 @@
                     <h5 class="modal-title">Add New Course</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{route('create_new_course')}}">
+                <form method="POST" action="{{ route('create_new_course') }}">
                     @csrf
 
                     <div class="modal-body">
@@ -127,16 +130,8 @@
                                         <input type="text" class="form-control" name="name" required>
                                     </div>
                                 </div>
-
-
-
-
-
-
                             </div>
                         </div>
-
-
 
                     </div>
                     <div class="modal-footer">
@@ -162,7 +157,7 @@
                     <h5 class="modal-title">Add Center Course</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{route('create_course')}}">
+                <form method="POST" action="{{ route('create_course') }}">
                     @csrf
 
                     <div class="modal-body">
@@ -176,10 +171,11 @@
                                     <div class="col-sm-10">
                                         <select class="selectpicker" aria-label="Default select example"
                                             name="course_id" required data-width=100% data-live-search="true">
-                                            <option selected="selected" hidden="hidden" value="">Open this select menu
+                                            <option selected="selected" hidden="hidden" value="">Open this
+                                                select menu
                                             </option>
-                                            @foreach($courses as $course)
-                                            <option value="{{$course->id}}">{{ $course->name }}</option>
+                                            @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}">{{ $course->name }}</option>
                                             @endforeach
 
 
@@ -193,10 +189,11 @@
                                     <div class="col-sm-10">
                                         <select class="selectpicker" aria-label="Default select example"
                                             name="teacher_id" required data-width=100% data-live-search="true">
-                                            <option selected="selected" hidden="hidden" value="">Open this select menu
+                                            <option selected="selected" hidden="hidden" value="">Open this
+                                                select menu
                                             </option>
-                                            @foreach($teachers as $teacher)
-                                            <option value="{{$teacher->id}}">{{ $teacher->name }}</option>
+                                            @foreach ($teachers as $teacher)
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                             @endforeach
 
 
@@ -210,30 +207,18 @@
                                     <div class="col-sm-10">
                                         <select class="selectpicker" aria-label="Default select example"
                                             name="center_id" required data-width=100% data-live-search="true">
-                                            <option selected="selected" hidden="hidden" value="">Open this select menu
+                                            <option selected="selected" hidden="hidden" value="">Open this
+                                                select menu
                                             </option>
-                                            @foreach($centers as $center)
-                                            <option value="{{$center->id}}">{{ $center->name }}</option>
+                                            @foreach ($centers as $center)
+                                            <option value="{{ $center->id }}">{{ $center->name }}</option>
                                             @endforeach
-
-
                                         </select>
                                     </div>
                                 </div>
 
-
-
-
-
-
-
-
-
-
                             </div>
                         </div>
-
-
 
                     </div>
                     <div class="modal-footer">
@@ -249,10 +234,140 @@
 
     <!-- Add new center course model -->
 
+    <!-- add center course -->
+    <div class="modal fade" id="EditNewCenterCourseModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Center Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('update_course') }}">
+                    @csrf
+
+                    <div class="modal-body">
+                        <div class="" id="add_region">
+                            <div class="card-body">
+                                <!-- General Form Elements -->
+                                <input type="hidden" id="course_center_id" name="course_center_id">
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">Course</label>
+                                    <div class="col-sm-10">
+                                        <select class="selectpicker" aria-label="Default select example"
+                                            name="course_id" id="course_id" required data-width=100%
+                                            data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Open this
+                                                select menu
+                                            </option>
+                                            @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">Teacher</label>
+                                    <div class="col-sm-10">
+                                        <select class="selectpicker" aria-label="Default select example"
+                                            name="teacher_id" id="teacher_id" required data-width=100%
+                                            data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Open this
+                                                select menu
+                                            </option>
+                                            @foreach ($teachers as $teacher)
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">Center</label>
+                                    <div class="col-sm-10">
+                                        <select class="selectpicker" aria-label="Default select example"
+                                            name="center_id" id="center_id" required data-width=100%
+                                            data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Open this
+                                                select menu
+                                            </option>
+                                            @foreach ($centers as $center)
+                                            <option value="{{ $center->id }}">{{ $center->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update </button>
+                    </div>
+                </form><!-- End General Form Elements -->
+
+            </div>
+        </div>
+    </div><!-- End of model add new  course-->
 
 
 </div>
+@endsection
 
+@section('scripts')
+<script>
+$(document).on('click', '.editBtn', function() {
+    var id = $(this).val();
+    console.log(id);
+    $.ajax({
+        type: "GET",
+        url: "/edit_course/" + id,
+        success: function(response) {
+            console.log(response);
+            $('#course_id').val(response.course_centers.course_id);
+            $('#course_id').selectpicker('refresh');
+            $('#course_center_id').val(id);
+            $('#teacher_id').val(response.course_centers.teacher_id);
+            $('#teacher_id').selectpicker('refresh');
+            $('#center_id').val(response.course_centers.center_id);
+            $('#center_id').selectpicker('refresh');
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
 
+    });
+});
 
+$('.delBtn').on('click', function() {
+    var confirmation = confirm('Are you sure you want to delete this course?');
+    if (confirmation) {
+        // delete it
+        var course = $(this).val();
+        console.log(course);
+
+        $.ajax({
+            type: 'POST',
+            url: '/delete_course_center',
+            data: {
+                id: course
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+            }
+        });
+    } else {
+        //canceled
+    }
+});
+</script>
 @endsection

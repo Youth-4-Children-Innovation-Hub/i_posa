@@ -1,0 +1,55 @@
+Permisions
+-CRUD users
+-CRUD regions
+-CRUD districts
+-CRUD centers
+-CRUD course
+-CRUD teacher
+-CDUD inventory
+
+Role
+Admin
+	-Creating users
+	-Creating regions
+	-All permissions
+
+Regional Cordinator
+	-Creating districts with their cordinator in his 	region
+	-Updating district with their cordinator
+	in his region
+	-Deleting district with no cascaded data in his 	region
+	-Viewing districts in his region
+	-Viewing centers in his region
+	-Viewing courses in his region
+	-Viewing teachers in his regions
+	-Viewing students in his region
+	-Viewing inventory in his region
+
+District cordinator
+	-Creating center with their head of center in his 	district
+	-Updating centers in his district
+	-Deleting centers with no cascaded data in his 			district
+	-Viewing centers in his district
+	-Viewing courses in his district
+	-Viewing teachers in his district
+	-Viewing students in his district
+	-Viewing inventory in his district
+
+Head of center
+	-Adding course with teacher to his center
+	-Deleting courses whith having no cascaded data in 	his center
+	-Updating course and teacher
+	-Viewing courses with teachers
+	-Creating inventory in his center
+	-Viewing inventory in his center
+	-Updating inventory in his center
+	-Creating students in his center
+	-Viewing students and courses selected in his center
+
+User
+	-View users
+	-View View centers with districts and regions
+	-View teachers
+	-View Courses
+	-View students
+	-View inventory
