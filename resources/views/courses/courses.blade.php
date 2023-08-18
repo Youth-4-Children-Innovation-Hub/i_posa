@@ -10,6 +10,7 @@
                 <li class="mx-3 py-0">
                     <div class="search mx-auto">
                         <form action="{{ url('/search_district') }}" method="GET">
+                        @csrf
                             <input id="search_text" type="text" placeholder="Search" name="search_querry">
                             <button type="submit">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -27,7 +28,8 @@
 
                 <li>
                     <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{ url('/districts') }}">
+                        <form method="GET" action="{{ url('/courses') }}">
+                        @csrf
                             <select class="" name="number" id="exampleFormControlSelect1">
                                 @if (isset($paginate))
                                 <option value="{{ $paginate }}">{{ $paginate }}</option>
@@ -72,7 +74,7 @@
         </nav>
     </div><!-- End Page Title -->
 
-
+    @can('is_admin')
     <table class="table table-striped">
         <thead>
             <tr>
@@ -106,7 +108,47 @@
 
         </tbody>
     </table>
+    @endcan
+    
+    @can('is_hoc')
+    @cannot('is_admin')
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Course</th>
+                <th scope="col">Teacher</th>
+               
+                @can('is_hoc')
 
+                <th scope="col">Action</th>
+                @endcan
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($centercourses1 as $key => $centercourses1)
+            <tr>
+                <th scope="row">{{ $key + 1 }}</th>
+                <td>{{ $centercourses1->course1 }}</td>
+                <td>{{ $centercourses1->teacher1 }}</td>
+               
+                @can('is_hoc')
+                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
+                        value="{{ $centercourses1->id }}" data-bs-toggle="modal"
+                        data-bs-target="#EditNewCenterCourseModal">Update</button>
+                    <button type="button" value="{{ $centercourses1->id }}"
+                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                </td>
+                @endcan
+            </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+    @endcannot
+    @endcan
+
+   
     <!-- add new course -->
     <div class="modal fade" id="CreateNewCourseModal" tabindex="-1">
         <div class="modal-dialog modal-lg">

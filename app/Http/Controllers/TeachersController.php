@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Teacher;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\CourseCenter;
 
 use Illuminate\Http\Request;
 use PHPUnit\Event\Code\Test;
@@ -17,7 +17,19 @@ class TeachersController extends Controller
         $userData = Auth::user();
         $teachers = Teacher::orderBy('created_at', 'DESC')
             ->get();
-        return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData]);
+
+         //for the head of center
+
+         $teachers1 = CourseCenter::select('course_centers.id AS id', 'teachers.name AS name1', 'courses.name AS course1', 'teachers.email AS email1', 'teachers.phone_number AS phone_number1')
+            ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+            ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+            ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+            ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
+            ->where('users.id', '=', $userData->id)
+            ->get();    
+        return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData, 'teachers1' => $teachers1]);
+
+       
     }
 
     public function Create(Request $request)

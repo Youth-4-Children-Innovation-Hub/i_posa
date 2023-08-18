@@ -36,10 +36,10 @@ class DistrictController extends Controller
             ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
             ->paginate($request->session()->get('pagination_number'));
         $regions = Region::all();
-        $district_cordinator_id = Role::select('id')
-            ->where('role', 'district cordinator')
-            ->first();
-        $users = User::where('role_id', $district_cordinator_id->id)
+        // $district_cordinator_id = Role::select('id')
+        //     ->where('role', 'district cordinator')
+        //     ->first();
+        $users = User::where('role_id', 13)
             ->get();
         return view('district.district', [
             'cordinators' => $users,
@@ -68,6 +68,7 @@ class DistrictController extends Controller
     {
         $querry = $_GET['search_querry'];
         if ($querry != null) {
+            $userData = auth()->user();
             $districts = District::select('districts.Id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
                 ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
                 ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
@@ -81,7 +82,7 @@ class DistrictController extends Controller
                 ->first();
             $users = User::where('role_id', $district_cordinator_id->id)
                 ->get();
-            return view('district.district', ['cordinators' => $users, 'regions' => $regions, 'districts' => $districts]);
+            return view('district.district', ['cordinators' => $users, 'userData' => $userData, 'regions' => $regions, 'districts' => $districts]);
         } else {
             return redirect('districts');
         }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CourseCenter;
+use App\Models\Center;  
 use Illuminate\Http\Request;
 use App\Models\Inventory;
 use App\Models\InventoryRequest;

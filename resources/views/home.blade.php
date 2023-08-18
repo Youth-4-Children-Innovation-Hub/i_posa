@@ -34,72 +34,52 @@
 
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-bell"></i>
-                        <span class="badge bg-primary badge-number">4</span>
+                        <span class="badge bg-primary badge-number">{{ auth()->user()->unreadNotifications->count() }}</span>
                     </a><!-- End Notification Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                         <li class="dropdown-header">
-                            You have 4 new notifications
-                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                            @if(auth()->user()->unreadNotifications->count() == 0)
+                                 You have no new reports
+                            @else
+                                You have {{ auth()->user()->unreadNotifications->count() }} new reports to read
+                                <!-- <a href="{{ url('/notifications') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a> -->
+                                <li>
+                                <hr class="dropdown-divider">
+                                </li>
+                                @foreach(auth()->user()->notifications as $notifications)
+                                @if(!$notifications->read_at)
+                                @foreach($global_variable as $variable)
+                                @if($variable->id == $notifications->data['report']['user_id'])
+                                    <li class="notification-item">
+                                        <i class="bi bi-exclamation-circle text-warning"></i>
+                                        <a href="{{ url('/reports_page') }}" style="text-decoration: none;">
+                                        <div>
+                                            <h4 style="color: rgb(51, 51, 51);">{{ $variable->name}}</h4>
+                                            <p>{{ $notifications->data['report']['name']}}</p>
+                                            <p>{{$variable->role}} at {{$variable->center_name}}</p>
+                                        </div>
+                                        </a>
+                                        
+                                    </li>
 
-                        <li class="notification-item">
-                            <i class="bi bi-exclamation-circle text-warning"></i>
-                            <div>
-                                <h4>Lorem Ipsum</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>30 min. ago</p>
-                            </div>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    @endif
+                                @endforeach    
+                                @endif
+                                @endforeach
+                    
+                                <!-- <li class="dropdown-footer">
+                                    <a href="#">Show all notifications</a>
+                                </li> -->
+                            
+                            @endif
+                            
+                            
                         </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li class="notification-item">
-                            <i class="bi bi-x-circle text-danger"></i>
-                            <div>
-                                <h4>Atque rerum nesciunt</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>1 hr. ago</p>
-                            </div>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li class="notification-item">
-                            <i class="bi bi-check-circle text-success"></i>
-                            <div>
-                                <h4>Sit rerum fuga</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>2 hrs. ago</p>
-                            </div>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li class="notification-item">
-                            <i class="bi bi-info-circle text-primary"></i>
-                            <div>
-                                <h4>Dicta reprehenderit</h4>
-                                <p>Quae dolorem earum veritatis oditseno</p>
-                                <p>4 hrs. ago</p>
-                            </div>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li class="dropdown-footer">
-                            <a href="#">Show all notifications</a>
-                        </li>
+                       
 
                     </ul><!-- End Notification Dropdown Items -->
 
@@ -175,9 +155,9 @@
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
 
-                        <img src="{{ asset($userData->profile_photo) }}" alt="Profile" class="rounded-circle"
+                        <img src="{{ asset(Auth::user()->profile_photo) }}" alt="Profile" class="rounded-circle"
                             style="width: 40px; height: 40px;">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">{{ $userData->name }}</span>
+                        <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
                     </a><!-- End Profile Iamge Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -307,15 +287,20 @@
             <!-- end of district level -->
             @endcanany
 
-
+            @canany(['is_admin'])
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="ri-home-2-fill"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
+                    <!-- <li>
                         <a href="{{ url('/centers') }}">
                             <i class="bi bi-circle"></i><span>Center</span>
+                        </a>
+                    </li> -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="">
+                            <i class="bi bi-circle"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
                         </a>
                     </li>
 
@@ -345,12 +330,72 @@
                         </a>
                     </li>
                 </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/students') }}">
+                            <i class="bi bi-circle"></i><span>Students</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/reports_page') }}">
+                            <i class="bi bi-circle"></i><span>Reports</span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                @cannot('is_admin')
+                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/reports_page') }}">
+                            <i class="bi bi-circle"></i><span>Reports</span>
+                        </a>
+                    </li>
+
+                </ul>
+                @endcannot
 
 
-            </li><!-- End Forms Nav -->
+            </li>
+            @endcanany
+        <!-- End Forms Nav -->
+            @can('is_hoc')
+            @cannot('is_admin')
+            <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/centers') }}">
+                    <i class="ri-home-2-fill"></i>
+                        <span>Center</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/courses') }}">
+                    <i class="ri-pencil-fill"></i>
+                        <span>Courses</span>
+                    </a>
+                </li><li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/teachers') }}">
+                    <i class="bi bi-file-person-fill"></i>
+                        <span>Teachers</span>
+                    </a>
+                </li><li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/inventory') }}">
+                    <i class="bi bi-file-ruled-fill"></i>
+                        <span>Inventory list</span>
+                    </a>
+                </li><li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/students') }}">
+                    <i class="bi bi-person-lines-fill"></i>
+                        <span>students</span>
+                    </a>
+            @endcannot
+            @endcan      
+           
+           
 
-
-
+            @cannot('is_hoc')
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#students-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Students</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -364,10 +409,22 @@
 
                 </ul>
             </li><!-- End Forms Nav -->
+            @endcannot
+
+            @canany(['is_dist_cordinator', 'is_reg_cordinator', 'is_hoc'])
+           
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('/reports_page') }}">
+                <!-- <i class="bi bi-layout-text-window-reverse"></i> -->
+                <i class="ri-mail-open-fill"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+          
+            @endcanany
 
 
-
-            <li class="nav-heading">Pages</li>
+            <li class="nav-heading"><hr></li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('/user_profile') }}">

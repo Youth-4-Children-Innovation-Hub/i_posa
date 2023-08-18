@@ -29,7 +29,7 @@
 
                     <li>
                         <div class="my-1 d-flex" id="paginate">
-                            <form method="GET" action="{{ url('/districts') }}">
+                            <form method="GET" action="{{ url('/centers') }}">
                                 <select class="" name="number" id="exampleFormControlSelect1">
                                     @if (isset($paginate))
                                         <option value="{{ $paginate }}">{{ $paginate }}</option>
