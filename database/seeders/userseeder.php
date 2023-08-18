@@ -26,27 +26,34 @@ class userseeder extends Seeder
         $regions=Region::all();
 
         $data=[
-            [
-                'name' => 'John Doe',
-                'email' => 'johndoe@example.com',
-                'role_id'=> $roles->random()->id,
-              //  'region_id'=> $regions->random()->id,
-                'password' => bcrypt('john123')
-            ],
-            [
-                'name' => 'Jane Doe',
-                'email' => 'janedoe@example.com',
-                'role_id'=> $roles->random()->id,
-               // 'region_id'=> $regions->random()->id,
+            // [
+            //     'name' => 'John Doe',
+            //     'email' => 'johndoe@example.com',
+            //     'role_id'=> $roles->random()->id,
+            //   //  'region_id'=> $regions->random()->id,
+            //     'password' => bcrypt('john123')
+            // ],
+            // [
+            //     'name' => 'Jane Doe',
+            //     'email' => 'janedoe@example.com',
+            //     'role_id'=> $roles->random()->id,
+            //    // 'region_id'=> $regions->random()->id,
                 
-                'password' => bcrypt('jane123')
-            ],
+            //     'password' => bcrypt('jane123')
+            // ],
+            // [
+            //     'name' => 'Michael Doe',
+            //     'email' => 'michaeldoe@example.com',
+            //     'role_id'=> $roles->random()->id,
+            //   //  'region_id'=> $regions->random()->id,
+            //     'password' => bcrypt('michael123')
+            // ],
             [
-                'name' => 'Michael Doe',
-                'email' => 'michaeldoe@example.com',
-                'role_id'=> $roles->random()->id,
+                'name' => 'mary mary',
+                'email' => 'mary@example.com',
+                'role_id'=> 13,
               //  'region_id'=> $regions->random()->id,
-                'password' => bcrypt('michael123')
+                'password' => bcrypt('mary123')
             ]
         ];
         DB::table('users')->insert($data);

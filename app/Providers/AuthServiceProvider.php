@@ -46,5 +46,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('is_user', function (User $user) {
             return $user->role_id == 4 ;
         });
+        Gate::define('is_dist_cordinator', function (User $user) {
+            return $user->role_id == 13 ;
+        });
     }
 }

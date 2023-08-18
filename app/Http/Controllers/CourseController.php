@@ -29,6 +29,17 @@ class CourseController extends Controller
             ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
             ->orderBy('course_centers.created_at', 'DESC')
             ->get();
+            
+            //for the head of center
+
+        $centercourses1 = CourseCenter::select('courses.name AS course1', 'teachers.name AS teacher1', 'course_centers.id AS id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+            ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+            ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+            ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
+            ->where('users.id', '=', $userData->id)
+            ->get();
+            
         return view(
             'courses.courses',
             [
@@ -36,6 +47,7 @@ class CourseController extends Controller
                 'courses' => $courses,
                 'centers' => $centers,
                 'centercourses' => $centercourses,
+                'centercourses1' => $centercourses1,
                 'userData' =>   $userData
             ]
         );

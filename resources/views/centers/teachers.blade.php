@@ -24,7 +24,7 @@
                 </li>
                 <li>
                     <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{ url('/districts') }}">
+                        <form method="GET" action="{{ url('/teachers') }}">
                             <select class="" name="number" id="exampleFormControlSelect1">
                                 @if (isset($paginate))
                                 <option value="{{ $paginate }}">{{ $paginate }}</option>
@@ -36,9 +36,9 @@
                                 <option value="5">5</option>
                                 <option value="6">6</option>
                                 <option value="7">7</option>
-                                <option value="8">8</option>
                                 <option value="9">9</option>
                                 <option value="10">10</option>
+                                <option value="8">8</option>
                                 <option value="11">11</option>
                                 <option value="12">12</option>
                                 <option value="13">13</option>
@@ -62,7 +62,7 @@
         </nav>
     </div><!-- End Page Title -->
 
-
+    @can('is_admin')
     <table class="table table-striped">
         <thead>
             <tr>
@@ -87,7 +87,7 @@
                 <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teacher->id }}"
                         class="btn btn-outline-primary btn-sm editBtn">Update</button>
                     <button type="button" value="{{ $teacher->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delte</button>
+                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                 </td>
 
                 @endcan
@@ -98,6 +98,49 @@
         </thead>
 
     </table>
+    @endcan
+   
+    @can('is_hoc')
+    @cannot('is_admin')
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Course</th>
+                <th scope="col">Email</th
+                <th scope="col">Phone number</th>
+                @can('is_hoc')
+
+                <th scope="col">Action</th>
+                @endcan
+            </tr>
+        <tbody>
+            @foreach ($teachers1 as $key => $teachers1)
+            <tr>
+                <th scope="row">{{ $key + 1 }}</th>
+                <td>{{ $teachers1->name1 }}</td>
+                <td>{{ $teachers1->course1 }}</td>
+                <td>{{ $teachers1->email1 }}</td>
+                <td>{{ $teachers1->phone_number1 }}</td>
+                @can('is_hoc')
+
+                <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers1->id }}"
+                        class="btn btn-outline-primary btn-sm editBtn">Update</button>
+                    <button type="button" value="{{ $teachers1->id }}"
+                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                </td>
+
+                @endcan
+            </tr>
+            @endforeach
+
+        </tbody>
+        </thead>
+
+    </table>
+    @endcannot
+    @endcan
 
 
     <!-- add new teacher -->

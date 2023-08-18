@@ -33,6 +33,7 @@
                             </div>
 
                             <form class="row g-3 needs-validation" novalidate>
+                            @csrf
                                 <div class="col-12">
 
                                     <label for="name" class="form-label">{{ __('Name') }}</label>

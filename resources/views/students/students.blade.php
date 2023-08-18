@@ -12,7 +12,8 @@
                 <li class="breadcrumb-item active">Students</li>
                 <li class="mx-3 py-0">
                     <div class="search mx-auto">
-                        <form action="{{ url('/search_district') }}" method="GET">
+                        <form action="" method="GET">
+                            @csrf
                             <input id="search_text" type="text" placeholder="Search" name="search_querry">
                             <button type="submit">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -30,7 +31,8 @@
 
                 <li>
                     <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{ url('/districts') }}">
+                        <form method="GET" action="{{ url('/students') }}">
+                            @csrf
                             <select class="" name="number" id="exampleFormControlSelect1">
                                 @if (isset($paginate))
                                 <option value="{{ $paginate }}">{{ $paginate }}</option>
@@ -55,7 +57,7 @@
                         </form>
                     </div>
                 </li>
-                @can('is_reg_cordinator')
+                @can('is_hoc')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Student</button>
@@ -76,7 +78,7 @@
     </div>
     @endif
 
-
+    @can('is_admin')
     <table class="table table-striped bg-light">
         <thead>
             <tr>
@@ -117,7 +119,52 @@
 
         </tbody>
     </table>
+    @endcan
+    
+    @can('is_hoc')
+    @cannot('is_admin')
+    <table class="table table-striped bg-light">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Course</th>
+                <th scope="col">Phone number</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Status</th>
+                @can('is_hoc')
 
+                <th scope="col">Action</th>
+                @endcan
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($students1 as $key => $students1)
+            <tr>
+                <th scope="row">{{ $key + 1 }}</th>
+                <td>{{ $students1->name1 }}</td>
+                <td>{{ $students1->course1 }}</td>
+                <td>{{ $students1->phone_number1 }}</td>
+                <td>{{ $students1->gender1 }}</td>
+                <td><span
+                        class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $students1->status1 }}</span>
+                </td>
+
+                @can('is_hoc')
+
+                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"
+                        data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
+                    <button type="button" value="{{ $students1->id }}"
+                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                </td>
+                @endcan
+            </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+    @endcannot
+    @endcan
 
 
     <!-- model add student -->
@@ -181,10 +228,18 @@
                                             <option selected="selected" hidden="hidden" value="">Open this
                                                 select menu
                                             </option>
+                                            @can('is_admin')
                                             @foreach ($centers as $center)
                                             <option value="{{ $center->id }}">{{ $center->name }}</option>
                                             @endforeach
-
+                                            @endcan
+                                            @can('is_hoc')
+                                            @cannot('is_admin')
+                                            @foreach ($center1 as $center1)
+                                            <option value="{{ $center1->id }}">{{ $center1->centerName1 }}</option>
+                                            @endforeach
+                                            @endcannot
+                                            @endcan
 
                                         </select>
                                     </div>

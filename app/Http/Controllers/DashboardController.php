@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Center;
 use App\Models\Student;
 use App\Models\Teacher;
 use Faker\Core\DateTime;
@@ -16,7 +17,7 @@ class DashboardController extends Controller
     {
         $userData = Auth::user();
         $coursesCount = Course::all()->count();
-        $centersCount = Course::all()->count();
+        $centersCount = Center::all()->count();
         $studentsCount = Student::all()->count();
         $teachersCount = Teacher::all()->count();
         $regionDistribution = DashboardController::getRegionDistribution();
