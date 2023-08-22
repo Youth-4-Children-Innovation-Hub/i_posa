@@ -15,15 +15,15 @@
         </nav>
     </div>
     @can('is_admin')
-    <table class="table table-striped bg-light">
+    <table class="table table-borderless bg-light">
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th></th>
                 <th scope="col">Report</th>
                 <th scope="col">Date</th>
                 <th scope="col">sender</th>
-                <th scope="col">center</th>
-                <th scope="col">role</th>
+               
                 @can('is_hoc')
 
                 <th scope="col">Action</th>
@@ -31,18 +31,22 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($reports as $reports)
+            @foreach($reports as $key=>$reports)
             <tr>
-                <th scope="row"></th>
+                <th scope="row">{{ $key+1 }}</th>
+                @if($reports->status == 'New') 
+                <td><span class="badge bg-success">{{ $reports->status }}</span></td>
+                @else
+                <td><span class="badge bg-secondary"><i class="bi bi-check-circle me-1"></i> {{ $reports->status }}</span></td>
+                @endif
                 <td>{{ $reports->report_name }}</td>
                 <td>{{ $reports->date }}</td>
-                <td>{{ $reports->hoc_name }}</td>
-                <td>{{ $reports->center_name }}</td>
-                <td>{{ $reports->role_name }}</td>
+                <td>{{ $reports->hoc_name }} - {{ $reports->role_name }} at {{ $reports->center_name }}</td>
+               
                 @can('is_hoc')
 
                 <td> 
-                <a href="{{ url('/download',$reports->report_name) }}" class="btn btn-outline-primary btn-sm">Download</a>
+                
                         <a href="{{ url('/view',$reports->id) }}" class="btn btn-outline-primary btn-sm">View</a>
                     <button type="button" value="{{ $reports->id }}"
                         class="btn btn-outline-danger btn-sm delBtn">Delete</button>
@@ -84,7 +88,7 @@
                   <!-- <button type="button" value=""
                         class="btn btn-outline-primary btn-sm delBtn">Download</button> -->
                         <a href="{{ url('/download',$reports->report_name) }}" class="btn btn-outline-primary btn-sm">Download</a>
-                        <a href="{{ url('/view',$reports->id) }}" class="btn btn-outline-primary btn-sm">View</a>
+                       
                     <button type="button" value="{{ $reports->id }}"
                         class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                 </td>
@@ -170,5 +174,23 @@
         //canceled
     }
 });
+
+
+function changeStatus(link) {
+    // Change the badge content and class
+    var statusBadge = document.getElementById('status-badge');
+    statusBadge.innerHTML = '<span class="badge bg-warning">Pending</span>';
+
+    // Send an AJAX request to update the status in the database
+    var reportId = {{ $reports->id }}; // Assuming you're passing the report ID from your Laravel view
+    fetch('/update-status/' + reportId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Status updated in the database.');
+            }
+        });
+}
+
     </script>
 @endsection

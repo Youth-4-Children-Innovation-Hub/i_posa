@@ -12,10 +12,11 @@ use App\Models\User;
 class reportController extends Controller
 {
     public function index(){
-        $reports = Report::Select('reports.id AS id', 'reports.user_id as id1','reports.created_at as date', 'users.name AS hoc_name', 'centers.name as center_name', 'reports.name as report_name', 'roles.role AS role_name')
+        $reports = Report::Select('reports.id AS id', 'reports.user_id as id1','reports.created_at as date', 'users.name AS hoc_name', 'centers.name as center_name', 'reports.name as report_name', 'roles.role AS role_name', 'reports.status as status')
                            ->leftJoin('centers', 'centers.hod_id', '=', 'reports.user_id')
                            ->leftJoin('users', 'users.id', '=', 'reports.user_id')
                            ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
+                           ->orderBy('reports.created_at', 'DESC')
                            ->get();
         if(auth()->user() !== null){
             auth()->user()->unreadNotifications->markAsRead();
@@ -47,6 +48,7 @@ class reportController extends Controller
 
     public function view($id){
         $data = Report::find($id);
+        $data->update(['status' => 'Read']);
         return view('centers.view_report', compact('data'));
     }
 

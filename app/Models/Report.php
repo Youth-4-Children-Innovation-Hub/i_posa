@@ -9,4 +9,9 @@ class Report extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'status'
+        
+    ];
+
 }
