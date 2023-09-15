@@ -182,14 +182,15 @@ function changeStatus(link) {
     statusBadge.innerHTML = '<span class="badge bg-warning">Pending</span>';
 
     // Send an AJAX request to update the status in the database
-    var reportId = {{ $reports->id }}; // Assuming you're passing the report ID from your Laravel view
-    fetch('/update-status/' + reportId)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Status updated in the database.');
-            }
-        });
+    // Assuming you're passing the report ID from your Laravel view
+   
+    // fetch('/update-status/' + reportId)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.success) {
+    //             console.log('Status updated in the database.');
+    //         }
+    //     });
 }
 
     </script>

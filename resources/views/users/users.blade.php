@@ -109,7 +109,6 @@
 
         </tr>
 
-
         @endforeach
 
     </tbody>
