@@ -38,11 +38,11 @@
                     </a><!-- End Notification Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                        <li class="dropdown-header">
+                        <li class="dropdown-header" style="padding: 0px 60px 4px 60px;">
                             @if(auth()->user()->unreadNotifications->count() == 0)
-                                 You have no new reports
+                                 No new reports
                             @else
-                                You have {{ auth()->user()->unreadNotifications->count() }} new reports to read
+                                {{ auth()->user()->unreadNotifications->count() }} unread reports
                                 <!-- <a href="{{ url('/notifications') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a> -->
                                 <li>
                                 <hr class="dropdown-divider">
@@ -215,6 +215,7 @@
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
+                                
                             </form>
                         </li>
 

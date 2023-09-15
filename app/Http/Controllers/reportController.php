@@ -48,7 +48,7 @@ class reportController extends Controller
 
     public function view($id){
         $data = Report::find($id);
-        $data->update(['status' => 'Read']);
+        $data->update(['status' => 'opened']);
         return view('centers.view_report', compact('data'));
     }
 
