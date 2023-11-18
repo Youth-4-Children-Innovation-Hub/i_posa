@@ -17,6 +17,7 @@ use App\Http\Controllers\TeachersController;
 use App\Models\Teacher;
 use App\Http\Controllers\reportController;
 use App\Models\Report;
+use App\Http\Controllers\ForgetPasswordManager;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -39,7 +40,7 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function(){
    
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [App\Http\Controllers\DashboardController::class,'GetDashboard'])->name('home');
     //Route::view('regions','regions.regions');
     Route::get('users',[UserController::class,'GetUsers']);
     Route::post('/addusers',[UserController::class,'Create'])->name('create_user');
@@ -79,6 +80,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('edit_course/{id}', [CourseController::class, 'editCourse']);
     Route::post('update_course', [CourseController::class, 'updateCourse'])->name('update_course');
     Route::post('delete_course_center', [CourseController::class, 'deleteCourse'])->name('delete_course_center');
+   Route::get('search_course',[CourseController::class,'Search']);
     
     
     Route::get('teachers',[TeachersController::class,'GetTeachers']);
@@ -86,13 +88,15 @@ Route::middleware(['auth'])->group(function(){
     Route::get('edit_teacher/{id}', [TeachersController::class, 'edit']);
     Route::post('update_teacher', [TeachersController::class, 'update'])->name('update_teacher');
     Route::post('delete_teacher', [TeachersController::class, 'delete'])->name('delete_teacher');
-    
+    Route::get('search_teacher',[TeachersController::class,'Search']);
+
     Route::get('students',[StudentController::class,'GetStudents']);
     Route::post('/addstudent',[StudentController::class,'Create'])->name('create_student');
     Route::get('edit_student/{id}', [StudentController::class, 'edit']);
     Route::post('update_student', [StudentController::class, 'update'])->name('update_student');
     Route::post('delete_student', [StudentController::class, 'delete'])->name('delete_student');
-    
+    Route::get('search_student',[StudentController::class,'Search']);
+
     
     
     Route::get('dashboard',[DashboardController::class,'GetDashboard']);

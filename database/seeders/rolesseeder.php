@@ -27,6 +27,11 @@ class rolesseeder extends Seeder
                 'updated_at' => Carbon::now()
             ],
             [
+                'role'=>'district cordinator',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
                 'role'=>'head of center',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
