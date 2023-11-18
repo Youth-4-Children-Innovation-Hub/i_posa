@@ -26,28 +26,28 @@ class userseeder extends Seeder
         $regions=Region::all();
 
         $data=[
-            // [
-            //     'name' => 'John Doe',
-            //     'email' => 'johndoe@example.com',
-            //     'role_id'=> $roles->random()->id,
-            //   //  'region_id'=> $regions->random()->id,
-            //     'password' => bcrypt('john123')
-            // ],
-            // [
-            //     'name' => 'Jane Doe',
-            //     'email' => 'janedoe@example.com',
-            //     'role_id'=> $roles->random()->id,
-            //    // 'region_id'=> $regions->random()->id,
+            [
+                'name' => 'Gadafi japhaly',
+                'email' => 'gadafijaphaly@gmail.com',
+                'role_id'=> $roles->random()->id,
+              //  'region_id'=> $regions->random()->id,
+                'password' => bcrypt('gadafi2000')
+            ],
+            [
+                'name' => 'Jane Doe',
+                'email' => 'janedoe@example.com',
+                'role_id'=> $roles->random()->id,
+               // 'region_id'=> $regions->random()->id,
                 
-            //     'password' => bcrypt('jane123')
-            // ],
-            // [
-            //     'name' => 'Michael Doe',
-            //     'email' => 'michaeldoe@example.com',
-            //     'role_id'=> $roles->random()->id,
-            //   //  'region_id'=> $regions->random()->id,
-            //     'password' => bcrypt('michael123')
-            // ],
+                'password' => bcrypt('jane123')
+            ],
+            [
+                'name' => 'Michael Doe',
+                'email' => 'michaeldoe@example.com',
+                'role_id'=> $roles->random()->id,
+              //  'region_id'=> $regions->random()->id,
+                'password' => bcrypt('michael123')
+            ],
             [
                 'name' => 'mary mary',
                 'email' => 'mary@example.com',
