@@ -35,8 +35,11 @@ class reportController extends Controller
         $data->name=$filename;
         $data->user_id = Auth::user()->id;
         $data->save();
-        //the 2 below should be changed:
-        $admin = User::find(2);
+        $adminUserId = User::whereHas('role', function ($query) {
+            $query->where('role', 'admin');
+        })->value('id');
+       
+        $admin = User::find($adminUserId);
         $admin->notify(new ReportUploaded($data));
         return redirect()->back();
         

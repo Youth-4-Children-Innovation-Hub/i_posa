@@ -51,9 +51,16 @@ class userseeder extends Seeder
             [
                 'name' => 'mary mary',
                 'email' => 'mary@example.com',
-                'role_id'=> 13,
+                'role_id'=> $roles->random()->id,
               //  'region_id'=> $regions->random()->id,
                 'password' => bcrypt('mary123')
+            ],
+            [
+                'name' => 'july july',
+                'email' => 'july@example.com',
+                'role_id'=> $roles->random()->id,
+              //  'region_id'=> $regions->random()->id,
+                'password' => bcrypt('july123')
             ]
         ];
         DB::table('users')->insert($data);

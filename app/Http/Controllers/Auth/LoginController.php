@@ -31,13 +31,13 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $userData)
 {   
-    $id = $userData->id;
-        $userRole= DB::table('users')
-                        ->join('roles', 'users.role_id', '=', 'roles.id')
-                        ->where('users.id', $id)
-                        ->select('roles.role')
-                        ->first();
-    return view('home')->with('userData', $userData)->with('userRole', $userRole);
+    // $id = $userData->id;
+    //     $userRole= DB::table('users')
+    //                     ->join('roles', 'users.role_id', '=', 'roles.id')
+    //                     ->where('users.id', $id)
+    //                     ->select('roles.role')
+    //                     ->first();
+    // return view('home')->with('userData', $userData)->with('userRole', $userRole);
     
  
   
