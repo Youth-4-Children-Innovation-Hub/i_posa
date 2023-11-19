@@ -36,10 +36,10 @@ class DistrictController extends Controller
             ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
             ->paginate($request->session()->get('pagination_number'));
         $regions = Region::all();
-        // $district_cordinator_id = Role::select('id')
-        //     ->where('role', 'district cordinator')
-        //     ->first();
-        $users = User::where('role_id', 13)
+        $district_cordinator_id = Role::select('id')
+            ->where('role', 'district cordinator')
+            ->first();
+        $users = User::where('role_id', 3)
             ->get();
         return view('district.district', [
             'cordinators' => $users,

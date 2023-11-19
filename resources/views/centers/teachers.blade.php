@@ -51,12 +51,12 @@
                     </div>
                 </li>
 
-                @can('is_reg_cordinator')
+              
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Teacher</button>
                 </li>
-                @endcan
+                
 
             </ol>
         </nav>

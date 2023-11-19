@@ -288,16 +288,16 @@
                 <i class="ri-home-2-fill"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <!-- <li>
+                    <li>
                         <a href="{{ url('/centers') }}">
                             <i class="bi bi-circle"></i><span>Center</span>
                         </a>
-                    </li> -->
-                    <li>
-                        <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="">
+                    </li>
+                    <!-- <li>
+                        <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="{{ url('/centers') }}">
                             <i class="bi bi-circle"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
                         </a>
-                    </li>
+                    </li> -->
 
                 </ul>
 

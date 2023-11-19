@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('date_of_birth');
             $table->string('gender');
+            $table->string('disability')->nullable();
             $table->string('phone_number');
             $table->string('email');
             $table->unsignedBigInteger('center_id');
