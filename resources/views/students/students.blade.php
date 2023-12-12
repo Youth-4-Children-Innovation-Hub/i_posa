@@ -12,7 +12,7 @@
                 <li class="breadcrumb-item active">Students</li>
                 <li class="mx-3 py-0">
                     <div class="search mx-auto">
-                        <form action="" method="GET">
+                        <form action="{{ url('/search_student') }}" method="GET">
                             @csrf
                             <input id="search_text" type="text" placeholder="Search" name="search_querry">
                             <button type="submit">

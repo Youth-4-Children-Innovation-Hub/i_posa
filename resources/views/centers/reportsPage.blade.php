@@ -7,9 +7,13 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="">Home</a></li>
                 <li class="breadcrumb-item active">reports</li>
-                <li>
+                <!-- <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Upload report</button>
+                </li> -->
+                <li>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
+                        data-bs-target="#CreateModal">Write report</button>
                 </li>
             </ol>
         </nav>
@@ -89,8 +93,8 @@
                         class="btn btn-outline-primary btn-sm delBtn">Download</button> -->
                         <a href="{{ url('/download',$reports->report_name) }}" class="btn btn-outline-primary btn-sm">Download</a>
                        
-                    <button type="button" value="{{ $reports->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                    <!-- <button type="button" value="{{ $reports->id }}"
+                        class="btn btn-outline-danger btn-sm delBtn">Delete</button> -->
                 </td>
                 @endcanany
             </tr>
@@ -105,8 +109,8 @@
     @endcanany
     
  
-
-      <div class="modal fade" id="CreateModal" tabindex="-1">
+<!-- upload report modal-->
+      <!-- <div class="modal fade" id="CreateModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -134,11 +138,68 @@
                         <button type="submit" class="btn btn-primary">Upload </button>
 
                     </div>
+                </form> -->
+                <!-- End General Form Elements -->
+
+            </div>
+        </div>
+    </div><!-- End of model upload report-->
+    <!-- upload report modal-->
+    <div class="modal fade" id="CreateModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="{{ url('send_report') }}" enctype="multipart/form-data">
+                    @csrf
+                <div class="modal-body">
+                <div class="row mb-3">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-10">
+                    <input type="text" name="title" class="form-control" id="inputEmail">
+                    </div>
+                    </div>
+                       
+                    <div class="row mb-3">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Total number of students</label>
+                    <div class="col-sm-10">
+                    <input type="number" name="students" class="form-control" id="inputEmail">
+                    </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Total number of courses</label>
+                    <div class="col-sm-10">
+                    <input type="number" name="courses" class="form-control" id="inputEmail">
+                    </div>
+                    </div>
+
+                    <div class="row mb-3">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Textarea</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" name="description" style="height: 100px"></textarea>
+                    </div>
+                    </div>
+
+                    <div class="row mb-3">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Attachment</label>
+                    <div class="col-sm-10">
+                    <input type="file" id="file" name="file" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png">
+                    </div>
+                    </div>
+                </div>
+                    <div class="modal-footer">
+                        
+                        <button type="submit" class="btn btn-primary">submit</button>
+
+                    </div>
                 </form><!-- End General Form Elements -->
 
             </div>
         </div>
-    </div><!-- End of model add student-->
+    </div><!-- End of model upload report-->
 
 @endsection
 

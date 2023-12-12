@@ -23,12 +23,10 @@ class CourseController extends Controller
         $centers = Center::all();
         $userData = Auth::user();
 
-        $centercourses = CourseCenter::select('course_centers.id', 'courses.name AS course', 'teachers.name AS teacher', 'centers.name AS center')
-            ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
-            ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
-            ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
-            ->orderBy('course_centers.created_at', 'DESC')
-            ->get();
+        // $centercourses = Cours::select('course_centers.id', 'courses.name AS course')
+        //     ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+        //     ->orderBy('courses.created_at', 'DESC')
+        //     ->get();
             
             //for the head of center
 
@@ -46,7 +44,6 @@ class CourseController extends Controller
                 'teachers' => $teachers,
                 'courses' => $courses,
                 'centers' => $centers,
-                'centercourses' => $centercourses,
                 'centercourses1' => $centercourses1,
                 'userData' =>   $userData
             ]
@@ -171,6 +168,19 @@ class CourseController extends Controller
         return response()->json(['status' => false]);
 
     }
+
+    public function deleteCourseAdmin(Request $request)
+    {
+        $course = Course::find($request->id);
+
+        if($course->delete()){
+            return response()->json(['status' => true]);
+        }
+
+        return response()->json(['status' => false]);
+
+    }
+
 
     public function editCourse($id)
     {

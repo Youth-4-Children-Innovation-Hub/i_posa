@@ -80,8 +80,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Course</th>
-                <th scope="col">Teacher</th>
-                <th scope="col">Center</th>
+              
                 @can('is_hoc')
 
                 <th scope="col">Action</th>
@@ -89,18 +88,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($centercourses as $key => $centercourses)
+            @foreach ($courses as $key => $course)
             <tr>
                 <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $centercourses->course }}</td>
-                <td>{{ $centercourses->teacher }}</td>
-                <td>{{ $centercourses->center }}</td>
+                <td>{{ $course->name }}</td>
+                
                 @can('is_hoc')
                 <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
-                        value="{{ $centercourses->id }}" data-bs-toggle="modal"
+                        value="{{ $course->id }}" data-bs-toggle="modal"
                         data-bs-target="#EditNewCenterCourseModal">Update</button>
-                    <button type="button" value="{{ $centercourses->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                    <button type="button" value="{{ $course->id }}"
+                        class="btn btn-outline-danger btn-sm delBtnAdmin">Delete</button>
                 </td>
                 @endcan
             </tr>
@@ -391,6 +389,37 @@ $('.delBtn').on('click', function() {
         $.ajax({
             type: 'POST',
             url: '/delete_course_center',
+            data: {
+                id: course
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+            }
+        });
+    } else {
+        //canceled
+    }
+});
+
+$('.delBtnAdmin').on('click', function() {
+    var confirmation = confirm('Are you sure you want to delete this course?');
+    if (confirmation) {
+        // delete it
+        var course = $(this).val();
+        console.log(course);
+
+        $.ajax({
+            type: 'POST',
+            url: '/delete_course_admin',
             data: {
                 id: course
             },
