@@ -12,7 +12,7 @@
                 <li class="breadcrumb-item active">Students</li>
                 <li class="mx-3 py-0">
                     <div class="search mx-auto">
-                        <form action="" method="GET">
+                        <form action="{{ url('/search_student') }}" method="GET">
                             @csrf
                             <input id="search_text" type="text" placeholder="Search" name="search_querry">
                             <button type="submit">
@@ -86,6 +86,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Phone number</th>
                 <th scope="col">Gender</th>
+                <th scope="col">Disability</th>
                 <th scope="col">Center</th>
                 <th scope="col">Status</th>
                 @can('is_hoc')
@@ -101,10 +102,21 @@
                 <td>{{ $student->name }}</td>
                 <td>{{ $student->phone_number }}</td>
                 <td>{{ $student->gender }}</td>
+                <td>{{ $student->disability }}</td>
                 <td>{{ $student->center }}</td>
+                @if( $student->status == 'continous' )
                 <td><span
                         class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $student->status }}</span>
                 </td>
+                @elseif( $student->status == 'Graduate' )
+                <td><span
+                        class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $student->status }}</span>
+                </td>
+                @else
+                <td><span
+                class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $student->status }}</span>
+                </td>
+                @endif
 
                 @can('is_hoc')
 
@@ -120,6 +132,8 @@
         </tbody>
     </table>
     @endcan
+
+    
     
     @can('is_hoc')
     @cannot('is_admin')
@@ -131,11 +145,9 @@
                 <th scope="col">Course</th>
                 <th scope="col">Phone number</th>
                 <th scope="col">Gender</th>
+                <th scope="col">Disability</th>
                 <th scope="col">Status</th>
-                @can('is_hoc')
-
                 <th scope="col">Action</th>
-                @endcan
             </tr>
         </thead>
         <tbody>
@@ -146,10 +158,25 @@
                 <td>{{ $students1->course1 }}</td>
                 <td>{{ $students1->phone_number1 }}</td>
                 <td>{{ $students1->gender1 }}</td>
+                @if( $students1->disability1 == NULL)
+                <td>None</td>
+                @else
+                <td>{{ $students1->disability1}}</td>
+                @endif
+
+                @if( $students1->status1 == 'continous' )
                 <td><span
                         class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $students1->status1 }}</span>
                 </td>
-
+                @elseif( $students1->status1 == 'Graduate' )
+                <td><span
+                        class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $students1->status1 }}</span>
+                </td>
+                @else
+                <td><span
+                class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $students1->status1 }}</span>
+                </td>
+                @endif
                 @can('is_hoc')
 
                 <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"
@@ -217,6 +244,13 @@
                                             <option value="F">Female</option>
                                             <option value="M">Male</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Disability</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="disability">
                                     </div>
                                 </div>
 
@@ -371,6 +405,18 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">Status</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" aria-label="Default select example" name="status"
+                                            id="gender" required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Graduate">Graduate</option>
+                                            <option value="Dropout">dropout</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="row mb-3">
                                     <label for="inputNumber" class="col-sm-2 col-form-label">Passport</label>
                                     <div class="col-sm-10">

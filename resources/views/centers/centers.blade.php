@@ -11,7 +11,7 @@
 
                     <li class="mx-3 py-0">
                         <div class="search mx-auto">
-                            <form action="{{ url('/search_district') }}" method="GET">
+                            <form action="{{ url('/search_center') }}" method="GET">
                                 <input id="search_text" type="text" placeholder="Search" name="search_querry">
                                 <button type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"

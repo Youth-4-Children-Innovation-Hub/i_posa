@@ -41,13 +41,13 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('is_hoc', function (User $user) {
-            return $user->role_id == 3 ;
-        });
-        Gate::define('is_user', function (User $user) {
             return $user->role_id == 4 ;
         });
+        Gate::define('is_user', function (User $user) {
+            return $user->role_id == 5 ;
+        });
         Gate::define('is_dist_cordinator', function (User $user) {
-            return $user->role_id == 13 ;
+            return $user->role_id == 3 ;
         });
     }
 }

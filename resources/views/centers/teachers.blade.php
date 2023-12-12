@@ -51,12 +51,12 @@
                     </div>
                 </li>
 
-                @can('is_reg_cordinator')
+              
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Teacher</button>
                 </li>
-                @endcan
+                
 
             </ol>
         </nav>
@@ -107,7 +107,6 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
-                <th scope="col">Course</th>
                 <th scope="col">Email</th
                 <th scope="col">Phone number</th>
                 @can('is_hoc')
@@ -116,18 +115,17 @@
                 @endcan
             </tr>
         <tbody>
-            @foreach ($teachers1 as $key => $teachers1)
+            @foreach ($teachers as $key => $teachers)
             <tr>
                 <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $teachers1->name1 }}</td>
-                <td>{{ $teachers1->course1 }}</td>
-                <td>{{ $teachers1->email1 }}</td>
-                <td>{{ $teachers1->phone_number1 }}</td>
+                <td>{{ $teachers->name }}</td>
+                <td>{{ $teachers->email }}</td>
+                <td>{{ $teachers->phone_number }}</td>
                 @can('is_hoc')
 
-                <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers1->id }}"
+                <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers->id }}"
                         class="btn btn-outline-primary btn-sm editBtn">Update</button>
-                    <button type="button" value="{{ $teachers1->id }}"
+                    <button type="button" value="{{ $teachers->id }}"
                         class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                 </td>
 

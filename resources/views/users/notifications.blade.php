@@ -10,7 +10,7 @@
             </ol>
         </nav>
     </div>
-    @foreach(auth()->user()->notifications as $notifications)
+    <!-- @foreach(auth()->user()->notifications as $notifications)
     @if(!$notifications->read_at)
     <div class="alert alert-info  alert-dismissible fade show" role="alert">
                 <h4 class="alert-heading">Info Heading</h4>
@@ -20,7 +20,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
-    @endforeach
+    @endforeach -->
 
        <!-- Recent Sales -->
        <div class="col-12">

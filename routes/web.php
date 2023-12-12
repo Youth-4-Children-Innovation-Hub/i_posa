@@ -18,6 +18,7 @@ use App\Models\Teacher;
 use App\Http\Controllers\reportController;
 use App\Models\Report;
 use App\Http\Controllers\ForgetPasswordManager;
+use App\Models\Newrepport;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
@@ -33,9 +34,17 @@ use App\Http\Controllers\ForgetPasswordManager;
 |
 */
 
+// Route::get('/', function () {
+//     return view('auth/login');
+// });
 Route::get('/', function () {
+    return view('landing');
+});
+
+Route::get('log-in', function () {
     return view('auth/login');
 });
+
 Auth::routes();
 
 Route::middleware(['auth'])->group(function(){
@@ -73,6 +82,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('edit_center/{id}', [CenterController::class, 'edit']);
     Route::post('update_center', [CenterController::class, 'update_center'])->name('update_center');
     Route::post('delete_center', [CenterController::class, 'delete'])->name('delete_center');
+
     
     Route::get('courses',[CourseController::class,'GetCenterCourses']);
     Route::post('/addcourse',[CourseController::class,'Create'])->name('create_course');
@@ -80,7 +90,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('edit_course/{id}', [CourseController::class, 'editCourse']);
     Route::post('update_course', [CourseController::class, 'updateCourse'])->name('update_course');
     Route::post('delete_course_center', [CourseController::class, 'deleteCourse'])->name('delete_course_center');
-   Route::get('search_course',[CourseController::class,'Search']);
+    Route::post('delete_course_admin',[CourseController::class,'deleteCourseAdmin'])->name('delete_course_admin');
+    Route::get('search_course',[CourseController::class,'Search']);
     
     
     Route::get('teachers',[TeachersController::class,'GetTeachers']);
@@ -125,4 +136,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/view/{id}', [reportController::class, 'view']);
     Route::post('delete_report', [reportController::class, 'delete'])->name('delete_report');
     Route::get('/notifications', [reportController::class, 'getNotifications']);
+
+    Route::post('/send_report', [reportController::class, 'send']);
+    Route::post('/approve_report', [reportController::class, 'approve']);
+    Route::get('/pdf', [reportController::class, 'getPdf']);
+
+    // pdf testing
+    Route::get('/ripoti', function () {
+        return view('report.reportPdf');
+    });
+
 });

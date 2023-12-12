@@ -31,7 +31,7 @@ class StudentController extends Controller
 
         $centers = Center::all();
         $regions = Region::all();
-        $students = Student::select('students.id', 'students.status', 'students.phone_number', 'students.name AS name', 'students.gender', 'students.profile_picture', 'centers.name AS center')
+        $students = Student::select('students.id', 'students.disability as disability', 'students.status', 'students.phone_number', 'students.name AS name', 'students.gender', 'students.profile_picture', 'centers.name AS center')
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
             ->orderBy('students.created_at','DESC')
             ->paginate(100);
@@ -40,8 +40,7 @@ class StudentController extends Controller
         $center1 = Center::select('centers.name AS centerName1', 'centers.id AS id')
             ->where('hod_id', '=', $userData->id)
             ->get();
-        $regions = Region::all();
-        $students1 = Student::select('students.id AS id', 'students.status AS status1', 'students.phone_number AS phone_number1',
+            $students1 = Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
          'students.name AS name1', 'students.gender AS gender1', 'courses.name AS course1')
             ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id') 
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
@@ -49,6 +48,15 @@ class StudentController extends Controller
             ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
             ->where('users.id', '=', $userData->id)
             ->get();
+        // $regions = Region::all();
+        // $students1 = Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
+        //  'students.name AS name1', 'students.gender AS gender1', 'courses.name AS course1')
+        //     ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id') 
+        //     ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+        //     ->leftJoin('users', 'users.id', '=', 'hod_id')
+        //     ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
+        //     ->where('users.id', '=', $userData->id)
+        //     ->get();
         
 
       
@@ -117,6 +125,7 @@ class StudentController extends Controller
             $student->name = $request->name;
             $student->phone_number = $request->phone_number;
             $student->gender = $request->gender;
+            $student->disability = $request->disability;
             $student->email = "";
             $student->status = "continous";
             $student->date_of_birth = $request->dob;
@@ -151,7 +160,7 @@ class StudentController extends Controller
             $student->phone_number = $request->phone_number;
             $student->gender = $request->gender;
             $student->email = "";
-            $student->status = "continous";
+            $student->status = $request->status;
             $student->date_of_birth = $request->dob;
             $student->center_id = $request->center;
 
@@ -166,7 +175,8 @@ class StudentController extends Controller
                     $student_courses->student_id = $student_id->id;
                     $student_courses->course_id = $request->course_id[$i];
                     $student_courses->state = "not complete";
-                    $student_courses->save();
+                    DB::update('update student_courses set course_id = ? where student_id = ?' ,[$request->course_id[$i], $student_id->id]);
+                    // $student_courses->save();
                 }
             }
             return redirect('students')->with('success', 'User added successfully.');
@@ -199,5 +209,51 @@ class StudentController extends Controller
             return response()->json(['status' => true]);
         }
         return response()->json(['status' => false]);
+    }
+
+    public function Search()
+    {
+        $querry = $_GET['search_querry'];
+        if ($querry != null) {
+
+            $userData = auth()->user();
+        $courses = Course::all();
+        $id = $userData->id;
+        $userRole = DB::table('users')
+            ->join('roles', 'users.role_id', '=', 'roles.id')
+            ->where('users.id', $id)
+            ->select('roles.role')
+            ->first();
+
+        $centers = Center::all();
+        $regions = Region::all();
+        $students = Student::select('students.id', 'students.disability as disability', 'students.status', 'students.phone_number', 'students.name AS name', 'students.gender', 'students.profile_picture', 'centers.name AS center')
+            ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+            ->orderBy('students.created_at','DESC')
+            ->paginate(100);
+        //for the head of center
+
+        $center1 = Center::select('centers.name AS centerName1', 'centers.id AS id')
+            ->where('hod_id', '=', $userData->id)
+            ->get();
+        $regions = Region::all();
+        $students1 = Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
+         'students.name AS name1', 'students.gender AS gender1', 'courses.name AS course1')
+            ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id') 
+            ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+            ->leftJoin('users', 'users.id', '=', 'hod_id')
+            ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
+            ->where('users.id', '=', $userData->id)
+            ->where('students.disability', 'LIKE', '%' . $querry . '%')
+            ->orWhere('students.status', 'LIKE', '%' . $querry . '%')
+            ->orWhere('students.name', 'LIKE', '%' . $querry . '%')
+            ->orWhere('students.gender', 'LIKE', '%' . $querry . '%')
+            ->orWhere('courses.name', 'LIKE', '%' . $querry . '%')
+            ->get();
+            
+            return view('students.students', ['centers' => $centers, 'center1' => $center1, 'students1' => $students1, 'regions' => $regions, 'students' => $students, 'userData' => $userData, 'userRole' => $userRole, 'courses' => $courses]);
+        } else {
+            return redirect('students');
+        }
     }
 }
