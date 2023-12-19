@@ -72,8 +72,8 @@ class StudentController extends Controller
             'letter' => 'required|mimes:pdf',
             'birth_certificate' => 'required|mimes:pdf',
             'gender' => 'required',
-            'course_id' => 'required',
-            'center' => 'required'
+            'course_id' => 'required'
+            // 'center' => 'required'
         ];
 
         $messages = [
@@ -83,8 +83,8 @@ class StudentController extends Controller
             'birth_certificate.required' => 'Please upload the birth certificate',
             'birth_certificate.pdf' => 'The selected certificate must be a pdf',
             'gender.required' => 'Select the Gender',
-            'region.required' => 'Select the Region',
-            'center.required' => 'Select the Center'
+            'region.required' => 'Select the Region'
+            // 'center.required' => 'Select the Center'
 
         ];
 
@@ -121,18 +121,22 @@ class StudentController extends Controller
         $path_certificate = $request->file('birth_certificate')->storeAs($destination_certificates, $request->file('birth_certificate')->getClientOriginalName());
 
         try {
+            $centerId = Center::Select('id')->where('hod_id', Auth::user()->id)->value('id');
             $student = new Student();
             $student->name = $request->name;
-            $student->phone_number = $request->phone_number;
+            $student->parent = $request->parent;
+            $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;
             $student->disability = $request->disability;
-            $student->email = "";
-            $student->status = "continous";
-            $student->date_of_birth = $request->dob;
-            $student->center_id = $request->center;
+            $student->phone_number = $request->phone_number;
+            $student->email = "";   
+            $student->center_id = $centerId;
             $student->profile_picture = Storage::path($path_passport);
-            $student->letter = Storage::path($path_letter);
             $student->birth_certificate = Storage::path($path_certificate);
+            $student->letter = Storage::path($path_letter);
+            $student->status = "continous";
+            $student->term = $request->term;
+            $student->stage = $request->stage;
             $student->save();
             $student_id = Student::select('id')
                 ->where('name', $request->name)
@@ -202,7 +206,7 @@ class StudentController extends Controller
 
     public function delete(Request $request)
     {
-
+        StudentCourses::where('student_id', $request->id)->delete();
         $student = Student::find($request->id);
 
         if($student->delete()){

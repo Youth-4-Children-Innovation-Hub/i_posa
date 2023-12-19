@@ -219,6 +219,13 @@
                                 </div>
 
                                 <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Parent/Guardian's Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="parent" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
                                     <div class="col-sm-10">
                                         <input type="tel" class="form-control" name="phone_number" required>
@@ -231,6 +238,32 @@
                                     <label for="inputDate" class="col-sm-2 col-form-label">Date of birth</label>
                                     <div class="col-sm-10">
                                         <input type="date" class="form-control" name="dob">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="inputDate" class="col-sm-2 col-form-label">Term</label>
+                                    <div class="col-sm-10">
+                                    <select class="form-select" aria-label="Default select example" name="term"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Short term">short term</option>
+                                            <option value="Long term">Long term</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="inputDate" class="col-sm-2 col-form-label">Stage</label>
+                                    <div class="col-sm-10">
+                                    <select class="form-select" aria-label="Default select example" name="stage"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Stage 1">Stage 1 </option>
+                                            <option value="Stage 2">Stage 2</option>
+                                            <option value="Stage 3">Stage 3</option>
+                                            <option value="Stage 4">Stage 4</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -254,7 +287,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-3">
+                                <!-- <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Center</label>
                                     <div class="col-sm-10">
                                         <select class="selectpicker" aria-label="Default select example" name="center"
@@ -277,7 +310,7 @@
 
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="row mb-3">
                                     <label for="inputNumber" class="col-sm-2 col-form-label">Courses</label>

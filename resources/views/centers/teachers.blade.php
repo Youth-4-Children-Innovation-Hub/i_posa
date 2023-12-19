@@ -162,6 +162,34 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Gender</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" aria-label="Default select example" name="gender"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="F">Female</option>
+                                            <option value="M">Male</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Qualification</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="qualification" id="name" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Attended ANFE</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" aria-label="Default select example" name="anfe"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
                                         <input type="email" class="form-control" name="email" required>
@@ -178,16 +206,16 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">update </button>
+                        <button type="submit" class="btn btn-primary">Add </button>
                     </div>
                 </form><!-- End General Form Elements -->
             </div>
         </div>
-    </div><!-- End of model add new  course-->
+    </div>
 
     <!-- Add new teacher model -->
 
-    <!-- add new teacher -->
+    <!-- update teacher -->
     <div class="modal fade" id="EditModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -233,7 +261,7 @@
         </div>
     </div><!-- End of model add new  course-->
 
-    <!-- Add new teacher model -->
+    <!-- update teacher model -->
 
 
 </div>

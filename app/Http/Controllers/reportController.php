@@ -119,15 +119,31 @@ class reportController extends Controller
             'centers.name as center_name',
             DB::raw('(SELECT COUNT(*) FROM centers WHERE centers.district_id = districts.id) as center_count'),
             DB::raw('(SELECT COUNT(*) FROM districts WHERE districts.region_id = regions.id) as district_count'),
-            DB::raw('(SELECT COUNT(*) FROM centers WHERE centers.district_id IN (SELECT id FROM districts WHERE districts.region_id = regions.id)) as total_center_count')
+            DB::raw('(SELECT COUNT(*) FROM centers WHERE centers.district_id IN (SELECT id FROM districts WHERE districts.region_id = regions.id)) as total_center_count'),
+            DB::raw('(SELECT COUNT(*) FROM students WHERE students.center_id = centers.id AND students.gender = "M") as total_male_students'),
+            DB::raw('(SELECT COUNT(*) FROM students WHERE students.center_id = centers.id AND students.gender = "F") as total_female_students')
             
         )
             ->leftJoin('districts', 'districts.region_id', '=', 'regions.id')
             ->leftJoin('centers', 'centers.district_id', '=', 'districts.id')
             ->orderBy('regions.name')
             ->get();
+
+            $learners_training = Region::select(
+                'regions.name as reg_name',
+                'districts.name as dist_name',
+                'centers.name as center_name',
+                DB::raw('(SELECT COUNT(*) FROM centers WHERE centers.district_id = districts.id) as center_count'),
+                DB::raw('(SELECT COUNT(*) FROM students WHERE students.center_id = centers.id) as total_learners'),
+                DB::raw('(SELECT COUNT(*) FROM students WHERE students.center_id = centers.id AND students.term = "Long term") as long_term_count'),
+                DB::raw('(SELECT COUNT(*) FROM students WHERE students.center_id = centers.id AND students.term = "Short term") as short_term_count'),
+                )
+                ->leftJoin('districts', 'districts.region_id', '=', 'regions.id')
+                ->leftJoin('centers', 'centers.district_id', '=', 'districts.id')
+                ->orderBy('regions.name')
+                ->get();
         $title = "IPOSA implementation report";
-        $pdf = Pdf::loadView('report.reportPdf', ['title' => $title, 'center_distribution' => $center_distribution]);
+        $pdf = Pdf::loadView('report.reportPdf', ['title' => $title, 'center_distribution' => $center_distribution, 'learners_training' => $learners_training]);
         return $pdf->download($title);
      
     }
