@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\password;
+use App\Mail\HelloMail;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
@@ -90,22 +91,28 @@ class UserController extends Controller
     {
 
         try {
+            $name1 = $request->name;
+            $nameArray = explode(' ', $name1);
+            $firstName = $nameArray[0];
 
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $generated_password = Hash::make($request->name . "123");
-            $user->password = $generated_password;
-            $user->role_id = $request->input('role');
-            $user->save();
             try {
                 Mail::to($request->email)
-                    ->send(new password($request->name . "123", $request->name));
-                // ->send(new password());
+                    ->send(new HelloMail($firstName . 123456, $request->name));
+                    $user = new User();
+                    $user->name = $request->name;
+                    $user->email = $request->email;
+                    $generated_password = ($firstName . 123456);
+                    $user->password = Hash::make($generated_password);
+                    $user->role_id = $request->input('role');
+                    $user->save();
                 return redirect('users')->with('success', 'User added successfully.');
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
+
+            
+
+            
         } catch (\Exception $e) {
             return $e->getMessage();
         }
