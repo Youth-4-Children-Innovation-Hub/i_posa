@@ -241,22 +241,6 @@
                                     </div>
                                 </div>
 
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Center</label>
-                                    <div class="col-sm-10">
-                                        <select class="selectpicker" aria-label="Default select example"
-                                            name="center_id" required data-width=100% data-live-search="true">
-                                            <option selected="selected" hidden="hidden" value="">Open this
-                                                select menu
-                                            </option>
-                                            @foreach ($centers as $center)
-                                            <option value="{{ $center->id }}">{{ $center->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
 

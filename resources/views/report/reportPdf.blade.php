@@ -66,8 +66,8 @@
                     <td>{{ $distribution->dist_name }}</td>
                     @php $currentDistrict = $distribution->dist_name; @endphp
                 <td>{{ $distribution->center_count }}</td>
-                <td">jkdjf</td>
-                <td>jo</td>
+                <td">{{ $distribution->total_male_students }}</td>
+                <td>{{ $distribution->total_female_students }}</td>
                 @endif
             </tr>
         @endforeach
@@ -94,26 +94,35 @@
                
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>dar es salaam</td>
-                    <td>ilala</td>
-                    <td>ilala</td>
+            @php
+                $rowNumber = 1;
+                $currentRegion = null;
+                $currentDistrict = null;
+            @endphp
+            @foreach ($learners_training as $learners_training)
+                @if($currentRegion != $learners_training->reg_name)
+                    <tr>
+                        <td rowspan="{{ $learners_training->center_count }}">{{ $rowNumber }}</td>
+                        <td rowspan="{{ $learners_training->center_count }}">{{ $learners_training->reg_name }}</td>
+                        @php
+                            $currentRegion = $learners_training->reg_name;
+                            $rowNumber = $rowNumber + 1;
+                        @endphp
+                @endif
+
+                @if ($currentDistrict != $learners_training->dist_name)
+                    <td rowspan="{{ $learners_training->center_count }}">{{ $learners_training->dist_name }}</td>
+                    @php
+                        $currentDistrict = $learners_training->dist_name;
+                    @endphp
+              
+                    <td>{{ $learners_training->center_name }}</td>
                     <td>100</td>
                     <td>100</td>
                     <td>100</td>
-                    
+                @endif    
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>mbeya</td>
-                    <td>momba</td>
-                    <td>momba center</td>
-                    <td>100</td>
-                    <td>100</td>
-                    <td>100</td>
-                    
-                </tr>
+            @endforeach    
             </tbody>
         </table>
     </center>

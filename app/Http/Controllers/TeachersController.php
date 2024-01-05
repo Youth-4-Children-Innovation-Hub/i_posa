@@ -37,6 +37,9 @@ class TeachersController extends Controller
         try {
             $teacher = new Teacher();
             $teacher->name = $request->name;
+            $teacher->gender = $request->gender;
+            $teacher->qualification = $request->qualification;
+            $teacher->ANFE_training = $request->anfe;
             $teacher->email = $request->email;
             $teacher->phone_number = $request->phone_number;
             $teacher->created_by = Auth::user()->id;

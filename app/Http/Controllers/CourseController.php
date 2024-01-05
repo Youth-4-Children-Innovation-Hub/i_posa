@@ -52,10 +52,11 @@ class CourseController extends Controller
     public function Create(Request $request)
     {
         try {
+            $centerId = Center::Select('id')->where('hod_id', Auth::user()->id)->value('id');
             $coursecenter = new CourseCenter();
             $coursecenter->course_id = $request->course_id;
             $coursecenter->teacher_id = $request->teacher_id;
-            $coursecenter->center_id = $request->center_id;
+            $coursecenter->center_id = $centerId;
             $coursecenter->save();
             return redirect('courses');
         } catch (Exception $e) {
