@@ -19,6 +19,7 @@ use App\Http\Controllers\reportController;
 use App\Models\Report;
 use App\Http\Controllers\ForgetPasswordManager;
 use App\Models\Newrepport;
+use Illuminate\Support\Facades\Mail;
 
 //use C:\xampp\htdocs\i_posa\iposa\app\Http\Controllers\UserController.php
 
