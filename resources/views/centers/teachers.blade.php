@@ -10,7 +10,7 @@
 
                 <li class="mx-3 py-0">
                     <div class="search mx-auto">
-                        <form action="{{ url('/search_district') }}" method="GET">
+                        <form action="{{ url('/search_teacher') }}" method="GET">
                             <input id="search_text" type="text" placeholder="Search" name="search_querry">
                             <button type="submit">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -107,25 +107,23 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th
+                <th scope="col">Email</th>
                 <th scope="col">Phone number</th>
-                @can('is_hoc')
-
                 <th scope="col">Action</th>
-                @endcan
+                
             </tr>
         <tbody>
-            @foreach ($teachers as $key => $teachers)
+            @foreach ($teachers1 as $key => $teachers1)
             <tr>
                 <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $teachers->name }}</td>
-                <td>{{ $teachers->email }}</td>
-                <td>{{ $teachers->phone_number }}</td>
+                <td>{{ $teachers1->name1 }}</td>
+                <td>{{ $teachers1->email1 }}</td>
+                <td>{{ $teachers1->phone_number1 }}</td>
                 @can('is_hoc')
 
-                <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers->id }}"
+                <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers1->id }}"
                         class="btn btn-outline-primary btn-sm editBtn">Update</button>
-                    <button type="button" value="{{ $teachers->id }}"
+                    <button type="button" value="{{ $teachers1->id }}"
                         class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                 </td>
 

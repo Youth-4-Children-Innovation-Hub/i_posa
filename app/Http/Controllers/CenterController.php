@@ -86,4 +86,36 @@ class CenterController extends Controller
         }
         return response()->json(['status' => false]);
     }
+
+    public function Search()
+    {
+        $querry = $_GET['search_querry'];
+
+        if ($querry != null) {
+        $roleId = DB::table('roles')->where('role', 'head of center')->value('id');
+        $hods = User::where('role_id', $roleId)->get();
+        $districts = District::all();
+        $userData = auth()->user();
+        $id = $userData->id;
+        $userRole = DB::table('users')
+            ->join('roles', 'users.role_id', '=', 'roles.id')
+            ->where('users.id', $id)
+            ->select('roles.role')
+            ->first();
+
+        $centers = Center::select('centers.id AS id', 'centers.name', 'regions.name AS region', 'users.name AS hod', 'districts.name AS district')
+            ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+            ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
+            ->leftJoin('regions', 'regions.id', '=', 'districts.region_id')
+            ->where('centers.name', 'LIKE', '%' . $querry . '%')
+            ->orWhere('regions.name', 'LIKE', '%' . $querry . '%')
+            ->orWhere('users.name', 'LIKE', '%' . $querry . '%')
+            ->orWhere('districts.name', 'LIKE', '%' . $querry . '%')
+            ->orderBy('centers.created_at', 'DESC')
+            ->paginate(10);
+        return view('centers.centers', ['heads' => $hods, 'districts' => $districts, 'centers' => $centers, 'userData' => $userData, 'userRole' => $userRole]);
+        } else {
+            return redirect('centers');
+        }
+    }
 }

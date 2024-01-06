@@ -21,13 +21,13 @@ class TeachersController extends Controller
          //for the head of center
 
          $teachers1 = CourseCenter::select('course_centers.id AS id', 'teachers.name AS name1', 'courses.name AS course1', 'teachers.email AS email1', 'teachers.phone_number AS phone_number1')
-            ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
-            ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
-            ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
-            ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
-            ->where('users.id', '=', $userData->id)
-            ->get();    
-        return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData, 'teachers1' => $teachers1]);
+         ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+         ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+         ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+         ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
+         ->where('users.id', '=', $userData->id)
+         ->get();    
+     return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData, 'teachers1' => $teachers1]);
 
        
     }
@@ -87,5 +87,26 @@ class TeachersController extends Controller
         return response()->json(['status' => false]);
 
 
+    }
+
+    public function Search()
+    {
+        $querry = $_GET['search_querry'];
+        if ($querry != null) {
+            $userData = auth()->user();
+            $teachers1 = CourseCenter::select('course_centers.id AS id', 'teachers.name AS name1', 'courses.name AS course1', 'teachers.email AS email1', 'teachers.phone_number AS phone_number1')
+            ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+            ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+            ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+            ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
+            ->where('users.id', '=', $userData->id)
+            ->where('teachers.email', 'LIKE', '%' . $querry . '%')
+            ->orWhere('courses.name', 'LIKE', '%' . $querry . '%')
+            ->orWhere('teachers.name', 'LIKE', '%' . $querry . '%')
+            ->get();    
+            return view('centers.teachers', ['teachers1' => $teachers1]);
+        } else {
+            return redirect('teachers');
+        }
     }
 }
