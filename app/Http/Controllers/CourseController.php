@@ -192,4 +192,48 @@ class CourseController extends Controller
         ]);
 
     }
+
+    public function Search()
+    {
+        $querry = $_GET['search_querry'];
+        if ($querry != null) {
+            $courses = Course::all();
+            $teachers = Teacher::all();
+            $centers = Center::all();
+            $userData = Auth::user();
+    
+            $centercourses = CourseCenter::select('course_centers.id', 'courses.name AS course', 'teachers.name AS teacher', 'centers.name AS center')
+                ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+                ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+                ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+                ->orderBy('course_centers.created_at', 'DESC')
+                ->get();
+                
+                //for the head of center
+    
+            $centercourses1 = CourseCenter::select('courses.name AS course1', 'teachers.name AS teacher1', 'course_centers.id AS id')
+                ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+                ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
+                ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+                ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
+                ->where('users.id', '=', $userData->id)
+                ->where('courses.name', 'LIKE', '%' . $querry . '%')
+                ->orWhere('teachers.name', 'LIKE', '%' . $querry . '%')
+                ->get();
+                
+            return view(
+                'courses.courses',
+                [
+                    'teachers' => $teachers,
+                    'courses' => $courses,
+                    'centers' => $centers,
+                    'centercourses' => $centercourses,
+                    'centercourses1' => $centercourses1,
+                    'userData' =>   $userData
+                ]
+            );
+        } else {
+            return redirect('courses');
+        }
+    }
 }

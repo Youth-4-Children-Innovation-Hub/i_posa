@@ -84,6 +84,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('edit_center/{id}', [CenterController::class, 'edit']);
     Route::post('update_center', [CenterController::class, 'update_center'])->name('update_center');
     Route::post('delete_center', [CenterController::class, 'delete'])->name('delete_center');
+    Route::get('search_center',[CenterController::class,'Search']);
 
     
     Route::get('courses',[CourseController::class,'GetCenterCourses']);
