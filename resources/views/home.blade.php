@@ -359,32 +359,32 @@
         <!-- End Forms Nav -->
             @can('is_hoc')
             @cannot('is_admin')
-            <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/centers') }}">
-                    <i class="ri-home-2-fill"></i>
-                        <span>Center</span>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/students') }}">
+                    <i class="bi bi-person-lines-fill"></i>
+                        <span>students</span>
                     </a>
                 </li>
+           
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/courses') }}">
                     <i class="ri-pencil-fill"></i>
                         <span>Courses</span>
                     </a>
-                </li><li class="nav-item">
+                </li>
+                <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/teachers') }}">
                     <i class="bi bi-file-person-fill"></i>
                         <span>Teachers</span>
                     </a>
-                </li><li class="nav-item">
+                </li>
+                <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/inventory') }}">
                     <i class="bi bi-file-ruled-fill"></i>
                         <span>Inventory list</span>
                     </a>
-                </li><li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/students') }}">
-                    <i class="bi bi-person-lines-fill"></i>
-                        <span>students</span>
-                    </a>
+                </li>
+                
             @endcannot
             @endcan      
            

@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\Center;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\CourseCenter;
 use Faker\Core\DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,22 @@ class DashboardController extends Controller
         $ageDistribution = DashboardController::getAgeDistribution();
         $coursesDistribution = DashboardController::getCourseDistribution();
         $centersDistribution = DashboardController::getCentersDistribution();
+
+        $studentsCount1 = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->count();
+
+        $coursesCount1 = CourseCenter::select('id')
+        ->join('centers', 'course_centers.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->count();
+
+        $teachersCount1 = Teacher::select('id')
+        ->where('created_by', '=', Auth::user()->id)
+        ->count();
+           
+           
         return view('dashboard.dashboard',
             compact(
                 'userData',
@@ -34,7 +51,10 @@ class DashboardController extends Controller
                 'regionDistribution',
                 'ageDistribution',
                 'coursesDistribution',
-                'centersDistribution'
+                'centersDistribution',
+                'studentsCount1',
+                'coursesCount1',
+                'teachersCount1'
             ));
     }
 
@@ -123,6 +143,7 @@ class DashboardController extends Controller
     }
 
     public static function getCourseDistribution(){
+        $user_id = Auth::user()->id;
         $courses = DB::select(
             "
                     SELECT
@@ -131,11 +152,16 @@ class DashboardController extends Controller
                         count(courses.id) AS students_count
                     FROM
                         courses
-                        LEFT JOIN student_courses ON courses.id = student_courses.course_id
+                        INNER JOIN student_courses ON courses.id = student_courses.course_id
+                        INNER JOIN course_centers ON courses.id = course_centers.course_id
+                        INNER JOIN centers ON course_centers.center_id = centers.id
+                    WHERE
+                        centers.hod_id = :user_id
                     GROUP BY
                         courses.id,
                         courses.name
-            "
+            ",
+            ['user_id' => $user_id]
         );
 
         return $courses;

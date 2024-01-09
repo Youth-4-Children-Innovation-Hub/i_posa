@@ -2,16 +2,27 @@
 @section('contente')
 
     <section class="section">
-        <div class="card" id="dashboard-summary">
+        <div class="card" id="dashboard-summary" style="grid-template-columns: repeat(3,1fr);">
+            <div class="summary-card">
+                <div>
+                <i class="bi bi-person"></i>
+                </div>
+                <div>
+                    <h4>Students</h4>
+                    <p>{{$studentsCount1}}</p>
+                </div>
+            </div>
+        
             <div class="summary-card">
                 <div>
                     <i class="bi bi-book"></i>
                 </div>
                 <div>
                     <h4>Courses</h4>
-                    <p>{{$coursesCount}}</p>
+                    <p>{{$coursesCount1}}</p>
                 </div>
             </div>
+            @can('is_admin')
             <div class="summary-card">
                 <div>
                     <i class="bi bi-house"></i>
@@ -21,26 +32,20 @@
                     <p>{{$centersCount}}</p>
                 </div>
             </div>
-            <div class="summary-card">
-                <div>
-                    <i class="bi bi-person"></i>
-                </div>
-                <div>
-                    <h4>Students</h4>
-                    <p>{{$studentsCount}}</p>
-                </div>
-            </div>
+            @endcan
+          
             <div class="summary-card">
                 <div>
                     <i class="bi bi-person-fill-gear"></i>
                 </div>
                 <div>
                     <h4>Teachers</h4>
-                    <p>{{$teachersCount}}</p>
+                    <p>{{$teachersCount1}}</p>
                 </div>
             </div>
         </div>
         <div class="row">
+            @can('is_admin')
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
@@ -99,66 +104,16 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Line Chart -->
-                        <h5 class="font-weight-bold ">Students' Age Distribution</h5>
-                        <div id="studentAgeChart" style="max-height: 700px; height: 700px"></div>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", () => {
-                                // Initialize the echarts instance based on the prepared dom
-                                var myChart = echarts.init(document.getElementById('studentAgeChart'));
-                                var data = {{\Illuminate\Support\Js::from($ageDistribution)}};
-                                var ages = []
-                                var ageCount = []
-                                for(const key in data){
-                                    ages.push(key)
-                                    ageCount.push(data[key])
-
-                                }
-
-                                // Specify the configuration items and data for the chart
-                                var option = {
-                                    title: {
-                                        text: ''
-                                    },
-                                    tooltip: {},
-                                    legend: {
-                                        data: ['students count']
-                                    },
-                                    xAxis: [{
-                                        data: ages
-                                    }],
-                                    yAxis: [{
-                                        type: "value"
-                                    }],
-                                    series: [
-                                        {
-                                            name: 'students count',
-                                            type: 'bar',
-                                            data: ageCount
-                                        }
-                                    ]
-                                };
-
-                                // Display the chart using the configuration items and data just specified.
-                                myChart.setOption(option);
-                            })
-                        </script>
-                        <!-- End Line CHart -->
-
-                    </div>
-                </div>
-            </div>
-
+            @endcan
+             <div class="container">             
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
                         <!-- Line Chart -->
                         <h5 class="font-weight-bold ">Student attendance per course distribution</h5>
-                        <div id="coursesChart" style="max-height: 700px; height: 700px"></div>
+                        <div class="container">
+                        <div id="coursesChart" style="max-height: 700px; height: 400px"></div>
+                        </div>
                         <script>
                             document.addEventListener("DOMContentLoaded", () => {
                                 // Initialize the echarts instance based on the prepared dom
@@ -185,8 +140,10 @@
                                         data: courses
                                     }],
                                     yAxis: [{
-                                        type: "value"
-                                    }],
+                                        type: "value",
+                                        min: 0,    
+                                        interval: 1 
+                                        }],
                                     series: [
                                         {
                                             name: 'students count',
@@ -205,7 +162,8 @@
                     </div>
                 </div>
             </div>
-
+            </div>  
+            @can('is_admin')
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
@@ -262,6 +220,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
         </div>
     </section>
