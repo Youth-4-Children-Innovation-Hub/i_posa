@@ -12,6 +12,9 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Region;
 use Illuminate\Support\Facades\DB;
+use App\Models\Center;
+use App\Models\Student;
+use App\Models\Teacher;
 
 class reportController extends Controller
 {
@@ -108,11 +111,7 @@ class reportController extends Controller
     }
 
     public function getPdf(){
-        // $center_distribution = Region::Select('regions.name as reg_name', 'districts.name as dist_name','centers.name as center_name')
-        // ->leftJoin('districts', 'districts.region_id', '=', 'regions.id')
-        // ->leftJoin('centers', 'centers.district_id', '=', 'districts.id')
-        // ->orderBy('regions.name')
-        // ->get();
+        
         $center_distribution = Region::select(
             'regions.name as reg_name',
             'districts.name as dist_name',
@@ -147,4 +146,75 @@ class reportController extends Controller
         return $pdf->download($title);
      
     }
+
+    public function centerReport(){
+            $owner_funder = Center::select('name', 'Ownership', 'Funders')
+            ->where('hod_id', '=', auth()->user()->id)
+            ->get();
+
+            $learnersCount = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->count();
+
+            $malesCount = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('students.gender', '=', 'M')
+            ->count();
+
+            $femalesCount = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('students.gender', '=', 'F')
+            ->count();
+
+            $stage1Students = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('stage', '=', 'stage 1' )->count();
+
+            $stage2Students = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('stage', '=', 'stage 2' )->count();
+
+            $with3rs = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('three_rs', '=', 'Yes' )->count();
+
+            $without3rs = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('three_rs', '=', 'No' )->count();
+
+            $longTerm = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('term', '=', 'Long term' )->count();
+
+            $shortTerm = Student::select('id')
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('term', '=', 'Short term' )->count();
+
+            $allLearners = Student::select('centers.name AS center_name','students.phone_number AS phone_number', 'students.name AS name', 'students.stage AS stage', 'students.parent AS parent')
+            ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->get();
+            
+           
+
+            $title = "Quarter report";
+            $pdf = Pdf::loadView('report.centerReport', ['owner_funder' => $owner_funder, 'title' => $title,
+             'malesCount' => $malesCount, 'femalesCount' => $femalesCount, 'learnersCount' => $learnersCount,
+             'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
+             'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners]);
+            return $pdf->download($title);
+
+
+    }
+
+    
 }

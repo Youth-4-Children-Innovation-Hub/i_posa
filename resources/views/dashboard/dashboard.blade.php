@@ -133,11 +133,16 @@
                                         text: ''
                                     },
                                     tooltip: {},
-                                    legend: {
-                                        data: ['students count']
-                                    },
+                                    // legend: {
+                                    //     data: ['students count']
+                                    // },
                                     xAxis: [{
-                                        data: courses
+                                        type: 'category',
+                                        axisLabel: {
+                                            rotate: 90, // Rotate the labels by 90 degrees counterclockwise
+                                            interval: 0  // Display all labels, you can adjust the interval as needed
+                                        },
+                                        data: courses // Assuming 'courses' contains your x-axis labels
                                     }],
                                     yAxis: [{
                                         type: "value",
