@@ -144,9 +144,11 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/approve_report', [reportController::class, 'approve']);
     Route::get('/pdf', [reportController::class, 'getPdf']);
 
+    Route::get('/centerReport', [reportController::class, 'centerReport']);
+
     // pdf testing
     Route::get('/ripoti', function () {
-        return view('report.reportPdf');
+        return view('report.centerReport');
     });
 
 });
