@@ -362,7 +362,7 @@
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/students') }}">
                     <i class="bi bi-person-lines-fill"></i>
-                        <span>students</span>
+                        <span>Students</span>
                     </a>
                 </li>
            
@@ -376,6 +376,12 @@
                     <a class="nav-link collapsed" href="{{ url('/teachers') }}">
                     <i class="bi bi-file-person-fill"></i>
                         <span>Teachers</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/clubs') }}">
+                    <i class="bi bi-file-person-fill"></i>
+                        <span>Clubs</span>
                     </a>
                 </li>
                 <li class="nav-item">

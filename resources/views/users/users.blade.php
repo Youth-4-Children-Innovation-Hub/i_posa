@@ -253,18 +253,7 @@
 
 
 </div>
-<script>
-// function showDiv(id) {
-//     var div = document.getElementById(id);
-//     div.style.display = "block";
-// }
 
-// function showUpdate() {
-//     var div = document.getElementById("update_user");
-//     div.style.display = "block";
-
-// }
-</script>
 
 @endsection
 
