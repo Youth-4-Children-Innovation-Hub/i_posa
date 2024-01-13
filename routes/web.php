@@ -10,6 +10,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\userProfileController;
+use App\Http\Controllers\clubController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\DistrictController;
 use App\Models\District;
@@ -143,8 +144,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);
     Route::get('/pdf', [reportController::class, 'getPdf']);
-
     Route::get('/centerReport', [reportController::class, 'centerReport']);
+
+    Route::get('/clubs', [clubController::class, 'getClubs']);
+    Route::post('/create_club', [clubController::class, 'createClubs'])->name('create_club');
 
     // pdf testing
     Route::get('/ripoti', function () {
