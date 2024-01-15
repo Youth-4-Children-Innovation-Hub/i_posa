@@ -148,6 +148,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/clubs', [clubController::class, 'getClubs']);
     Route::post('/create_club', [clubController::class, 'createClubs'])->name('create_club');
+    Route::get('/club_details/{id}', [clubController::class, 'clubDetails']);
 
     // pdf testing
     Route::get('/ripoti', function () {

@@ -380,7 +380,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/clubs') }}">
-                    <i class="bi bi-file-person-fill"></i>
+                    <i class="bi bi-people-fill"></i>
                         <span>Clubs</span>
                     </a>
                 </li>
