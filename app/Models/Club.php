@@ -9,4 +9,7 @@ class Club extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'Asset' => 'json',
+    ];
 }

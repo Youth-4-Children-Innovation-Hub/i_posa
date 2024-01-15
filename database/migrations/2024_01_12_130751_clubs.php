@@ -18,7 +18,8 @@ return new class extends Migration
                 $table->string('Registration_status');
                 $table->string('Chairperson');
                 $table->string('Contact');
-                $table->json('Asset');
+                $table->string('Email');
+                $table->string('Asset');
                 $table->unsignedBigInteger('Capital');
                 $table->string('QA_Contact');
                 $table->unsignedBigInteger('Center_id');
