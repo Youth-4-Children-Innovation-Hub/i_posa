@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Center;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\Club;
 
 class reportController extends Controller
 {
@@ -203,14 +204,17 @@ class reportController extends Controller
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
             ->get();
-            
-           
+
+            $club1 = Club::select('clubs.name AS club_name','clubs.Funding_sources AS funding', 'centers.name AS center')
+            ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->get();
 
             $title = "Quarter report";
             $pdf = Pdf::loadView('report.centerReport', ['owner_funder' => $owner_funder, 'title' => $title,
              'malesCount' => $malesCount, 'femalesCount' => $femalesCount, 'learnersCount' => $learnersCount,
              'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
-             'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners]);
+             'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1] );
             return $pdf->download($title);
 
 

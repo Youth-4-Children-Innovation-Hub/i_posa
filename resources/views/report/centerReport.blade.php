@@ -217,12 +217,14 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($club1 as $club1)
                 <tr>
                     <td>1</td>
-                    <td>dar es salaam</td>
-                    <td>ilala</td>
-                    <td>ilala</td>
+                    <td>{{ $club1->center }}</td>
+                    <td>{{ $club1->club_name }}</td>
+                    <td>{{ $club1->funding }}</td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </center>
