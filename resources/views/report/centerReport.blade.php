@@ -25,7 +25,7 @@
     <p> <b>1.0Introduction</b></p>
     <br>
   
-    <p style="text-align: center;"><b>IPOSA Ownership and Funders</b></p>
+    <p><b>IPOSA Ownership and Funders</b></p>
    
     <center>
     <table class="table table-bordered">
@@ -176,6 +176,33 @@
        </table>
    </center>
 
+   <p><b>5.0 IPOSA Facilitators</b></p>
+   
+   <center>
+   <table class="table table-bordered">
+           <thead>
+               <tr>
+                   <th>NO</th>
+                   <th>Name of the Center</th>
+                   <th>Name of facilitator</th>
+                   <th>Qualifications</th> 
+                   <th>Current employer</th>
+               </tr>
+           </thead>
+           <tbody>
+            @foreach($facilitators as $facilitator)
+               <tr>
+                   <td>1</td>
+                   <td>Chitete</td>
+                   <td>{{ $facilitator->name }}</td>
+                   <td>{{ $facilitator->qualification }}</td>
+                   <td>dfids</td>
+               </tr>
+            @endforeach
+           </tbody>
+       </table>
+   </center>
+
    
 
    <p><b>5.0 IPOSA Centers and the type of trades</b></p>
@@ -203,6 +230,7 @@
            </tbody>
        </table>
    </center>
+   
 
     <p><b>6:0 IPOSA Centers and the IPOSA Empowerment Clubs (IECs)</b></p>
    
@@ -217,12 +245,22 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($club1 as $club1)
+                @php
+                    $centerName = null; // Initialize centerName variable
+                @endphp
+           
+                @foreach($club1 as $club)
+                
                 <tr>
                     <td>1</td>
-                    <td>{{ $club1->center }}</td>
-                    <td>{{ $club1->club_name }}</td>
-                    <td>{{ $club1->funding }}</td>
+                    @if($centerName != $club->center)
+                    <td rowspan="{{ $club1->where('center', $club->center)->count(); }}">{{ $club->center }}</td>
+                    @php
+                        $centerName = $club->center; // Update centerName
+                    @endphp
+                    @endif
+                    <td>{{ $club->club_name }}</td>
+                    <td>{{ $club->funding }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -248,28 +286,27 @@
                
             </thead>
             <tbody>
+                @php
+                    $centerName = null; // Initialize centerName variable
+                @endphp
+                @foreach($clubInfo as $info)
                 <tr>
-                    <td>1</td>
-                    <td>Momba</td>
-                    <td>team craft</td>
-                    <td>registered</td>
-                    <td>gadafi japhaly</td>
-                    <td>0755029113</td>
-                    <td>jembe, panga</td>
-                    <td>5,000,000</td>
-                    <td>yes</td>    
+                @if($centerName != $info->center)
+                    <td rowspan="{{ $clubInfo->where('center', $info->center)->count(); }}">1</td>
+                    <td rowspan="{{ $clubInfo->where('center', $info->center)->count(); }}">{{ $info->center }}</td>
+                    @php
+                        $centerName = $info->center; // Update centerName
+                    @endphp
+                @endif
+                    <td>{{ $info->club_name }}</td>
+                    <td>{{ $info->Registration_status }}</td>
+                    <td>{{ $info->Chairperson }}</td>
+                    <td>{{ $info->Contact }}</td>
+                    <td>{{ $info->Asset }}</td>
+                    <td>{{ $info->Capital }}</td>
+                    <td>{{ $info->QA_Contact }}</td>    
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Momba</td>
-                    <td>team craft</td>
-                    <td>registered</td>
-                    <td>gadafi japhaly</td>
-                    <td>0755029113</td>
-                    <td>jembe, panga</td>
-                    <td>5,000,000</td>
-                    <td>yes</td>    
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </center>

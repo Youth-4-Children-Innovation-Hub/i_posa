@@ -210,11 +210,21 @@ class reportController extends Controller
             ->where('centers.hod_id', '=', Auth::user()->id)
             ->get();
 
+            $clubInfo = Club::select('clubs.name AS club_name', 'Registration_status', 'Chairperson', 'Contact', 'Asset', 'Capital', 'QA_Contact', 'centers.name AS center')
+            ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->get();
+
+            $facilitators = Teacher::select('*')
+            ->where('created_by', '=', Auth::user()->id)
+            ->get();
+
             $title = "Quarter report";
             $pdf = Pdf::loadView('report.centerReport', ['owner_funder' => $owner_funder, 'title' => $title,
              'malesCount' => $malesCount, 'femalesCount' => $femalesCount, 'learnersCount' => $learnersCount,
              'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
-             'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1] );
+             'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1,
+              'clubInfo' => $clubInfo, 'facilitators' => $facilitators] );
             return $pdf->download($title);
 
 
