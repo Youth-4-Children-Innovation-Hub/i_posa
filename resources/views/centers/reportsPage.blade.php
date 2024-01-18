@@ -7,17 +7,91 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="">Home</a></li>
                 <li class="breadcrumb-item active">reports</li>
-                <!-- <li>
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
-                        data-bs-target="#CreateModal">Upload report</button>
-                </li> -->
                 <li>
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
-                        data-bs-target="#CreateModal">Write report</button>
+                    <form action="{{ route('centerReport') }}" method="get">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" >Preview Report</button>
+                    </form>
+               
                 </li>
+                <li>
+                    <form action="" method="get">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1">Upload Report</button>
+                    </form>
+                </li>
+               
             </ol>
         </nav>
     </div>
+     <!-- Recent Sales -->
+     <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><a href="#">#2457</a></th>
+                        <td>Brandon Jacob</td>
+                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
+                        <td>$64</td>
+                        
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#">#2147</a></th>
+                        <td>Bridie Kessler</td>
+                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
+                        <td>$47</td>
+                        <td><span class="badge bg-warning">Pending</span></td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#">#2049</a></th>
+                        <td>Ashleigh Langosh</td>
+                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
+                        <td>$147</td>
+                        <td><span class="badge bg-success">Approved</span></td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#">#2644</a></th>
+                        <td>Angus Grady</td>
+                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
+                        <td>$67</td>
+                        <td><span class="badge bg-danger">Rejected</span></td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#">#2644</a></th>
+                        <td>Raheem Lehner</td>
+                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                        <td>$165</td>
+                        <td><span class="badge bg-success">Approved</span></td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><a href="#">#2644</a></th>
+                        <td>Raheem Lehner</td>
+                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                        <td>$165</td>
+                        <td><span class="badge bg-success">Approved</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+    
     @can('is_admin')
     <table class="table table-borderless bg-light">
         <thead>
@@ -108,98 +182,6 @@
     @endcannot
     @endcanany
     
- 
-<!-- upload report modal-->
-      <!-- <div class="modal fade" id="CreateModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload report</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post" action="{{ url('upload_report') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="" id="add_region">
-                            <div class="card-body ">
-                                <div class="row mb-3">
-                                    <div class="col-sm-10">
-                                        <input class="form-control" name="file" type="file" id="formFile">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-                    <div class="modal-footer">
-                        
-                        <button type="submit" class="btn btn-primary">Upload </button>
-
-                    </div>
-                </form> -->
-                <!-- End General Form Elements -->
-
-            </div>
-        </div>
-    </div><!-- End of model upload report-->
-    <!-- upload report modal-->
-    <div class="modal fade" id="CreateModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload report</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post" action="{{ url('send_report') }}" enctype="multipart/form-data">
-                    @csrf
-                <div class="modal-body">
-                <div class="row mb-3">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Title</label>
-                    <div class="col-sm-10">
-                    <input type="text" name="title" class="form-control" id="inputEmail">
-                    </div>
-                    </div>
-                       
-                    <div class="row mb-3">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Total number of students</label>
-                    <div class="col-sm-10">
-                    <input type="number" name="students" class="form-control" id="inputEmail">
-                    </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Total number of courses</label>
-                    <div class="col-sm-10">
-                    <input type="number" name="courses" class="form-control" id="inputEmail">
-                    </div>
-                    </div>
-
-                    <div class="row mb-3">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">Textarea</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" name="description" style="height: 100px"></textarea>
-                    </div>
-                    </div>
-
-                    <div class="row mb-3">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">Attachment</label>
-                    <div class="col-sm-10">
-                    <input type="file" id="file" name="file" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png">
-                    </div>
-                    </div>
-                </div>
-                    <div class="modal-footer">
-                        
-                        <button type="submit" class="btn btn-primary">submit</button>
-
-                    </div>
-                </form><!-- End General Form Elements -->
-
-            </div>
-        </div>
-    </div><!-- End of model upload report-->
 
 @endsection
 

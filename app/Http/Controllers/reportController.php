@@ -225,7 +225,7 @@ class reportController extends Controller
              'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
              'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1,
               'clubInfo' => $clubInfo, 'facilitators' => $facilitators] );
-            return $pdf->download($title);
+             return $pdf->download($title);
 
 
     }

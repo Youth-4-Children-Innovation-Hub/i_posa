@@ -144,7 +144,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);
     Route::get('/pdf', [reportController::class, 'getPdf']);
-    Route::get('/centerReport', [reportController::class, 'centerReport']);
+    Route::get('/centerReport', [reportController::class, 'centerReport'])->name('centerReport');
 
     Route::get('/clubs', [clubController::class, 'getClubs']);
     Route::post('/create_club', [clubController::class, 'createClubs'])->name('create_club');
