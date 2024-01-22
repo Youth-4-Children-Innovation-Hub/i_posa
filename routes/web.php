@@ -140,6 +140,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/view/{id}', [reportController::class, 'view']);
     Route::post('delete_report', [reportController::class, 'delete'])->name('delete_report');
     Route::get('/notifications', [reportController::class, 'getNotifications']);
+    Route::post('/upload_center_report', [reportController::class, 'uploadCenterReport']);
 
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);

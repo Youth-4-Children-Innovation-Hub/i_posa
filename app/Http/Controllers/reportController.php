@@ -16,6 +16,7 @@ use App\Models\Center;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Club;
+use App\Models\CenterReport;
 
 class reportController extends Controller
 {
@@ -225,10 +226,104 @@ class reportController extends Controller
              'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
              'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1,
               'clubInfo' => $clubInfo, 'facilitators' => $facilitators] );
-             return $pdf->download($title);
+             return $pdf->stream($title);
 
 
     }
+
+    public function uploadCenterReport(){
+        $owner_funder = Center::select('name', 'Ownership', 'Funders')
+        ->where('hod_id', '=', auth()->user()->id)
+        ->get();
+
+        $learnersCount = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->count();
+
+        $malesCount = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('students.gender', '=', 'M')
+        ->count();
+
+        $femalesCount = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('students.gender', '=', 'F')
+        ->count();
+
+        $stage1Students = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('stage', '=', 'stage 1' )->count();
+
+        $stage2Students = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('stage', '=', 'stage 2' )->count();
+
+        $with3rs = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('three_rs', '=', 'Yes' )->count();
+
+        $without3rs = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('three_rs', '=', 'No' )->count();
+
+        $longTerm = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('term', '=', 'Long term' )->count();
+
+        $shortTerm = Student::select('id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->where('term', '=', 'Short term' )->count();
+
+        $allLearners = Student::select('centers.name AS center_name','students.phone_number AS phone_number', 'students.name AS name', 'students.stage AS stage', 'students.parent AS parent')
+        ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->get();
+
+        $club1 = Club::select('clubs.name AS club_name','clubs.Funding_sources AS funding', 'centers.name AS center')
+        ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->get();
+
+        $clubInfo = Club::select('clubs.name AS club_name', 'Registration_status', 'Chairperson', 'Contact', 'Asset', 'Capital', 'QA_Contact', 'centers.name AS center')
+        ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth::user()->id)
+        ->get();
+
+        $facilitators = Teacher::select('*')
+        ->where('created_by', '=', Auth::user()->id)
+        ->get();
+
+        $title = "Quarter report";
+        $pdf = Pdf::loadView('report.centerReport', ['owner_funder' => $owner_funder, 'title' => $title,
+         'malesCount' => $malesCount, 'femalesCount' => $femalesCount, 'learnersCount' => $learnersCount,
+         'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
+         'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1,
+          'clubInfo' => $clubInfo, 'facilitators' => $facilitators] );
+
+        $filename = 'Quarter_report_' . time() . '.pdf';
+        $uploader = User::select('name')->where('id', '=', Auth()->user()->id)->first();
+
+        $createdReport = new CenterReport();
+        $createdReport->Report_name = $filename;
+        $createdReport->Uploaded_by = $uploader->name;
+        $createdReport->save();
+        return redirect()->back();
+
+        // Save the PDF on the server
+        // $pdf->save(storage_path('app/pdf/' . $filename)); 
+        //  return $pdf->stream($title);
+
+}
+    
 
     
 }

@@ -19,7 +19,7 @@ class CourseController extends Controller
     public function GetCenterCourses()
     {
         $courses = Course::all();
-        $teachers = Teacher::all();
+        $teachers = Teacher::all()->where('created_by', '=', Auth()->user()->id);
         $centers = Center::all();
         $userData = Auth::user();
 

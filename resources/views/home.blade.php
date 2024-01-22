@@ -232,6 +232,41 @@
                     <span>Dashboard</span>
                 </a>
             </li><!-- End Dashboard Nav -->
+            @can('is_dist_cordinator')
+            @cannot('is_admin')
+            <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/students') }}">
+                    <i class="bi bi-person-lines-fill"></i>
+                        <span>Students</span>
+                    </a>
+                </li>
+           
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/courses') }}">
+                    <i class="ri-pencil-fill"></i>
+                        <span>Courses</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/teachers') }}">
+                    <i class="bi bi-file-person-fill"></i>
+                        <span>Teachers</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/clubs') }}">
+                    <i class="bi bi-people-fill"></i>
+                        <span>Clubs</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/inventory') }}">
+                    <i class="bi bi-file-ruled-fill"></i>
+                        <span>Inventory list</span>
+                    </a>
+                </li>
+            @endcannot
+            @endcan
 
             @canany(['is_admin','is_user'])
             <li class="nav-item">
@@ -397,7 +432,7 @@
            
 
             @cannot('is_hoc')
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#students-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Students</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
@@ -409,7 +444,7 @@
                     </li>
 
                 </ul>
-            </li><!-- End Forms Nav -->
+            </li> -->
             @endcannot
 
             @canany(['is_dist_cordinator', 'is_reg_cordinator', 'is_hoc'])

@@ -15,7 +15,7 @@
                
                 </li>
                 <li>
-                    <form action="" method="get">
+                    <form action="{{ url('upload_center_report') }}" method="post">
                         @csrf
                         <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1">Upload Report</button>
                     </form>
@@ -29,7 +29,7 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                  <h5 class="card-title">Recent Reports</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
