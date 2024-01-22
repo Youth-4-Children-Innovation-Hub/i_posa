@@ -26,42 +26,54 @@ class userseeder extends Seeder
         $regions=Region::all();
 
         $data=[
+            // [
+            // 'name' => 'bashiri japhaly',
+            // 'email' => 'bashiri@gmail.com',
+            // 'role_id'=> $roles->random()->id,
+            // 'password' => bcrypt('bashiri2000')
+            // ],
             [
-                'name' => 'Gadafi japhaly',
-                'email' => 'gadafijaphaly@gmail.com',
+                'name' => 'Jovin Sanga',
+                'email' => 'jovin@gmail.com',
                 'role_id'=> $roles->random()->id,
-              //  'region_id'=> $regions->random()->id,
-                'password' => bcrypt('gadafi2000')
-            ],
-            [
-                'name' => 'Jane Doe',
-                'email' => 'janedoe@example.com',
-                'role_id'=> $roles->random()->id,
-               // 'region_id'=> $regions->random()->id,
+                'password' => bcrypt('jovin2000')
+                ]
+            // [
+            //     'name' => 'Gadafi japhaly',
+            //     'email' => 'gadafijaphaly@gmail.com',
+            //     'role_id'=> $roles->random()->id,
+            
+            //     'password' => bcrypt('gadafi2000')
+            // ],
+            // [
+            //     'name' => 'Jane Doe',
+            //     'email' => 'janedoe@example.com',
+            //     'role_id'=> $roles->random()->id,
+            
                 
-                'password' => bcrypt('jane123')
-            ],
-            [
-                'name' => 'Michael Doe',
-                'email' => 'michaeldoe@example.com',
-                'role_id'=> $roles->random()->id,
-              //  'region_id'=> $regions->random()->id,
-                'password' => bcrypt('michael123')
-            ],
-            [
-                'name' => 'mary mary',
-                'email' => 'mary@example.com',
-                'role_id'=> $roles->random()->id,
-              //  'region_id'=> $regions->random()->id,
-                'password' => bcrypt('mary123')
-            ],
-            [
-                'name' => 'july july',
-                'email' => 'july@example.com',
-                'role_id'=> $roles->random()->id,
-              //  'region_id'=> $regions->random()->id,
-                'password' => bcrypt('july123')
-            ]
+            //     'password' => bcrypt('jane123')
+            // ],
+            // [
+            //     'name' => 'Michael Doe',
+            //     'email' => 'michaeldoe@example.com',
+            //     'role_id'=> $roles->random()->id,
+             
+            //     'password' => bcrypt('michael123')
+            // ],
+            // [
+            //     'name' => 'mary mary',
+            //     'email' => 'mary@example.com',
+            //     'role_id'=> $roles->random()->id,
+             
+            //     'password' => bcrypt('mary123')
+            // ],
+            // [
+            //     'name' => 'july july',
+            //     'email' => 'july@example.com',
+            //     'role_id'=> $roles->random()->id,
+             
+            //     'password' => bcrypt('july123')
+            // ]
         ];
         DB::table('users')->insert($data);
     }

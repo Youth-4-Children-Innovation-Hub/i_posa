@@ -163,7 +163,7 @@ class DashboardController extends Controller
             ",
             ['user_id' => $user_id]
         );
-
+      
         return $courses;
 
     }

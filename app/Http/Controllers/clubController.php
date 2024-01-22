@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 class clubController extends Controller
 {
     public function getClubs(){
-        $clubs=Club::all();
+        $cid = Center::where('hod_id', '=', Auth()->user()->id)->value('id');
+        $clubs=Club::all()->where('Center_id', '=', $cid);
         return view('clubs.club', ['clubs' => $clubs]);
     }
 

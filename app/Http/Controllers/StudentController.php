@@ -40,7 +40,7 @@ class StudentController extends Controller
         $center1 = Center::select('centers.name AS centerName1', 'centers.id AS id')
             ->where('hod_id', '=', $userData->id)
             ->get();
-            $students1 = Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
+        $students1 = Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
          'students.name AS name1', 'students.gender AS gender1', 'courses.name AS course1')
             ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id') 
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
@@ -48,17 +48,16 @@ class StudentController extends Controller
             ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
             ->where('users.id', '=', $userData->id)
             ->get();
-        // $regions = Region::all();
-        // $students1 = Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
-        //  'students.name AS name1', 'students.gender AS gender1', 'courses.name AS course1')
-        //     ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id') 
-        //     ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
-        //     ->leftJoin('users', 'users.id', '=', 'hod_id')
-        //     ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
-        //     ->where('users.id', '=', $userData->id)
-        //     ->get();
         
-
+        $districtStudents =  Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
+        'students.name AS name1', 'students.gender AS gender1', 'courses.name AS course1')
+           ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id') 
+           ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+           ->leftJoin('users', 'users.id', '=', 'hod_id')
+           ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
+           ->where('users.id', '=', $userData->id)
+           ->get();   
+            
       
         return view('students.students', ['centers' => $centers, 'center1' => $center1, 'students1' => $students1, 'regions' => $regions, 'students' => $students, 'userData' => $userData, 'userRole' => $userRole, 'courses' => $courses]);
         //return Auth::User()->role_id;
