@@ -146,11 +146,15 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/approve_report', [reportController::class, 'approve']);
     Route::get('/pdf', [reportController::class, 'getPdf']);
     Route::get('/centerReport', [reportController::class, 'centerReport'])->name('centerReport');
+    Route::get('/approve/{id}', [reportController::class, 'approve']);
+    Route::post('/remarks', [reportController::class, 'addRemarks'])->name('add_remarks');
+    Route::get('/send_mail', [reportController::class, 'sendMail']);
 
     Route::get('/clubs', [clubController::class, 'getClubs']);
     Route::post('/create_club', [clubController::class, 'createClubs'])->name('create_club');
     Route::get('/club_details/{id}', [clubController::class, 'clubDetails']);
 
+   
     // pdf testing
     Route::get('/ripoti', function () {
         return view('report.centerReport');

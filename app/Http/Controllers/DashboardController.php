@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Center;
+use App\Models\Region;
+use App\Models\District;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\CourseCenter;
@@ -21,6 +23,8 @@ class DashboardController extends Controller
         $centersCount = Center::all()->count();
         $studentsCount = Student::all()->count();
         $teachersCount = Teacher::all()->count();
+        $regionCount = Region::all()->count();
+        $districtCount = District::all()->count();
         $regionDistribution = DashboardController::getRegionDistribution();
         $ageDistribution = DashboardController::getAgeDistribution();
         $coursesDistribution = DashboardController::getCourseDistribution();
@@ -39,6 +43,7 @@ class DashboardController extends Controller
         $teachersCount1 = Teacher::select('id')
         ->where('created_by', '=', Auth::user()->id)
         ->count();
+        
            
            
         return view('dashboard.dashboard',
@@ -54,7 +59,9 @@ class DashboardController extends Controller
                 'centersDistribution',
                 'studentsCount1',
                 'coursesCount1',
-                'teachersCount1'
+                'teachersCount1',
+                'regionCount',
+                'districtCount'
             ));
     }
 

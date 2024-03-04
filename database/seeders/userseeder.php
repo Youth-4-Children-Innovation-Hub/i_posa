@@ -77,4 +77,4 @@ class userseeder extends Seeder
         ];
         DB::table('users')->insert($data);
     }
-}
+}   

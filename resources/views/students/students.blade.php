@@ -78,6 +78,7 @@
     </div>
     @endif
 
+
     @can('is_admin')
     <table class="table table-striped bg-light">
         <thead>
@@ -90,7 +91,6 @@
                 <th scope="col">Center</th>
                 <th scope="col">Status</th>
                 @can('is_hoc')
-
                 <th scope="col">Action</th>
                 @endcan
             </tr>
@@ -133,7 +133,71 @@
     </table>
     @endcan
 
-    
+    @can('is_dist_cordinator')
+<!--    
+        <div class="card">
+            <div class="card-body">
+               
+            <h5 class="card-title">Select students from centers</h5>
+            <a href="#" class="mr-3">All students</a> <br> 
+            <a href="#" class="mr-3">Ihanda</a>
+            <a href="#" class="mr-3">Chitete</a>
+            </div>
+        </div> -->
+
+        <div class="">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <!-- <h5 class="card-title">Recent Reports</h5> -->
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Center</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($districtStudents as $key => $districtStudents)
+                      <tr>
+                        <th scope="row"><a href="#">{{ $key + 1 }}</a></th>
+                        <td>{{ $districtStudents->name }}</td>
+                        <td>{{ $districtStudents->course2 }}</td>
+                        <td>{{ $districtStudents->phone_number }}</td>
+                        <td>{{ $districtStudents->gender }}</td>
+                        @if( $districtStudents->status == 'continous' )
+                        <td><span
+                                class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $districtStudents->status }}</span>
+                        </td>
+                        @elseif( $districtStudents->status == 'Graduate' )
+                        <td><span
+                                class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $districtStudents->status }}</span>
+                        </td>
+                        @else
+                        <td><span
+                        class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $districtStudents->status }}</span>
+                        </td>
+                        @endif
+                        <td>{{ $districtStudents->centerName2 }}</td>
+                        <td>jkfhd</td>
+                      </tr> 
+                      @endforeach 
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
+              
+    @endcan
     
     @can('is_hoc')
     @cannot('is_admin')
@@ -192,6 +256,7 @@
     </table>
     @endcannot
     @endcan
+    
 
 
     <!-- model add student -->

@@ -30,6 +30,13 @@ class CourseController extends Controller
             
             //for the head of center
 
+        $districtCourses = Course::select('courses.*')
+        ->Join('course_centers', 'course_centers.course_id', '=', 'courses.id')
+        ->Join('centers', 'course_centers.center_id', '=', 'centers.id')
+        ->Join('districts', 'districts.id', '=', 'centers.district_id')
+        ->where('districts.cordinator_id', '=', $userData->id)
+        ->get();
+
         $centercourses1 = CourseCenter::select('courses.name AS course1', 'teachers.name AS teacher1', 'course_centers.id AS id')
             ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
             ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
@@ -45,7 +52,8 @@ class CourseController extends Controller
                 'courses' => $courses,
                 'centers' => $centers,
                 'centercourses1' => $centercourses1,
-                'userData' =>   $userData
+                'userData' =>   $userData,
+                'districtCourses' => $districtCourses
             ]
         );
     }
