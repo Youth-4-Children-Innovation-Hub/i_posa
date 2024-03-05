@@ -54,6 +54,7 @@ class RegionsController extends Controller
         }
     }
 
+    
     public function Search()
     {
         $querry = $_GET['search_querry'];
@@ -115,5 +116,10 @@ class RegionsController extends Controller
 
         return response()->json(['status' => false]);
 
+    }
+
+    public function selRegion(){
+        $regions = Region::select('*')->get();
+        return view('regions.regionSelect', ['regions' => $regions]);
     }
 }

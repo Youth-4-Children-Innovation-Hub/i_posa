@@ -118,4 +118,15 @@ class CenterController extends Controller
             return redirect('centers');
         }
     }
+
+    public function districtCenters($id)
+    {
+        $centers = Center::select('*')->where('district_id', '=', $id)->get();
+        return view('centers.centerSelect', ['centers' => $centers]);     
+    }
+
+    public function centerDetails($id)
+    {
+        return view('centers.centerDetails', ['id', $id]);  
+    }
 }

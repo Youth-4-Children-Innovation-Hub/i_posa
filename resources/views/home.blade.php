@@ -314,69 +314,18 @@
 
                 </ul>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('/select_region') }}">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Centers</span>
+                </a>
+            </li>
             <!-- end of district level -->
             @endcanany
 
             @canany(['is_admin'])
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="#">
-                <i class="ri-home-2-fill"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/centers') }}">
-                            <i class="bi bi-circle"></i><span>Center</span>
-                        </a>
-                    </li>
-                    <!-- <li>
-                        <a class="nav-link collapsed" data-bs-target="#center-nav" data-bs-toggle="collapse" href="{{ url('/centers') }}">
-                            <i class="bi bi-circle"></i><span>Center</span><i class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                    </li> -->
-
-                </ul>
-
-                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/courses') }}">
-                            <i class="bi bi-circle"></i><span>Courses</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/teachers') }}">
-                            <i class="bi bi-circle"></i><span>Teachers</span>
-                        </a>
-                    </li>
-                </ul>
-
-
-                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/inventory') }}">
-                            <i class="bi bi-circle"></i><span>Inventory List</span>
-                        </a>
-                    </li>
-                </ul>
-                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/students') }}">
-                            <i class="bi bi-circle"></i><span>Students</span>
-                        </a>
-                    </li>
-
-                </ul>
-                <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/reports_page') }}">
-                            <i class="bi bi-circle"></i><span>Reports</span>
-                        </a>
-                    </li>
-
-                </ul>
-
+               
                 @cannot('is_admin')
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
@@ -384,10 +333,8 @@
                             <i class="bi bi-circle"></i><span>Reports</span>
                         </a>
                     </li>
-
                 </ul>
                 @endcannot
-
 
             </li>
             @endcanany
@@ -467,7 +414,8 @@
                     <i class="bi bi-person"></i>
                     <span>Profile</span>
                 </a>
-            </li><!-- End Profile Page Nav -->
+            </li>
+            <!-- End Profile Page Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="pages-contact.html">
