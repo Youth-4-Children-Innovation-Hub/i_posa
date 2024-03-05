@@ -126,4 +126,10 @@ class DistrictController extends Controller
         ]);
 
     }
+
+    public function regionDistricts($id)
+    {
+        $districts = District::select('*')->where('region_id', '=', $id)->get();
+        return view('district.districtSelect', ['districts' => $districts]);     
+    }
 }

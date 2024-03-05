@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('edit_region/{id}', [RegionsController::class, 'editRegion']);
     Route::post('edit_region', [RegionsController::class, 'updateRegion'])->name('edit_region');
     Route::post('delete_region', [RegionsController::class, 'delRegion'])->name('delete-region');
+    Route::get('select_region', [RegionsController::class, 'selRegion']);
     
     
     Route::get('districts',[DistrictController::class,'GetDistricts']);
@@ -78,6 +79,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('edit_district/{id}', [DistrictController::class, 'editDistrict']);
     Route::post('update_district', [DistrictController::class, 'updateDistrict'])->name('update_district');
     Route::post('delete_district', [DistrictController::class, 'deleteDistrict'])->name('delete_district');
+    Route::get('select_region/{id}', [DistrictController::class, 'regionDistricts']);
+   
     
     
     Route::get('centers',[CenterController::class,'GetCenters']);
@@ -86,6 +89,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('update_center', [CenterController::class, 'update_center'])->name('update_center');
     Route::post('delete_center', [CenterController::class, 'delete'])->name('delete_center');
     Route::get('search_center',[CenterController::class,'Search']);
+    Route::get('select_district/{id}', [CenterController::class, 'districtCenters']);
+    Route::get('center_details/{id}', [CenterController::class, 'centerDetails']);
 
     
     Route::get('courses',[CourseController::class,'GetCenterCourses']);
