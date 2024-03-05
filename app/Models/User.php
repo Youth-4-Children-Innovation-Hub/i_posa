@@ -57,4 +57,9 @@ class User extends Authenticatable
             $user->password = Hash::make('iposa123');
         });
     }
+
+    public function routeNotificationForMail()
+    {
+        return $this->email;
+    }
 }

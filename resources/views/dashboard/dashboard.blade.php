@@ -3,6 +3,58 @@
 
     <section class="section">
         <div class="card" id="dashboard-summary" style="grid-template-columns: repeat(3,1fr);">
+            
+            @can('is_admin')
+            <div class="summary-card">
+                <div>
+                <i class="bi bi-person"></i>
+                </div>
+                <div>
+                    <h4>Regions</h4>
+                    <p>{{$regionCount}}</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div>
+                <i class="bi bi-person"></i>
+                </div>
+                <div>
+                    <h4>Districts</h4>
+                    <p>{{$districtCount}}</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div>
+                    <i class="bi bi-house"></i>
+                </div>
+                <div>
+                    <h4>Centers</h4>
+                    <p>{{$centersCount}}</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div>
+                <i class="bi bi-person"></i>
+                </div>
+                <div>
+                    <h4>Students</h4>
+                    <p>{{$studentsCount}}</p>
+                </div>
+            </div>
+           
+            <div class="summary-card">
+                <div>
+                    <i class="bi bi-person-fill-gear"></i>
+                </div>
+                <div>
+                    <h4>Teachers</h4>
+                    <p>{{$teachersCount}}</p>
+                </div>
+            </div>
+            @endcan
+
+            @can('is_hoc')
+            @cannot('is_admin')
             <div class="summary-card">
                 <div>
                 <i class="bi bi-person"></i>
@@ -10,6 +62,16 @@
                 <div>
                     <h4>Students</h4>
                     <p>{{$studentsCount1}}</p>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div>
+                    <i class="bi bi-person-fill-gear"></i>
+                </div>
+                <div>
+                    <h4>Teachers</h4>
+                    <p>{{$teachersCount1}}</p>
                 </div>
             </div>
         
@@ -22,27 +84,13 @@
                     <p>{{$coursesCount1}}</p>
                 </div>
             </div>
-            @can('is_admin')
-            <div class="summary-card">
-                <div>
-                    <i class="bi bi-house"></i>
-                </div>
-                <div>
-                    <h4>Centers</h4>
-                    <p>{{$centersCount}}</p>
-                </div>
-            </div>
+            @endcannot
+            @endcan
+
+            @can('is_dist_cordinator')
             @endcan
           
-            <div class="summary-card">
-                <div>
-                    <i class="bi bi-person-fill-gear"></i>
-                </div>
-                <div>
-                    <h4>Teachers</h4>
-                    <p>{{$teachersCount1}}</p>
-                </div>
-            </div>
+           
         </div>
         <div class="row">
             @can('is_admin')

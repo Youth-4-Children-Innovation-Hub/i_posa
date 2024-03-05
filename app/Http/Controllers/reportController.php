@@ -17,15 +17,22 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Club;
 use App\Models\CenterReport;
+use App\Models\District;
+use App\Models\Remark;
+use Notification;
+use App\Notifications\mailNotification;
 
 class reportController extends Controller
 {
     public function index(){
-        $reports = Report::Select('reports.id AS id', 'reports.user_id as id1','reports.created_at as date', 'users.name AS hoc_name', 'centers.name as center_name', 'reports.name as report_name', 'roles.role AS role_name', 'reports.status as status')
-                           ->leftJoin('centers', 'centers.hod_id', '=', 'reports.user_id')
-                           ->leftJoin('users', 'users.id', '=', 'reports.user_id')
+        $reports = CenterReport::Select('center_reports.id AS id', 'center_reports.user_id as id1','center_reports.created_at as date', 'users.name AS hoc_name', 'centers.name as center', 'centers.hod_id as hod_id', 
+        'center_reports.name as report_name', 'roles.role AS role_name', 'center_reports.Approval as approval', 
+        'remarks.remark as remark')
+                           ->leftJoin('centers', 'centers.hod_id', '=', 'center_reports.user_id')
+                           ->leftJoin('users', 'users.id', '=', 'center_reports.user_id')
                            ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
-                           ->orderBy('reports.created_at', 'DESC')
+                           ->leftJoin('remarks', 'remarks.report_id', '=', 'center_reports.id')
+                           ->orderBy('center_reports.created_at', 'DESC')
                            ->get();
         if(auth()->user() !== null){
             auth()->user()->unreadNotifications->markAsRead();
@@ -33,6 +40,21 @@ class reportController extends Controller
         
         
         return view('centers.reportsPage', ['reports' => $reports]);
+    }
+
+    public function sendMail(){
+        $user = User::find(47);
+
+        $details = [
+            'greeting'=>'hi ' .auth()->user()->name,
+            'body'=>'This is the email body',
+            'actiontext'=>'subscribe',
+            'actionurl'=>'/',
+            'lastline'=>'This is the last line',
+        ];
+
+        Notification::send($user, new mailNotification($details));
+        dd('done');
     }
 
     public function upload(Request $request){
@@ -44,17 +66,14 @@ class reportController extends Controller
         $data->name=$filename;
         $data->user_id = Auth::user()->id;
         $data->save();
-        // $adminUserId = User::whereHas('role', function ($query) {
-        //     $query->where('role', 'admin');
-        // })->value('id');
+        
         $districtUserId = User::whereHas('role', function ($query) {
             $query->where('role', 'district cordinator');
         })->value('id');
         $district = User::find($districtUserId);
         $district->notify(new ReportUploaded($data));
        
-        // $admin = User::find($adminUserId);
-        // $admin->notify(new ReportUploaded($data));
+    
         return redirect()->back();
         
     }
@@ -64,10 +83,13 @@ class reportController extends Controller
     }
 
     public function view($id){
-        $data = Report::find($id);
-        $data->update(['status' => 'opened']);
-        return view('centers.view_report', compact('data'));
+        $data = centerReport::find($id);
+        $filePath = storage_path('app/public/reports/' . $data->name);
+        return response()->file($filePath, ['Content-Type' => 'application/pdf']);
+   
     }
+
+ 
 
     public function delete(Request $request)
     {
@@ -107,9 +129,20 @@ class reportController extends Controller
         return redirect()->back();
     }
 
-    public function approve(){
-        $update = Newrepport::find($request->report_id);
-        $update->status = "Approved";
+    public function approve($id){
+        $update = CenterReport::find($id);
+        $update->Approval = 2;
+        $update->save();
+
+        $reg_cord_id = Region::select('regions.cordinator_id')
+        ->leftjoin('districts', 'districts.region_id', '=', 'regions.id')
+        ->where('districts.cordinator_id', '=', Auth::user()->id)->first();
+
+        $reg_cord_details = User::find($reg_cord_id->cordinator_id);
+
+        $reg_cord_details->notify(new ReportUploaded($update));
+        
+        return redirect()->back();
     }
 
     public function getPdf(){
@@ -310,12 +343,44 @@ class reportController extends Controller
           'clubInfo' => $clubInfo, 'facilitators' => $facilitators] );
 
         $filename = 'Quarter_report_' . time() . '.pdf';
+        $pdf->save(storage_path('app/public/reports/' . $filename));
         $uploader = User::select('name')->where('id', '=', Auth()->user()->id)->first();
 
         $createdReport = new CenterReport();
-        $createdReport->Report_name = $filename;
-        $createdReport->Uploaded_by = $uploader->name;
+        $createdReport->name = $filename;
+        $createdReport->uploaded_by = $uploader->name;
+        $createdReport->user_id = Auth()->user()->id;
         $createdReport->save();
+
+        $dist_cord_id = District::select('districts.cordinator_id')
+        ->leftJoin('centers', 'districts.id', '=', 'centers.district_id')
+        ->where('centers.hod_id', '=', Auth::user()->id)->first();
+
+        $reg_cord_id = Region::select('regions.cordinator_id')
+        ->leftjoin('districts', 'districts.region_id', '=', 'regions.id')
+        ->leftJoin('centers', 'districts.id', '=', 'centers.district_id')
+        ->where('centers.hod_id', '=', Auth::user()->id)->first();
+
+        $dist_cord_details = User::find($dist_cord_id->cordinator_id);
+       
+        $dist_cord_details->notify(new ReportUploaded($createdReport));
+
+        $userToEmail = User::find($dist_cord_details);
+
+        $centerToEmail = Center::select('name', 'Ownership', 'Funders')
+        ->where('hod_id', '=', auth()->user()->id)
+        ->first();
+
+        $details = [
+            'greeting'=>'hi ' . $dist_cord_details->name,
+            'body'=>'You just received a report from ' . Auth::user()->name . ', head of ' .  $centerToEmail->name . ' center. Click the button below to see it.',
+            'actiontext'=>'See a report',
+            'actionurl'=>'/',
+            'lastline'=>'This is the last line',
+        ];
+
+        Notification::send($userToEmail, new mailNotification($details));
+       
         return redirect()->back();
 
         // Save the PDF on the server
@@ -323,6 +388,17 @@ class reportController extends Controller
         //  return $pdf->stream($title);
 
 }
+        public function addRemarks(Request $request){
+            $data = new Remark();
+            $data->remark = $request->remarks;
+            $data->report_id = $request->id;
+            $data->sent_by = auth()->user()->id;
+            $data->save();
+            $update = CenterReport::find($request->id);
+            $update->Approval = 3;
+            $update->save();
+            return redirect()->back();
+        }
     
 
     

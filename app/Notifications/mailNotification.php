@@ -7,16 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReportUploaded extends Notification
+class mailNotification extends Notification
 {
     use Queueable;
+
+    private $details; //gonna help us send different messages in the email
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($data)
+    public function __construct($details)
     {
-        $this->data = $data;
+        $this->details=$details;
     }
 
     /**
@@ -26,7 +28,7 @@ class ReportUploaded extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail'];
     }
 
     /**
@@ -34,8 +36,11 @@ class ReportUploaded extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-      
-       
+        return (new MailMessage)
+                    ->greeting($this->details['greeting'])
+                    ->line($this->details['body'])
+                    ->action($this->details['actiontext'], $this->details['actionurl'])
+                    ->line($this->details['lastline']);
     }
 
     /**
@@ -46,9 +51,6 @@ class ReportUploaded extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'report' => $this->data
-            // 'report_id' => $this->data->id,
-            // 'user_id' => $this->data->user_id,
             //
         ];
     }

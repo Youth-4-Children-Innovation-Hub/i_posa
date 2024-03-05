@@ -7,6 +7,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="">Home</a></li>
                 <li class="breadcrumb-item active">reports</li>
+                @can('is_hoc')
                 <li>
                     <form action="{{ route('centerReport') }}" method="get">
                         @csrf
@@ -14,17 +15,20 @@
                     </form>
                
                 </li>
+               
                 <li>
                     <form action="{{ url('upload_center_report') }}" method="post">
                         @csrf
                         <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1">Upload Report</button>
                     </form>
                 </li>
+                @endcan
                
             </ol>
         </nav>
     </div>
-     <!-- Recent Sales -->
+     <!-- Recent reports -->
+     @can('is_dist_cordinator')
      <div class="col-12">
               <div class="card recent-sales overflow-auto">
 
@@ -35,157 +39,184 @@
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
+                        <th scope="col">Report</th>
+                        <th scope="col">Sent by</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
+                    @foreach($reports as $key=>$reports)
                       <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
+                        <th scope="row"><a href="#">{{ $key+1}}</a></th>
+                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a></td>
+                        <td>{{ $reports->hoc_name }} on {{ $reports->date }}</td>
+                        @if( $reports->approval == 1 )
+                        <td><span class="badge bg-warning">Pending</span></td> 
+                        @elseif($reports->approval == 2)
+                        <td><span class="badge bg-success">Approved</span></td> 
+                        @else
+                        <td><span class="badge bg-danger">Rejected</span></td> 
+                        @endif 
+                        <td>
+                        @if( $reports->approval == 1 )
+                        <a href="" class="btn btn-outline-success btn-sm approveBtn" data-report-id="{{ $reports->id }}">Approve</a>
+                        <button type="button" class="btn btn-outline-danger btn-sm editBtn" value="{{ $reports->id }}"
+                        data-bs-toggle="modal" data-bs-target="#remarks">Reject</button>
+                        @endif
+                        </td>
+                    @endforeach    
+                      </tr>  
                     </tbody>
                   </table>
 
                 </div>
 
               </div>
-            </div><!-- End Recent Sales -->
-    
-    @can('is_admin')
-    <table class="table table-borderless bg-light">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th></th>
-                <th scope="col">Report</th>
-                <th scope="col">Date</th>
-                <th scope="col">sender</th>
-               
-                @can('is_hoc')
+            </div>
+        @endcan
+        @can('is_hoc')
+     <div class="col-12">
+              <div class="card recent-sales overflow-auto">
 
-                <th scope="col">Action</th>
-                @endcan
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($reports as $key=>$reports)
-            <tr>
-                <th scope="row">{{ $key+1 }}</th>
-                @if($reports->status == 'New') 
-                <td><span class="badge bg-success">{{ $reports->status }}</span></td>
-                @else
-                <td><span class="badge bg-secondary"><i class="bi bi-check-circle me-1"></i> {{ $reports->status }}</span></td>
-                @endif
-                <td>{{ $reports->report_name }}</td>
-                <td>{{ $reports->date }}</td>
-                <td>{{ $reports->hoc_name }} - {{ $reports->role_name }} at {{ $reports->center_name }}</td>
-               
-                @can('is_hoc')
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
 
-                <td> 
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th scope="col">Report</th>
+                        <th scope="col">Date sent</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($reports as $key=>$reports)
+                    @if($reports->hod_id == auth()->user()->id)
+                      <tr>
+                        <th scope="row"><a href="#">{{ $key+1 }}</a></th>
+                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a></td>
+                        <td>{{ $reports->date }}</td>
+                        @if( $reports->approval == 1 )
+                        <td><span class="badge bg-warning">Pending</span></td> 
+                        @elseif($reports->approval == 2)
+                        <td><span class="badge bg-success">Approved</span></td> 
+                        @else
+                        <td><span class="badge bg-danger">Rejected</span></td> 
+                        <td><a class="btn btn-outline-success btn-sm seeRemarksBtn" type="button" data-bs-toggle="modal"
+                         data-bs-target="#seeRemarks" data-remarks="{{ $reports->remark }}">
+                          See remarks</a></td> 
+                        @endif 
+                      </tr>
+                    @endif  
+                    @endforeach  
                 
-                        <a href="{{ url('/view',$reports->id) }}" class="btn btn-outline-primary btn-sm">View</a>
-                    <button type="button" value="{{ $reports->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                </td>
-                @endcan
-            </tr>
-            @endforeach
-            
-        </tbody>
-    </table>
-    @endcan
+                    </tbody>
+                  </table>
 
-    @canany(['is_hoc', 'is_reg_cordinator', 'is_dist_cordinator'])
-    @cannot('is_admin')
-    <table class="table table-striped bg-light">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Report</th>
-                <th scope="col">Upload Date</th>
-                
-                @can('is_hoc')
+                </div>
 
-                <th scope="col">Action</th>
-                @endcan
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($reports as $reports)
-            @if($reports->id1 == Auth::user()->id)
-            <tr>
-                <th scope="row"></th>
-                <td>{{ $reports->report_name }}</td>
-                <td>{{ $reports->date }}</td>
-                
-                @canany(['is_hoc', 'is_reg_cordinator', 'is_dist_cordinator'])
+              </div>
+            </div>
+        @endcan
+        <!-- End Recent report -->
 
-                <td> 
-                  <!-- <button type="button" value=""
-                        class="btn btn-outline-primary btn-sm delBtn">Download</button> -->
-                        <a href="{{ url('/download',$reports->report_name) }}" class="btn btn-outline-primary btn-sm">Download</a>
+    <div class="modal fade" id="remarks" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add remarks</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('add_remarks') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
                        
-                    <!-- <button type="button" value="{{ $reports->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delete</button> -->
-                </td>
-                @endcanany
-            </tr>
-            @endif
-            @endforeach
+                        <div class="" id="add_region">
+                            <div class="card-body ">
+                              <div class="row mb-3">
+                                      <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                                      <div class="col-sm-10">
+                                      <textarea id="myTextArea" name="remarks" class="form-control"></textarea>
+                                      </div>
+                              </div>
+                              <input type="hidden" id="remarksId" name="id" value="">
+                            </div>
+                        </div>    
+                    </div> 
 
-          
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add remarks </button>
+                    </div>  
 
-        </tbody>
-    </table>
-    @endcannot
-    @endcanany
+                </form>
+                
+            
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="seeRemarks" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remarks</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+                       
+                        <div class="" id="add_region">
+                            <div class="card-body ">
+                              <div class="row mb-3">
+                                      <p id="remarksContent"></p>
+                              </div>
+                            </div>
+                        </div>    
+                    </div> 
+            </div>
+        </div>
+    </div>
+    
+  
     
 
 @endsection
 
 @section('scripts')
+<script>
+    // Use JavaScript to update the content of the modal body
+    document.addEventListener('DOMContentLoaded', function () {
+        var seeRemarksButtons = document.querySelectorAll('.seeRemarksBtn');
+
+        seeRemarksButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Get the remarks data from the data-remarks attribute
+                var remarksData = button.getAttribute('data-remarks');
+
+                // Set the content of the modal body
+                document.getElementById('remarksContent').innerText = remarksData;
+            });
+        });
+    });
+</script>
+<script>
+    // Use JavaScript to update the value of the hidden input field when the button is clicked
+    document.addEventListener('DOMContentLoaded', function () {
+        var editButtons = document.querySelectorAll('.editBtn');
+
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Get the value from the clicked button
+                var id = button.value;
+
+                // Set the value of the hidden input field in the modal form
+                document.getElementById('remarksId').value = id;
+            });
+        });
+    });
+</script>
     <script>
         $('.delBtn').on('click', function() {
     var confirmation = confirm('Are you sure you want to delete this report?');
@@ -237,4 +268,29 @@ function changeStatus(link) {
 }
 
     </script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var approveButtons = document.querySelectorAll('.approveBtn');
+
+        approveButtons.forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                // Get the report ID from the data-report-id attribute
+                var reportId = button.getAttribute('data-report-id');
+
+                // Display a confirmation dialog
+                var confirmation = window.confirm("Are you sure you want to approve this report?");
+
+                // If the user clicks OK, proceed to the approval link
+                if (confirmation) {
+                    window.location.href = "{{ url('/approve') }}/" + reportId;
+                }
+            });
+        });
+    });
+</script>
+
 @endsection

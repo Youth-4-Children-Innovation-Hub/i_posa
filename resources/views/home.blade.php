@@ -30,7 +30,6 @@
                         <i class="bi bi-bell"></i>
                         <span class="badge bg-primary badge-number">{{ auth()->user()->unreadNotifications->count() }}</span>
                     </a><!-- End Notification Icon -->
-
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                         <li class="dropdown-header" style="padding: 0px 60px 4px 60px;">
                             @if(auth()->user()->unreadNotifications->count() == 0)
@@ -41,7 +40,7 @@
                                 <li>
                                 <hr class="dropdown-divider">
                                 </li>
-                                @foreach(auth()->user()->notifications as $notifications)
+                                @foreach(auth()->User()->notifications as $notifications)
                                 @if(!$notifications->read_at)
                                 @foreach($global_variable as $variable)
                                 @if($variable->id == $notifications->data['report']['user_id'])
@@ -75,7 +74,8 @@
                         </li>
                        
 
-                    </ul><!-- End Notification Dropdown Items -->
+                    </ul>
+                  <!-- End Notification Dropdown Items -->
 
                 </li><!-- End Notification Nav -->
 
