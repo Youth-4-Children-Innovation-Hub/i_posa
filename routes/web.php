@@ -101,7 +101,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('delete_course_center', [CourseController::class, 'deleteCourse'])->name('delete_course_center');
     Route::post('delete_course_admin',[CourseController::class,'deleteCourseAdmin'])->name('delete_course_admin');
     Route::get('search_course',[CourseController::class,'Search']);
-    
+    Route::get('national_center_courses/{id}',[CourseController::class,'nationalCourses']);
     
     Route::get('teachers',[TeachersController::class,'GetTeachers']);
     Route::post('addteacher',[TeachersController::class,'Create'])->name('create_teacher');
@@ -109,6 +109,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('update_teacher', [TeachersController::class, 'update'])->name('update_teacher');
     Route::post('delete_teacher', [TeachersController::class, 'delete'])->name('delete_teacher');
     Route::get('search_teacher',[TeachersController::class,'Search']);
+    Route::get('national_center_teachers/{id}',[TeachersController::class,'nationalTeachers']);
 
     Route::get('students',[StudentController::class,'GetStudents']);
     Route::post('/addstudent',[StudentController::class,'Create'])->name('create_student');
@@ -116,8 +117,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('update_student', [StudentController::class, 'update'])->name('update_student');
     Route::post('delete_student', [StudentController::class, 'delete'])->name('delete_student');
     Route::get('search_student',[StudentController::class,'Search']);
+    Route::get('national_center_students/{id}',[StudentController::class,'nationalStudents']);
 
-    
     
     Route::get('dashboard',[DashboardController::class,'GetDashboard']);
     Route::get('click_edit/{id}',[CourseController::class,'edit']);

@@ -23,13 +23,6 @@ class CourseController extends Controller
         $centers = Center::all();
         $userData = Auth::user();
 
-        // $centercourses = Cours::select('course_centers.id', 'courses.name AS course')
-        //     ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
-        //     ->orderBy('courses.created_at', 'DESC')
-        //     ->get();
-            
-            //for the head of center
-
         $districtCourses = Course::select('courses.*')
         ->Join('course_centers', 'course_centers.course_id', '=', 'courses.id')
         ->Join('centers', 'course_centers.center_id', '=', 'centers.id')
@@ -79,6 +72,34 @@ class CourseController extends Controller
             return redirect('courses');
         } catch (Exception $e) {
         }
+    }
+
+    public function nationalCourses($id){
+        $courses = Course::all();
+        $teachers = Teacher::all()->where('created_by', '=', Auth()->user()->id);
+        $centers = Center::all();
+        $userData = Auth::user();
+
+      
+
+        $centercourses1 = CourseCenter::select('courses.name AS course1', 'teachers.name AS teacher1', 'course_centers.id AS id')
+            ->join('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+            ->join('courses', 'courses.id', '=', 'course_centers.course_id')
+            ->join('centers', 'centers.id', '=', 'course_centers.center_id')
+            ->join('users', 'users.id', '=', 'centers.hod_id')
+            ->where('centers.id', '=', $id)
+            ->get();
+            
+        return view(
+            'courses.nationalCourse',
+            [
+                'teachers' => $teachers,
+                'courses' => $courses,
+                'centers' => $centers,
+                'centercourses1' => $centercourses1,
+                'userData' =>   $userData
+            ]
+        );
     }
     // public function GetCourses(){
     //     $userData = auth()->user();

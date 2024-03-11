@@ -12,17 +12,16 @@
         <!-- Default Card -->
              <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Select A Center</h5>
                     <div class="row">
                      
                         <div class="col-6 col-md-4 mb-3">
-                            <a href="#" >Students</a>
+                            <a href="{{ url('national_center_students/' . $id) }}" >Students</a>
                         </div>
                         <div class="col-6 col-md-4 mb-3">
-                            <a href="#" >Courses</a>
+                            <a href="{{ url('national_center_courses/' . $id) }}" >Courses</a>
                         </div>
                         <div class="col-6 col-md-4 mb-3">
-                            <a href="#" >Teachers</a>
+                            <a href="{{ url('national_center_teachers/' . $id) }}" >Teachers</a>
                         </div>
                         <div class="col-6 col-md-4 mb-3">
                             <a href="#" >Clubs</a>

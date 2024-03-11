@@ -40,6 +40,17 @@ class TeachersController extends Controller
        
     }
 
+    public function nationalTeachers($id){
+        $teachers1 = CourseCenter::select('course_centers.id AS id', 'teachers.name AS name1', 'courses.name AS course1', 'teachers.email AS email1', 'teachers.phone_number AS phone_number1')
+        ->join('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+        ->join('courses', 'courses.id', '=', 'course_centers.course_id')
+        ->join('centers', 'centers.id', '=', 'course_centers.center_id')
+        ->join('users', 'users.id', '=', 'centers.hod_id')
+        ->where('centers.id', '=', $id)
+        ->get();    
+    return view('centers.nationalTeacher', ['teachers1' => $teachers1]);
+    }
+
     public function Create(Request $request)
     {
         try {
