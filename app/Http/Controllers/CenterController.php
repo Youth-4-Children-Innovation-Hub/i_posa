@@ -127,6 +127,6 @@ class CenterController extends Controller
 
     public function centerDetails($id)
     {
-        return view('centers.centerDetails', ['id', $id]);  
+        return view('centers.centerDetails', ['id' => $id]);  
     }
 }

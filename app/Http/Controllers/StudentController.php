@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Course;
+use App\Models\Role;
 use App\Models\StudentCourses;
 
 use Illuminate\Support\Facades\File;
@@ -60,7 +61,17 @@ class StudentController extends Controller
       
         return view('students.students', ['centers' => $centers, 'center1' => $center1, 'students1' => $students1, 'regions' => $regions,
         'districtStudents' => $districtStudents, 'students' => $students, 'userData' => $userData, 'userRole' => $userRole, 'courses' => $courses]);
-        //return Auth::User()->role_id;
+        
+    }
+
+    public function nationalStudents($id){
+        $courses = Course::all();
+        $students = Student::select('students.*', 'centers.name AS center')
+        ->Join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.id', '=', $id)
+        ->get();
+        return view('students.nationalStudents', ['students' => $students, 'id' => $id, 'courses' => $courses]);
+
     }
 
     public function Create(Request $request)
@@ -119,8 +130,18 @@ class StudentController extends Controller
 
         $path_certificate = $request->file('birth_certificate')->storeAs($destination_certificates, $request->file('birth_certificate')->getClientOriginalName());
 
+        $user_role = Role::select('role')
+        ->join('users', 'roles.id', '=', 'users.role_id')
+        ->where('users.id', '=', Auth::user()->id)
+        ->first();
+     
         try {
-            $centerId = Center::Select('id')->where('hod_id', Auth::user()->id)->value('id');
+            if ($user_role->role == 'head of center') {
+                $centerId = Center::where('hod_id', Auth::user()->id)->value('id');
+            } else {
+                $centerId = $request->centerId;
+            }
+            
             $student = new Student();
             $student->name = $request->name;
             $student->parent = $request->parent;
@@ -148,11 +169,12 @@ class StudentController extends Controller
                 $student_courses->state = "not complete";
                 $student_courses->save();
             }
-            return redirect('students')->with('success', 'User added successfully.');
+            return redirect()->back();
         } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
+
 
     public function update(Request $request)
     {
