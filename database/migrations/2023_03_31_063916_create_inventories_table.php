@@ -17,9 +17,11 @@ return new class extends Migration
             $table->string('number');
             $table->string('condition');
             $table->unsignedBigInteger('course_id');
+            $table->unsignedBigInteger('center_id');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses');
+            $table->foreign('center_id')->references('id')->on('centers');
         });
     }
 
