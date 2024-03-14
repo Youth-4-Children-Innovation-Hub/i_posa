@@ -24,13 +24,18 @@ class InventoryController extends Controller
                         ->select('roles.role')
                         ->first();
 
-        $courses = Course::all();
+        $courses = Course::select('courses.name as name', 'courses.id as id')
+        ->join('course_centers', 'course_centers.course_id', '=', 'courses.id')
+        ->join('centers', 'centers.id', '=', 'course_centers.center_id')
+        ->where('centers.hod_id', '=', auth()->user()->id)->get();
+
 
         $inventory_lists = DB::table('inventories')
                                 ->join('courses', 'inventories.course_id', '=', 'courses.id')
+                                ->join('centers', 'centers.id', '=', 'inventories.center_id')
+                                ->where('centers.hod_id', '=', auth()->user()->id)
                                 ->select('inventories.*', 'courses.name as course_name')
                                 ->get();
-
         return view('centers.inventory_lists', compact('inventory_lists', 'userData', 'userRole', 'courses'));
     }
 
@@ -56,23 +61,29 @@ class InventoryController extends Controller
 
     public function store(Request $request)
     {
-        $inventory = new Inventory();
+      
 
-        try {
+            $centerId = Center::select('id')
+            ->where('hod_id', '=', auth()->user()->id)->first();
+
+            $inventory = new Inventory();
+
             $inventory->name = $request->name;
             $inventory->number = $request->number;
             $inventory->course_id = $request->course;
             $inventory->condition = $request->condition;
+            $inventory->center_id = $centerId->id;
+            $inventory->save();
+            return redirect()->back();
 
-            if($inventory->save()){
-                return redirect('inventory')->with('success', 'Inventory added');
-            }else {
-                return redirect('inventory')->with('error', 'Failed to add Inventory');
-            }
+        //         return redirect('inventory')->with('success', 'Inventory added');
+        //     }else {
+        //         return redirect('inventory')->with('error', 'Failed to add Inventory');
+        //     }
 
-        } catch (\Throwable $th) {
-            return redirect('inventory')->with('error', 'Failed to add Inventory');
-        }
+        // } catch (\Throwable $th) {
+        //     return redirect('inventory')->with('error', 'Failed to add Inventory');
+        // }
 
     }
 

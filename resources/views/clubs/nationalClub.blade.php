@@ -1,0 +1,241 @@
+@extends('home')
+@section('contente')
+<div class="container">
+    <div class="pagetitle">
+        <h1>Clubs</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Clubs</li>
+
+                <li class="mx-3 py-0">
+                    <div class="search mx-auto">
+                        <form action="{{ url('/search_club') }}" method="GET">
+                            <input id="search_text" type="text" placeholder="Search" name="search_querry">
+                            <button type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+                <li>
+                    <div class="my-1 d-flex" id="paginate">
+                        <form method="GET" action="{{ url('/teachers') }}">
+                            <select class="" name="number" id="exampleFormControlSelect1">
+                                @if (isset($paginate))
+                                <option value="{{ $paginate }}">{{ $paginate }}</option>
+                                @endif
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="8">8</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                            </select>
+                            <button type="submit">Show</button>
+
+                        </form>
+                    </div>
+                </li>
+
+              
+                <li>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
+                        data-bs-target="#CreateModal">Add Club</button>
+                </li>
+                
+
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+       <!-- Default Card -->
+       <div class="row align-items-top">
+            @foreach($clubs as $clubs)
+            
+                <div class="col-lg-3">
+                  
+                        <a href="{{ url('club_details', ['id' => $clubs->cid]) }}" style="text-decoration: none;">
+                        <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">{{ $clubs->name }}</h5>
+                        </div>
+                        </div>
+                        </a>
+                </div>
+           @endforeach
+            
+       </div>
+       <!-- End Default Card -->
+
+    <!-- add new club-->
+    <div class="modal fade" id="CreateModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Club</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="" id="add_region">
+                            <div class="card-body">
+                                <!-- General Form Elements -->
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Club Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="name" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="chairName" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Phone Number</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="contact" required>
+                                    </div>
+                                </div>
+                               
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" name="email" id="name" placeholder="optional">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Registration Status</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="registration" id="name" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Assets</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="assets" id="name" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Funding sources</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="funding" id="name">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Capital</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="capital" id="name" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Contact with QA</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" aria-label="Default select example" name="QA"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add </button>
+                    </div>
+                </form><!-- End General Form Elements -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add new teacher model -->
+
+   
+
+</div>
+@endsection
+
+
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function addInputField() {
+        var inputGroup = $('<div class="input-group mt-2"><input type="text" name="multiInput[]" class="form-control" id="name"><div class="input-group-append"><button class="btn btn-outline-danger" type="button" onclick="removeInputField(this)">Remove</button></div></div>');
+        $('#input-container').append(inputGroup);
+    }
+
+    function removeInputField(button) {
+        $(button).closest('.input-group').remove();
+    }
+</script>
+
+<script>
+$(document).on('click', '.editBtn', function() {
+    var id = $(this).val();
+    console.log(id);
+    $.ajax({
+        type: "GET",
+        url: "/edit_teacher/" + id,
+        success: function(response) {
+            console.log(response);
+            $('#teacher_id').val(id);
+            $('#name').val(response.teacher.name);
+            $('#phone_number').val(response.teacher.phone_number);
+            $('#email').val(response.teacher.email);
+
+        },
+
+    });
+});
+
+$('.delBtn').on('click', function() {
+    var confirmation = confirm('Are you sure you want to delete this Teacher?');
+    if (confirmation) {
+        // delete it
+        var teacher = $(this).val();
+        console.log(teacher);
+
+        $.ajax({
+            type: 'POST',
+            url: '/delete_teacher',
+            data: {
+                id: teacher
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+            }
+        });
+    } else {
+        //canceled
+    }
+});
+</script>
+@endsection

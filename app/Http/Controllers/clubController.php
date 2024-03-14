@@ -39,4 +39,11 @@ class clubController extends Controller
         ->first();
         return view('clubs.clubDetails', ['club_details' => $club_details]);
     }
+
+    public function nationalClubs($id){
+        $clubs = Club::select('clubs.Name as name', 'clubs.id as cid')
+        ->join('centers', 'centers.id', '=', 'clubs.Center_id')
+        ->where('centers.id', '=', $id)->get();
+        return view('clubs.nationalClub', ['clubs' => $clubs]);
+    }
 }
