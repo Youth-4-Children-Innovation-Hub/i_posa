@@ -16,12 +16,19 @@ class TeachersController extends Controller
     {
         $userData = Auth::user();
         $teachers = Teacher::orderBy('created_at', 'DESC')
-            ->get();
+        ->get();
 
         $districtTeachers = Teacher::select('teachers.*', 'centers.name as centerName')
         ->Join('centers', 'centers.hod_id', '=', 'teachers.created_by')
         ->Join('districts', 'centers.district_id', '=', 'districts.id')
         ->where('districts.cordinator_id', '=', Auth::user()->id)
+        ->get();
+
+        $regionTeachers = Teacher::select('teachers.*', 'centers.name as centerName', 'districts.name as distName')
+        ->Join('centers', 'centers.hod_id', '=', 'teachers.created_by')
+        ->Join('districts', 'centers.district_id', '=', 'districts.id')
+        ->Join('regions', 'regions.id', '=', 'districts.region_id')
+        ->where('regions.cordinator_id', '=', Auth::user()->id)
         ->get();
 
 
@@ -35,7 +42,7 @@ class TeachersController extends Controller
          ->where('users.id', '=', $userData->id)
          ->get();    
      return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData, 'teachers1' => $teachers1, 
-    'districtTeachers' => $districtTeachers]);
+    'districtTeachers' => $districtTeachers, 'regionTeachers' =>  $regionTeachers]);
 
        
     }

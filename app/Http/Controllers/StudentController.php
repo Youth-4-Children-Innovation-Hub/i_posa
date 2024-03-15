@@ -56,11 +56,21 @@ class StudentController extends Controller
            ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
            ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
            ->where('districts.cordinator_id', '=', $userData->id)
-           ->get();   
+           ->get();  
+           
+           $regionStudents =  Student::select('students.*', 'courses.name AS course2', 'centers.name AS centerName2', 'districts.name as distName')
+           ->join('student_courses', 'student_courses.student_id', '=', 'students.id') 
+           ->join('centers', 'students.center_id', '=', 'centers.id')
+           ->join('districts', 'centers.district_id', '=', 'districts.id')
+           ->join('regions', 'regions.id', '=', 'districts.region_id')
+           ->join('courses', 'courses.id', '=', 'student_courses.course_id') 
+           ->where('regions.cordinator_id', '=', $userData->id)
+           ->get();      
             
       
         return view('students.students', ['centers' => $centers, 'center1' => $center1, 'students1' => $students1, 'regions' => $regions,
-        'districtStudents' => $districtStudents, 'students' => $students, 'userData' => $userData, 'userRole' => $userRole, 'courses' => $courses]);
+        'districtStudents' => $districtStudents, 'students' => $students, 'userData' => $userData, 'userRole' => $userRole, 'courses' => $courses, 
+        'regionStudents' => $regionStudents]);
         
     }
 

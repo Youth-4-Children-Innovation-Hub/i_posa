@@ -108,6 +108,40 @@
     </table>
     @endcan
 
+    @can('is_reg_cordinator')
+    <div class="row-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <!-- <h5 class="card-title">Recent Reports</h5> -->
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                   
+                      <tr>
+                        <th>#</th>
+                        <th scope="col">Name of Course</th>
+                      </tr>
+                    
+                    </thead>
+                    <tbody>
+              
+                    @foreach($regionCourses as $key => $regionCourses)  
+                      <tr>
+                      <th scope="row"><a href="#">{{ $key + 1 }}</a></th>
+                        <td scope="col">{{ $regionCourses->name }}</td>
+                      </tr>
+                      @endforeach
+                   
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
+    @endcan
+
     @can('is_dist_cordinator')
     <div class="row-12">
               <div class="card recent-sales overflow-auto">

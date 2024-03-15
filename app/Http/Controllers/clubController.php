@@ -6,13 +6,29 @@ use Illuminate\Http\Request;
 use App\Models\Club;
 use App\Models\Center;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class clubController extends Controller
 {
     public function getClubs(){
         $cid = Center::where('hod_id', '=', Auth()->user()->id)->value('id');
         $clubs=Club::all()->where('Center_id', '=', $cid);
-        return view('clubs.club', ['clubs' => $clubs]);
+
+        $distclubs=Club::select('clubs.*')
+        ->join('centers', 'centers.id', '=', 'clubs.Center_id')
+        ->join('districts', 'districts.id', '=', 'centers.district_id')
+        ->where('districts.cordinator_id', '=', Auth::user()->id)
+        ->get();
+
+        $regclubs=Club::select('clubs.*')
+        ->join('centers', 'centers.id', '=', 'clubs.Center_id')
+        ->join('districts', 'districts.id', '=', 'centers.district_id')
+        ->join('regions', 'regions.id', '=', 'districts.region_id')
+        ->where('regions.cordinator_id', '=', Auth::user()->id)
+        ->get();
+
+      
+        return view('clubs.club', ['clubs' => $clubs, 'distclubs' => $distclubs, 'regclubs' => $regclubs ]);
     }
 
     public function createClubs(Request $request){

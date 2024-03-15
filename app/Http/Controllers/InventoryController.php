@@ -29,6 +29,21 @@ class InventoryController extends Controller
         ->join('centers', 'centers.id', '=', 'course_centers.center_id')
         ->where('centers.hod_id', '=', auth()->user()->id)->get();
 
+        $reg_inventory = Inventory::select('inventories.*', 'courses.name as course_name', 'centers.name as cName', 'districts.name as distName')
+        ->Join('centers', 'centers.id', '=', 'inventories.center_id')
+        ->Join('courses', 'courses.id', '=', 'inventories.course_id')
+        ->Join('districts', 'centers.district_id', '=', 'districts.id')
+        ->Join('regions', 'regions.id', '=', 'districts.region_id')
+        ->where('regions.cordinator_id', '=', auth()->user()->id)
+        ->get();
+
+        $dist_inventory = Inventory::select('inventories.*', 'courses.name as course_name', 'centers.name as cName')
+        ->Join('centers', 'centers.id', '=', 'inventories.center_id')
+        ->Join('courses', 'courses.id', '=', 'inventories.course_id')
+        ->Join('districts', 'centers.district_id', '=', 'districts.id')
+        ->where('districts.cordinator_id', '=', auth()->user()->id)
+        ->get();
+
 
         $inventory_lists = DB::table('inventories')
                                 ->join('courses', 'inventories.course_id', '=', 'courses.id')
@@ -36,7 +51,7 @@ class InventoryController extends Controller
                                 ->where('centers.hod_id', '=', auth()->user()->id)
                                 ->select('inventories.*', 'courses.name as course_name')
                                 ->get();
-        return view('centers.inventory_lists', compact('inventory_lists', 'userData', 'userRole', 'courses'));
+        return view('centers.inventory_lists', compact('inventory_lists', 'userData', 'userRole', 'courses', 'reg_inventory', 'dist_inventory'));
     }
 
     public function getInventoryRequest(){
