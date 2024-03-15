@@ -133,6 +133,62 @@
     </table>
     @endcan
 
+    @can('is_reg_cordinator')
+    <div class="">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <!-- <h5 class="card-title">Recent Reports</h5> -->
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Center</th>
+                        <th scope="col">District</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($regionStudents as $key => $regionStudents)
+                      <tr>
+                        <th scope="row"><a href="#">{{ $key + 1 }}</a></th>
+                        <td>{{ $regionStudents->name }}</td>
+                        <td>{{ $regionStudents->course2 }}</td>
+                        <td>{{ $regionStudents->phone_number }}</td>
+                        <td>{{ $regionStudents->gender }}</td>
+                        @if( $regionStudents->status == 'continous' )
+                        <td><span
+                                class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $regionStudents->status }}</span>
+                        </td>
+                        @elseif( $regionStudents->status == 'Graduate' )
+                        <td><span
+                                class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $regionStudents->status }}</span>
+                        </td>
+                        @else
+                        <td><span
+                        class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $regionStudents->status }}</span>
+                        </td>
+                        @endif
+                        <td>{{ $regionStudents->centerName2 }}</td>
+                        <td>{{ $regionStudents->distName }}</td>
+                        <td>jkfhd</td>
+                      </tr> 
+                      @endforeach 
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
+    @endcan
+
     @can('is_dist_cordinator')
 <!--    
         <div class="card">

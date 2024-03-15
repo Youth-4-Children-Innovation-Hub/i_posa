@@ -9,15 +9,17 @@
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Inventory List</li>
                 <li>
+                @can('is_hoc')
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#addInventory">Add Inventory</button>
+                @endcan       
              </li>
             </ol>
            
         </nav>
     </div><!-- End Page Title -->
 
-
+    @can('is_hoc')
     <table class="table table-striped">
         <thead>
             <tr>
@@ -57,6 +59,81 @@
 
         </tbody>
     </table>
+    @endcan
+
+    @can('is_dist_cordinator')
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Number</th>
+                <th scope="col">Course</th>
+                <th scope="col">Center</th>
+                <th scope="col">Condition</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @php
+            $i = 1;
+            @endphp
+            @foreach ($dist_inventory as $dist_inventory)
+            <tr>
+                <th scope="row">{{ $i }}</th>
+                <td>{{ $dist_inventory->name }}</td>
+                <td>{{ $dist_inventory->number }}</td>
+                <td>{{ $dist_inventory->course_name }}</td>
+                <td>{{ $dist_inventory->cName }}</td>
+                <td>{{ $dist_inventory->condition }}</td>
+            </tr>
+               
+            @php
+            $i++;
+            @endphp
+            @endforeach
+
+        </tbody>
+    </table>
+    @endcan
+
+    @can('is_reg_cordinator')
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Number</th>
+                <th scope="col">Course</th>
+                <th scope="col">Center</th>
+                <th scope="col">District</th>
+                <th scope="col">Condition</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @php
+            $i = 1;
+            @endphp
+            @foreach ($reg_inventory as $reg_inventory)
+            <tr>
+                <th scope="row">{{ $i }}</th>
+                <td>{{ $reg_inventory->name }}</td>
+                <td>{{ $reg_inventory->number }}</td>
+                <td>{{ $reg_inventory->course_name }}</td>
+                <td>{{ $reg_inventory->cName }}</td>
+                <td>{{ $reg_inventory->distName }}</td>
+                <td>{{ $reg_inventory->condition }}</td>
+            </tr>
+               
+            @php
+            $i++;
+            @endphp
+            @endforeach
+
+        </tbody>
+    </table>
+    @endcan
 
     <div class="modal fade" id="addInventory" tabindex="-1">
         <div class="modal-dialog modal-lg">

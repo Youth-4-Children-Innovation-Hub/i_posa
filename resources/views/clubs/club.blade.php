@@ -63,6 +63,7 @@
     </div><!-- End Page Title -->
 
        <!-- Default Card -->
+       @can('is_hoc')
        <div class="row align-items-top">
             @foreach($clubs as $clubs)
             
@@ -81,6 +82,47 @@
            @endforeach
             
        </div>
+       @endcan
+       @can('is_dist_cordinator')
+       <div class="row align-items-top">
+            @foreach($distclubs as $clubs)
+            
+                <div class="col-lg-3">
+                  
+                        <a href="{{ url('club_details', ['id' => $clubs->id]) }}" style="text-decoration: none;">
+                        <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">{{ $clubs->Name }}</h5>
+                        </div>
+                        </div>
+                        </a>
+                    
+               
+                </div>
+           @endforeach
+            
+       </div>
+       @endcan
+       @can('is_reg_cordinator')
+       <div class="row align-items-top">
+            @foreach($regclubs as $clubs)
+            
+                <div class="col-lg-3">
+                  
+                        <a href="{{ url('club_details', ['id' => $clubs->id]) }}" style="text-decoration: none;">
+                        <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">{{ $clubs->Name }}</h5>
+                        </div>
+                        </div>
+                        </a>
+                    
+               
+                </div>
+           @endforeach
+            
+       </div>
+       @endcan
        <!-- End Default Card -->
 
     <!-- add new club-->

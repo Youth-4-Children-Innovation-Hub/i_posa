@@ -283,7 +283,7 @@
             </li><!-- End Forms Nav -->
             @endcanany
 
-            @canany(['is_reg_cordinator','is_user'])
+            @canany('is_user')
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
@@ -301,6 +301,37 @@
             @endcanany
             @canany(['is_reg_cordinator','is_user'])
             <!-- districti level -->
+            <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/students') }}">
+                    <i class="bi bi-person-lines-fill"></i>
+                        <span>Students</span>
+                    </a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/courses') }}">
+                    <i class="ri-pencil-fill"></i>
+                        <span>Courses</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/teachers') }}">
+                    <i class="bi bi-file-person-fill"></i>
+                        <span>Teachers</span>
+                    </a>
+                </li>    
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/clubs') }}">
+                    <i class="bi bi-people-fill"></i>
+                        <span>Clubs</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/inventory') }}">
+                    <i class="bi bi-file-ruled-fill"></i>
+                        <span>Inventory list</span>
+                    </a>
+                </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#districts-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Districts</span><i class="bi bi-chevron-down ms-auto"></i>
