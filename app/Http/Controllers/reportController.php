@@ -19,18 +19,22 @@ use App\Models\Club;
 use App\Models\CenterReport;
 use App\Models\District;
 use App\Models\Remark;
+use App\Models\Role;
+use App\Models\Challenge;
 use Notification;
 use App\Notifications\mailNotification;
 
 class reportController extends Controller
 {
     public function index(){
-        $reports = CenterReport::Select('center_reports.id AS id', 'center_reports.user_id as id1','center_reports.created_at as date', 'users.name AS hoc_name', 'centers.name as center', 'centers.hod_id as hod_id', 
-        'center_reports.name as report_name', 'roles.role AS role_name', 'center_reports.Approval as approval', 
-        'remarks.remark as remark')
-                           ->leftJoin('centers', 'centers.hod_id', '=', 'center_reports.user_id')
-                           ->leftJoin('users', 'users.id', '=', 'center_reports.user_id')
-                           ->leftJoin('roles', 'roles.id', '=', 'users.role_id')
+        $reports = CenterReport::Select('center_reports.id as id', 'districts.cordinator_id as dist_id', 'center_reports.user_id as id1','center_reports.created_at as date', 'users.name AS hoc_name', 'centers.name as center', 'centers.hod_id as hod_id', 
+        'center_reports.name as report_name', 'regions.cordinator_id as reg_id', 'roles.role AS role_name', 'center_reports.dist_approval', 'center_reports.reg_approval', 
+        'remarks.remark as remark', 'center_reports.nat_status')
+                           ->join('centers', 'centers.hod_id', '=', 'center_reports.user_id')
+                           ->join('users', 'users.id', '=', 'center_reports.user_id')
+                           ->join('roles', 'roles.id', '=', 'users.role_id')
+                           ->join('districts', 'districts.id', '=', 'centers.district_id')
+                           ->join('regions', 'regions.id', '=', 'districts.region_id')
                            ->leftJoin('remarks', 'remarks.report_id', '=', 'center_reports.id')
                            ->orderBy('center_reports.created_at', 'DESC')
                            ->get();
@@ -49,12 +53,32 @@ class reportController extends Controller
             'greeting'=>'hi ' .auth()->user()->name,
             'body'=>'This is the email body',
             'actiontext'=>'subscribe',
-            'actionurl'=>'/',
+            'actionurl'=>'http://127.0.0.1:8000/reports_page',
             'lastline'=>'This is the last line',
         ];
 
         Notification::send($user, new mailNotification($details));
         dd('done');
+    }
+
+    public function createChallenge(Request $request){
+        $id = Challenge::select('id')->where('user_id', '=', Auth::user()->id)->first();
+
+        $data = new Challenge();
+        $data->introduction = $request->introduction;
+        $data->challenges = $request->challenge;
+        $data->user_id = Auth::user()->id;
+
+        if($id){
+            $data = Challenge::find($id->id);
+            $data->introduction = $request->introduction;
+            $data->challenges = $request->challenge;
+            $data->user_id = Auth::user()->id;
+        }
+
+        $data->save();
+        return redirect()->back();
+             
     }
 
     public function upload(Request $request){
@@ -84,12 +108,14 @@ class reportController extends Controller
 
     public function view($id){
         $data = centerReport::find($id);
+        $data->nat_status = 'opened';
+        $data->save();
         $filePath = storage_path('app/public/reports/' . $data->name);
         return response()->file($filePath, ['Content-Type' => 'application/pdf']);
    
     }
 
- 
+
 
     public function delete(Request $request)
     {
@@ -130,18 +156,70 @@ class reportController extends Controller
     }
 
     public function approve($id){
+
+        $dist_role_id = Role::select('id')->where('role', '=', 'district cordinator')->first();
+        $reg_role_id = Role::select('id')->where('role', '=', 'regional cordinator')->first();
+
         $update = CenterReport::find($id);
-        $update->Approval = 2;
-        $update->save();
+        if ( Auth::user()->role_id == $dist_role_id->id ){
+            $update->dist_approval = 2;
+            $update->save();
 
-        $reg_cord_id = Region::select('regions.cordinator_id')
-        ->leftjoin('districts', 'districts.region_id', '=', 'regions.id')
-        ->where('districts.cordinator_id', '=', Auth::user()->id)->first();
+            $reg_cord_id = Region::select('regions.cordinator_id')
+            ->join('districts', 'districts.region_id', '=', 'regions.id')
+            ->where('districts.cordinator_id', '=', Auth::user()->id)->first();
+    
+            $reg_cord_details = User::find($reg_cord_id->cordinator_id);
+    
+            $reg_cord_details->notify(new ReportUploaded($update));
 
-        $reg_cord_details = User::find($reg_cord_id->cordinator_id);
+            $userToEmail = User::find($reg_cord_id->cordinator_id);
 
-        $reg_cord_details->notify(new ReportUploaded($update));
-        
+            $districtToEmail = District::select('name')
+            ->where('cordinator_id', '=', auth()->user()->id)
+            ->first();
+
+            $details = [
+                'greeting'=>'hi ' . $reg_cord_details->name,
+                'body'=>'You just received a report from ' . Auth::user()->name . ', district coordinator of ' .  $districtToEmail->name . ' . Click the button below to see it.',
+                'actiontext'=>'See a report',
+                'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                'lastline'=>'This is the last line',
+            ];
+
+            Notification::send($userToEmail, new mailNotification($details));
+        }
+
+        if ( Auth::user()->role_id == $reg_role_id->id ){
+            $update->reg_approval = 2;
+            $update->save();
+
+            $nat_cord_id = User::select('users.id as id')
+            ->join('roles', 'roles.id', '=', 'users.role_id')
+            ->where('roles.role', '=', 'admin')
+            ->first();
+
+            $nat_cord_details = User::find($nat_cord_id->id);
+            $nat_cord_details->notify(new ReportUploaded($update));
+            $userToEmail = User::find($nat_cord_id->id);
+
+            $regionToEmail = Region::select('name')
+            ->where('cordinator_id', '=', auth()->user()->id)
+            ->first();
+
+            $details = [
+                'greeting'=>'hi ' . $nat_cord_details->name,
+                'body'=>'You just received a report from ' . Auth::user()->name . ', regional coordinator of ' .  $regionToEmail->name . ' . Click the button below to see it.',
+                'actiontext'=>'See a report',
+                'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                'lastline'=>'This is the last line',
+            ];
+
+            Notification::send($userToEmail, new mailNotification($details));
+            
+
+        }
+ 
         return redirect()->back();
     }
 
@@ -253,12 +331,17 @@ class reportController extends Controller
             ->where('created_by', '=', Auth::user()->id)
             ->get();
 
+            $challenge = Challenge::select('*')
+            ->where('challenges.user_id', '=', Auth::user()->id)
+            ->first();
+
             $title = "Quarter report";
             $pdf = Pdf::loadView('report.centerReport', ['owner_funder' => $owner_funder, 'title' => $title,
              'malesCount' => $malesCount, 'femalesCount' => $femalesCount, 'learnersCount' => $learnersCount,
              'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
              'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1,
-              'clubInfo' => $clubInfo, 'facilitators' => $facilitators] );
+              'clubInfo' => $clubInfo, 'facilitators' => $facilitators, 
+              'challenge' =>  $challenge ] );
              return $pdf->stream($title);
 
 
@@ -375,7 +458,7 @@ class reportController extends Controller
             'greeting'=>'hi ' . $dist_cord_details->name,
             'body'=>'You just received a report from ' . Auth::user()->name . ', head of ' .  $centerToEmail->name . ' center. Click the button below to see it.',
             'actiontext'=>'See a report',
-            'actionurl'=>'/',
+            'actionurl'=>'http://127.0.0.1:8000/reports_page',
             'lastline'=>'This is the last line',
         ];
 
@@ -383,21 +466,101 @@ class reportController extends Controller
        
         return redirect()->back();
 
-        // Save the PDF on the server
-        // $pdf->save(storage_path('app/pdf/' . $filename)); 
-        //  return $pdf->stream($title);
-
 }
         public function addRemarks(Request $request){
+            $dist_role_id = Role::select('id')->where('role', '=', 'district cordinator')->first();
+            $reg_role_id = Role::select('id')->where('role', '=', 'regional cordinator')->first();
+
             $data = new Remark();
             $data->remark = $request->remarks;
             $data->report_id = $request->id;
             $data->sent_by = auth()->user()->id;
             $data->save();
             $update = CenterReport::find($request->id);
-            $update->Approval = 3;
-            $update->save();
+
+            if ( Auth::user()->role_id == $dist_role_id->id ){
+                $update->dist_approval = 3;
+                $update->save();
+
+                $hoc_id = CenterReport::select('user_id')
+                ->where('id', '=', $request->id)->first();
+                $id_of_center = $hoc_id->user_id;
+                
+
+                $hoc_details = User::find($id_of_center);
+
+
+                $district_details = District::select('districts.name as dist_name')
+                ->join('centers', 'centers.district_id', '=', 'districts.id')
+                ->join('users', 'centers.hod_id', '=', 'users.id')
+                ->where('centers.hod_id', '=',   $id_of_center)
+                ->where('districts.cordinator_id', '=',  Auth::user()->id)->first();
+
+                dd($district_details->dist_name);
+
+                $name_of_dist = $district_details->dist_name;
+
+              
+                $details = [
+                    'greeting'=>'hi ' . $hoc_details->name,
+                    'body'=>'You received a feedback from ' . Auth::user()->name . ', district coordinator of ' .  $name_of_dist . ', saying: $request->remarks.',
+                    'actiontext'=>'See a report',
+                    'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                    'lastline'=>'This is the last line',
+                ];
+
+                Notification::send($hoc_details, new mailNotification($details));
+            }
+
+            if ( Auth::user()->role_id == $reg_role_id->id ){
+                $update->reg_approval = 3;
+                $update->save();
+                //head of center details
+                $hoc_id = CenterReport::select('user_id')
+                ->where('id', '=', $request->id)->first();
+                $hoc_details = User::find($hoc_id->user_id);
+
+                 //district coordinator details
+                 $dist_cordinator_id = District::select('districts.id as id', 'regions.name as reg_name')
+                 ->join('centers', 'centers.district_id', '=', 'districts.id')
+                 ->join('regions', 'regions.id', '=', 'districts.region_id')
+                 ->where('centers.hod_id', '=', $hoc_id->user_id)->first();
+
+                 $dist_email_details = User::find($dist_cordinator_id->id);
+
+                 //email the head of center
+                 $details = [
+                    'greeting'=>'hi ' . $hoc_details->name,
+                    'body'=>'You received a feedback from ' . Auth::user()->name . ', regional coordinator of ' .  $dist_cordinator_id->reg_name . ', saying: $request->remarks.',
+                    'actiontext'=>'See a report',
+                    'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                    'lastline'=>'This is the last line',
+                ];
+
+                Notification::send($hoc_details, new mailNotification($details));
+
+                //email the district coordinator
+
+                $dist_details = [
+                    'greeting'=>'hi ' . $dist_email_details->name,
+                    'body'=>'You received a feedback from ' . Auth::user()->name . ', regional coordinator of ' .  $dist_cordinator_id->reg_name . ', saying: $request->remarks.',
+                    'actiontext'=>'See a report',
+                    'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                    'lastline'=>'This is the last line',
+                ];
+
+                Notification::send($dist_email_details, new mailNotification($dist_details));
+
+            }
+            
             return redirect()->back();
+        }
+
+        public function erase($id)
+        {
+            $report = CenterReport::find($id);
+            $report->delete();
+            return redirect()->back()->with('success', 'Report deleted successfully');
         }
     
 

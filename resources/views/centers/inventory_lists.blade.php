@@ -3,7 +3,7 @@
 <div class="container">
 
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Inventory</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -20,119 +20,202 @@
     </div><!-- End Page Title -->
 
     @can('is_hoc')
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Number</th>
-                <th scope="col">Course</th>
-                <th scope="col">Condition</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-            $i = 1;
-            @endphp
-            @foreach ($inventory_lists as $inventory_list)
-            <tr>
-                <th scope="row">{{ $i }}</th>
-                <td>{{ $inventory_list->name }}</td>
-                <td>{{ $inventory_list->number }}</td>
-                <td>{{ $inventory_list->course_name }}</td>
-                <td>{{ $inventory_list->condition }}</td>
-                @can('is_hoc')
-                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
-                        data-bs-target="#EditModal" value="{{ $inventory_list->id }}">Update</button>
-                    <button type="button" value="{{ $inventory_list->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                </td>
-                @endcan
+    @cannot('is_admin')
+    <div class="">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Number</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Condition</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @php
+                    $i = 1;
+                    @endphp
+                    @foreach ($inventory_lists as $inventory_list)
+                    <tr>
+                        <th scope="row">{{ $i }}</th>
+                        <td>{{ $inventory_list->name }}</td>
+                        <td>{{ $inventory_list->number }}</td>
+                        <td>{{ $inventory_list->course_name }}</td>
+                        <td>{{ $inventory_list->condition }}</td>
+                        @can('is_hoc')
+                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
+                                data-bs-target="#EditModal" value="{{ $inventory_list->id }}">Update</button>
+                            <button type="button" value="{{ $inventory_list->id }}"
+                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                        </td>
+                        @endcan
 
 
-            </tr>
-            @php
-            $i++;
-            @endphp
-            @endforeach
+                    </tr>
+                    @php
+                    $i++;
+                    @endphp
+                    @endforeach
+                    </tbody>
+                  </table>
 
-        </tbody>
-    </table>
+                </div>
+
+              </div>
+            </div>
+            @endcannot
+    @endcan
+    @can('is_admin')
+    <div class="">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Number</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Condition</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                 
+                    @php
+                    $i = 1;
+                    @endphp
+                    @foreach ($admin_inventory as $admin_inventory)
+                    <tr>
+                        <th scope="row">{{ $i }}</th>
+                        <td>{{ $admin_inventory->name }}</td>
+                        <td>{{ $admin_inventory->number }}</td>
+                        <td>{{ $admin_inventory->course_name }}</td>
+                        <td>{{ $admin_inventory->cName }}, {{ $admin_inventory->distName }}, {{ $admin_inventory->rName }}</td>
+                        <td>{{ $admin_inventory->condition }}</td>
+                    </tr>
+                    
+                    @php
+                    $i++;
+                    @endphp
+                    @endforeach
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
     @endcan
 
     @can('is_dist_cordinator')
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Number</th>
-                <th scope="col">Course</th>
-                <th scope="col">Center</th>
-                <th scope="col">Condition</th>
-               
-            </tr>
-        </thead>
-        <tbody>
-            @php
-            $i = 1;
-            @endphp
-            @foreach ($dist_inventory as $dist_inventory)
-            <tr>
-                <th scope="row">{{ $i }}</th>
-                <td>{{ $dist_inventory->name }}</td>
-                <td>{{ $dist_inventory->number }}</td>
-                <td>{{ $dist_inventory->course_name }}</td>
-                <td>{{ $dist_inventory->cName }}</td>
-                <td>{{ $dist_inventory->condition }}</td>
-            </tr>
-               
-            @php
-            $i++;
-            @endphp
-            @endforeach
+    @cannot('is_admin')
+    <div class="">
+              <div class="card recent-sales overflow-auto">
 
-        </tbody>
-    </table>
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Number</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Center</th>
+                        <th scope="col">Condition</th>
+                    
+                    </tr>
+                    </thead>
+                    <tbody>
+                 
+                    @php
+                    $i = 1;
+                    @endphp
+                    @foreach ($dist_inventory as $dist_inventory)
+                    <tr>
+                        <th scope="row">{{ $i }}</th>
+                        <td>{{ $dist_inventory->name }}</td>
+                        <td>{{ $dist_inventory->number }}</td>
+                        <td>{{ $dist_inventory->course_name }}</td>
+                        <td>{{ $dist_inventory->cName }}</td>
+                        <td>{{ $dist_inventory->condition }}</td>
+                    </tr>
+                    
+                    @php
+                    $i++;
+                    @endphp
+                    @endforeach
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
+            @endcannot
     @endcan
 
     @can('is_reg_cordinator')
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Number</th>
-                <th scope="col">Course</th>
-                <th scope="col">Center</th>
-                <th scope="col">District</th>
-                <th scope="col">Condition</th>
-               
-            </tr>
-        </thead>
-        <tbody>
-            @php
-            $i = 1;
-            @endphp
-            @foreach ($reg_inventory as $reg_inventory)
-            <tr>
-                <th scope="row">{{ $i }}</th>
-                <td>{{ $reg_inventory->name }}</td>
-                <td>{{ $reg_inventory->number }}</td>
-                <td>{{ $reg_inventory->course_name }}</td>
-                <td>{{ $reg_inventory->cName }}</td>
-                <td>{{ $reg_inventory->distName }}</td>
-                <td>{{ $reg_inventory->condition }}</td>
-            </tr>
-               
-            @php
-            $i++;
-            @endphp
-            @endforeach
+    @cannot('is_admin')
+    <div class="">
+              <div class="card recent-sales overflow-auto">
 
-        </tbody>
-    </table>
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Number</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Center</th>
+                        <th scope="col">District</th>
+                        <th scope="col">Condition</th>
+                    
+                    </tr>
+                    </thead>
+                    <tbody>
+                 
+                    @php
+                    $i = 1;
+                    @endphp
+                    @foreach ($reg_inventory as $reg_inventory)
+                    <tr>
+                        <th scope="row">{{ $i }}</th>
+                        <td>{{ $reg_inventory->name }}</td>
+                        <td>{{ $reg_inventory->number }}</td>
+                        <td>{{ $reg_inventory->course_name }}</td>
+                        <td>{{ $reg_inventory->cName }}</td>
+                        <td>{{ $reg_inventory->distName }}</td>
+                        <td>{{ $reg_inventory->condition }}</td>
+                    </tr>
+                    
+                    @php
+                    $i++;
+                    @endphp
+                    @endforeach
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
+            @endcannot
     @endcan
 
     <div class="modal fade" id="addInventory" tabindex="-1">

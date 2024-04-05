@@ -193,12 +193,7 @@
                             <hr class="dropdown-divider">
                         </li>
 
-                        <!-- <li>
-                                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                                    <i class="bi bi-box-arrow-right"></i>
-                                                    <span>Log Out</span>
-                                                </a>
-                                            </li> -->
+
                         <li>
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                         document.getElementById('logout-form').submit();">
@@ -234,6 +229,13 @@
             </li><!-- End Dashboard Nav -->
             @can('is_dist_cordinator')
             @cannot('is_admin')
+            <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/centers') }}">
+                    <i class="bi bi-file-ruled-fill"></i>
+                        <span>Centers</span>
+                    </a>
+                </li>
+            
             <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/students') }}">
                     <i class="bi bi-person-lines-fill"></i>
@@ -287,7 +289,7 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Regions</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-journal-text"></i><span>Administration Levels</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
@@ -297,10 +299,49 @@
                     </li>
 
                 </ul>
+                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/districts') }}">
+                            <i class="bi bi-circle"></i><span>Districts</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/centers') }}">
+                            <i class="bi bi-circle"></i><span>Centers</span>
+                        </a>
+                    </li>
+
+                </ul>
             </li><!-- End Forms Nav -->
             @endcanany
             @canany(['is_reg_cordinator','is_user'])
+            @cannot('is_admin')
             <!-- districti level -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-journal-text"></i><span>Administration Levels</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/districts') }}">
+                            <i class="bi bi-circle"></i><span>Districts</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ url('/centers') }}">
+                            <i class="bi bi-circle"></i><span>Centers</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+            @endcannot
             <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/students') }}">
                     <i class="bi bi-person-lines-fill"></i>
@@ -325,34 +366,24 @@
                     <i class="bi bi-people-fill"></i>
                         <span>Clubs</span>
                     </a>
-                </li>
+                </li>  
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ url('/inventory') }}">
                     <i class="bi bi-file-ruled-fill"></i>
                         <span>Inventory list</span>
                     </a>
                 </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#districts-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Districts</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="districts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/districts') }}">
-                            <i class="bi bi-circle"></i><span>Districts</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('/select_region') }}">
-                    <i class="bi bi-journal-text"></i>
-                    <span>Centers</span>
-                </a>
-            </li>
-            <!-- end of district level -->
+               
+               
             @endcanany
+            @can('is_admin')
+            <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ url('/select_region') }}">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Visit Center</span>
+                    </a>
+                </li>
+            @endcan
 
             @canany(['is_admin'])
             <li class="nav-item">
@@ -365,7 +396,7 @@
                         </a>
                     </li>
                 </ul>
-                @endcannot
+            @endcannot
 
             </li>
             @endcanany
@@ -409,21 +440,6 @@
            
            
 
-            @cannot('is_hoc')
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#students-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Students</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="students-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/students') }}">
-                            <i class="bi bi-circle"></i><span>Students</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </li> -->
-            @endcannot
 
             @canany(['is_dist_cordinator', 'is_reg_cordinator', 'is_hoc'])
            
@@ -447,17 +463,6 @@
                 </a>
             </li>
             <!-- End Profile Page Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-contact.html">
-                    <i class="bi bi-envelope"></i>
-                    <span>Contact</span>
-                </a>
-            </li><!-- End Contact Page Nav -->
-
-
-
-
 
         </ul>
 

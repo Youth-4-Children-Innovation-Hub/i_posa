@@ -8,50 +8,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Regions</li>
-                <li class="mx-3 py-0">
-                    <div class="search mx-auto">
-                        <form action="{{ url('/search_region') }}" method="GET">
-                            <input id="search_text" type="text" placeholder="Search" name="search_querry">
-                            <button type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-search" viewBox="0 0 16 16">
-                                    <path
-                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                </svg>
-                            </button>
-
-                        </form>
-
-                    </div>
-                </li>
-                <li>
-                    <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{ url('/regions') }}">
-                            <select class="" name="number" id="exampleFormControlSelect1">
-                                @if (isset($paginate))
-                                <option value="{{ $paginate }}">{{ $paginate }}</option>
-                                @endif
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="3">4</option>
-                                <option value="3">5</option>
-                                <option value="3">6</option>
-                                <option value="3">7</option>
-                                <option value="3">8</option>
-                                <option value="3">9</option>
-                                <option value="3">10</option>
-                                <option value="3">11</option>
-                                <option value="3">12</option>
-                                <option value="3">13</option>
-                            </select>
-
-                            <button type="submit">Show</button>
-
-                        </form>
-
-                    </div>
-
+                
 
                 </li>
                 <li>
@@ -63,40 +20,48 @@
     </div><!-- End Page Title -->
 
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Region</th>
-                <th scope="col">Cordinator</th>
-                @can('is_admin')
+    <div class="col-12">
+              <div class="card recent-sales overflow-auto">
 
-                <th scope="col">Action</th>
-                @endcan
-            </tr>
-        </thead>
-        <tbody>
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
 
-            @foreach ($regions as $key => $region)
-            <tr>
-                <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $region->region }}</td>
-                <td>{{ $region->name }}</td>
-                @can('is_admin')
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                      <th scope="col">#</th>
+                        <th scope="col">Region</th>
+                        <th scope="col">Cordinator</th>
+                        @can('is_admin')
 
-                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $region->id }}"
-                        data-bs-toggle="modal" data-bs-target="#EditModal">Update</button>
-                    <button type="button" class="btn btn-outline-danger btn-sm delBtn"
-                        value="{{ $region->id }}">Delete</button>
-                </td>
-                @endcan
+                        <th scope="col">Action</th>
+                        @endcan
+                      </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($regions as $key => $region)
+                    <tr>
+                        <th scope="row">{{ $key + 1 }}</th>
+                        <td>{{ $region->region }}</td>
+                        <td>{{ $region->name }}</td>
+                        @can('is_admin')
 
-            </tr>
-            @endforeach
+                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $region->id }}"
+                                data-bs-toggle="modal" data-bs-target="#EditModal">Update</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm delBtn"
+                                value="{{ $region->id }}">Delete</button>
+                        </td>
+                        @endcan
 
+                    </tr>
+                    @endforeach  
+                    </tbody>
+                  </table>
 
-        </tbody>
-    </table>
+                </div>
+
+              </div>
+            </div>
     {{ $regions->onEachSide(1)->links() }}
 
 

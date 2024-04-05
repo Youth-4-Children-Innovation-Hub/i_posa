@@ -87,24 +87,53 @@ class UserController extends Controller
         }
     }
 
+    public function createUser(Request $request){
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $generated_password = 12345678;
+        $user->password = Hash::make($generated_password);
+        $user->role_id = $request->input('role');
+        $user->save();
+        dd('successful');
+
+    }
+
+    
+
     public function Create(Request $request)
     {
-
+      
+           
         try {
             $name1 = $request->name;
-            $nameArray = explode(' ', $name1);
-            $firstName = $nameArray[0];
-
+            // $nameArray = explode(' ', $name1);
+            // $firstName = $nameArray[0];
+          
             try {
-                Mail::to($request->email)
-                    ->send(new HelloMail($firstName . 123456, $request->name));
+                // Mail::to($request->email)
+                //     ->send(new HelloMail($firstName . 123456, $request->name));
                     $user = new User();
                     $user->name = $request->name;
                     $user->email = $request->email;
-                    $generated_password = ($firstName . 123456);
-                    $user->password = Hash::make($generated_password);
+                    $user->password = Hash::make('12345678');
                     $user->role_id = $request->input('role');
                     $user->save();
+
+                    $userToEmail = User::where('email', $request->email)->first();
+
+                  
+                    $details = [
+                        'greeting'=>'hi ' . $userToEmail->name,
+                        'body'=>'You have been registered in the IPOSA system. Click the button below to set password
+                        for access.',
+                        'actiontext'=>'Set password',
+                        'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                        'lastline'=>'This is the last line',
+                    ];
+        
+                    Notification::send($userToEmail, new mailNotification($details));
+                   
                 return redirect('users')->with('success', 'User added successfully.');
             } catch (\Exception $e) {
                 return $e->getMessage();

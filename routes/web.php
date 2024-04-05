@@ -44,6 +44,10 @@ Route::get('/', function () {
     return view('landing');
 });
 
+Route::get('/challenge', function () {
+    return view('report.challenge');
+});
+
 Route::get('log-in', function () {
     return view('auth/login');
 });
@@ -145,8 +149,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/download/{file}', [reportController::class, 'download']);
     Route::get('/view/{id}', [reportController::class, 'view']);
     Route::post('delete_report', [reportController::class, 'delete'])->name('delete_report');
+    Route::delete('erase_report/{id}', [reportController::class, 'erase']);
     Route::get('/notifications', [reportController::class, 'getNotifications']);
     Route::post('/upload_center_report', [reportController::class, 'uploadCenterReport']);
+    Route::post('/post_challenges', [reportController::class, 'createChallenge']);
 
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);

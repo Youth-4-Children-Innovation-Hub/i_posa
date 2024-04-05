@@ -34,7 +34,15 @@ class DistrictController extends Controller
         $districts = District::select('districts.Id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
             ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
             ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
-            ->paginate($request->session()->get('pagination_number'));
+            ->get();
+        
+        $regionDistricts = District::select('districts.Id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
+        ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+        ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
+        ->where('regions.cordinator_id', '=', auth()->user()->id)
+        ->get();    
+
+
         $regions = Region::all();
         $district_cordinator_id = Role::select('id')
             ->where('role', 'district cordinator')
@@ -46,6 +54,7 @@ class DistrictController extends Controller
             'regions' => $regions,
             'districts' => $districts,
             'userData' =>   $userData,
+            'regionDistricts' =>  $regionDistricts,
             'paginate' => $request->session()->get('pagination_number')
         ]);
     }

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Models\Region;
@@ -33,10 +33,10 @@ class userseeder extends Seeder
             // 'password' => bcrypt('bashiri2000')
             // ],
             [
-                'name' => 'Jovin Sanga',
-                'email' => 'jovin@gmail.com',
+                'name' => 'simon mpembee',
+                'email' => 'mpembee@gmail.com',
                 'role_id'=> $roles->random()->id,
-                'password' => bcrypt('jovin2000')
+                'password' => Hash::make('simon mpembee123')
                 ]
             // [
             //     'name' => 'Gadafi japhaly',

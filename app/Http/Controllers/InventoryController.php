@@ -44,6 +44,14 @@ class InventoryController extends Controller
         ->where('districts.cordinator_id', '=', auth()->user()->id)
         ->get();
 
+        $admin_inventory = Inventory::select('inventories.*', 'courses.name as course_name', 'centers.name as cName', 'districts.name as distName', 
+        'regions.name as rName')
+        ->Join('centers', 'centers.id', '=', 'inventories.center_id')
+        ->Join('courses', 'courses.id', '=', 'inventories.course_id')
+        ->Join('districts', 'centers.district_id', '=', 'districts.id')
+        ->Join('regions', 'regions.id', '=', 'districts.region_id')
+        ->get();
+
 
         $inventory_lists = DB::table('inventories')
                                 ->join('courses', 'inventories.course_id', '=', 'courses.id')
@@ -51,7 +59,7 @@ class InventoryController extends Controller
                                 ->where('centers.hod_id', '=', auth()->user()->id)
                                 ->select('inventories.*', 'courses.name as course_name')
                                 ->get();
-        return view('centers.inventory_lists', compact('inventory_lists', 'userData', 'userRole', 'courses', 'reg_inventory', 'dist_inventory'));
+        return view('centers.inventory_lists', compact('inventory_lists', 'userData', 'userRole', 'courses', 'reg_inventory', 'dist_inventory', 'admin_inventory'));
     }
 
     public function getInventoryRequest(){
