@@ -32,8 +32,24 @@ class CenterController extends Controller
             ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
             ->leftJoin('regions', 'regions.id', '=', 'districts.region_id')
             ->orderBy('centers.created_at', 'DESC')
-            ->paginate(10);
-        return view('centers.centers', ['heads' => $hods, 'districts' => $districts, 'centers' => $centers, 'userData' => $userData, 'userRole' => $userRole]);
+            ->get();
+        
+        $districtCenters = Center::select('centers.id AS id', 'centers.name', 'users.name AS hod', 'districts.name AS district')
+        ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+        ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
+        ->where('districts.cordinator_id', '=', auth()->user()->id)
+        ->orderBy('centers.created_at', 'DESC')
+        ->get();
+
+        $regionCenters = Center::select('centers.id AS id', 'centers.name', 'regions.name AS region', 'users.name AS hod', 'districts.name AS district')
+        ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+        ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
+        ->leftJoin('regions', 'regions.id', '=', 'districts.region_id')
+        ->where('regions.cordinator_id', '=', auth()->user()->id)
+        ->orderBy('centers.created_at', 'DESC')
+        ->get();
+        return view('centers.centers', ['heads' => $hods, 'districts' => $districts, 'centers' => $centers, 'userData' => $userData, 'userRole' => $userRole, 
+    'regionCenters' => $regionCenters, 'districtCenters' =>  $districtCenters]);
     }
 
     public function Create(Request $request)

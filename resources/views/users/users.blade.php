@@ -10,55 +10,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Users</li>
-                <li class="mx-3 py-0">
-                    <div class="search mx-auto">
-                        <form action="{{url('/search_user')}}" method="GET">
-                            <input id="search_text" type="text" placeholder="Search" name="search_querry">
-                            <button type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-search" viewBox="0 0 16 16">
-                                    <path
-                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                </svg>
-                            </button>
-
-                        </form>
-
-                    </div>
-                </li>
-
-
-                <li>
-                    <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{url('/users')}}">
-                            <select class="" name="number" id="exampleFormControlSelect1">
-                                @if (isset($paginate))
-                                <option value="{{$paginate}}">{{$paginate}}</option>
-
-                                @endif
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                                <option value="13">13</option>
-                                <option value="14">14</option>
-                                <option value="15">15</option>
-                            </select>
-                            <button type="submit">Show</button>
-                            <!-- <label for=" exampleFormControlSelect1 mx-1">Show</label> -->
-
-                        </form>
-
-                    </div>
-
+                  <li>
 
                 </li>
                 <li>
@@ -67,54 +19,53 @@
                         User</button>
 
                 </li>
-
-
     </div>
-
-
     </ol>
-
-
     </nav>
 </div><!-- End Page Title -->
+ <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($users as $key=>$user)
+                        <tr>
+                        <th scope="row">{{$key+1}}</th>
+                        <td> {{$user->name}}</td>
+                        <td>{{$user->email}}</td>
+                        <td>{{$user->phone_number}}</td>
+                        <td>{{$user->role}}</td>
+
+                        <!-- updateform/{{$user->id}} -->
+                        <td>
+                            <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
+                                data-bs-target="#UpdateModal">Update</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm py-0 delBtn" value="{{ $user->id }}">Delete</button>
+                        </td>
+                      </tr>  
+                    @endforeach  
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
 
 
-<table class="table table-striped mx-auto ">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Role</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($users as $key=>$user)
-
-        <tr>
-            <th scope="row">{{$key+1}}</th>
-            <td> {{$user->name}}</td>
-            <td>{{$user->email}}</td>
-            <td>{{$user->phone_number}}</td>
-            <td>{{$user->role}}</td>
-
-            <!-- updateform/{{$user->id}} -->
-            <td>
-                <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
-                    data-bs-target="#UpdateModal">Update</button>
-                    <button type="button" class="btn btn-outline-danger btn-sm py-0 delBtn" value="{{ $user->id }}">Delete</button>
-            </td>
-
-        </tr>
-
-        @endforeach
-
-    </tbody>
-</table>
-
-{{$users->onEachSide(1)->links()}}
 
 <!-- model add user -->
 

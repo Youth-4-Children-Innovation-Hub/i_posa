@@ -1,7 +1,6 @@
 <h3>Dear {{$name}},</h3>
 <p>
-    Your password for Iposa has been updated to {{$password}}. Please log in with this temporary password
-    and change it as soon as possible for security reasons.
+    You have been registered in the IPOSA system. Please set your password using the button below.
 
 </p>
 

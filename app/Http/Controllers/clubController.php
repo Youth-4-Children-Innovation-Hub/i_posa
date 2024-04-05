@@ -27,8 +27,14 @@ class clubController extends Controller
         ->where('regions.cordinator_id', '=', Auth::user()->id)
         ->get();
 
+        $adminClubs=Club::select('clubs.*', 'centers.name as cName', 'districts.name as dName', 'regions.name as rName')
+        ->join('centers', 'centers.id', '=', 'clubs.Center_id')
+        ->join('districts', 'districts.id', '=', 'centers.district_id')
+        ->join('regions', 'regions.id', '=', 'districts.region_id')
+        ->get();
+
       
-        return view('clubs.club', ['clubs' => $clubs, 'distclubs' => $distclubs, 'regclubs' => $regclubs ]);
+        return view('clubs.club', ['clubs' => $clubs, 'distclubs' => $distclubs, 'regclubs' => $regclubs, 'adminClubs' =>  $adminClubs ]);
     }
 
     public function createClubs(Request $request){

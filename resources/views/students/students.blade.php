@@ -5,58 +5,12 @@
 <div class="container">
 
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Students</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Students</li>
-                <li class="mx-3 py-0">
-                    <div class="search mx-auto">
-                        <form action="{{ url('/search_student') }}" method="GET">
-                            @csrf
-                            <input id="search_text" type="text" placeholder="Search" name="search_querry">
-                            <button type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-search" viewBox="0 0 16 16">
-                                    <path
-                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                </svg>
-                            </button>
-
-                        </form>
-
-                    </div>
-                </li>
-
-
-                <li>
-                    <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{ url('/students') }}">
-                            @csrf
-                            <select class="" name="number" id="exampleFormControlSelect1">
-                                @if (isset($paginate))
-                                <option value="{{ $paginate }}">{{ $paginate }}</option>
-                                @endif
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                                <option value="13">13</option>
-                                <option value="14">14</option>
-                                <option value="15">15</option>
-                            </select>
-                            <button type="submit">Show</button>
-                        </form>
-                    </div>
-                </li>
+               
                 @can('is_hoc')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
@@ -80,60 +34,76 @@
 
 
     @can('is_admin')
-    <table class="table table-striped bg-light">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Phone number</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Disability</th>
-                <th scope="col">Center</th>
-                <th scope="col">Status</th>
-                @can('is_hoc')
-                <th scope="col">Action</th>
-                @endcan
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($students as $key => $student)
-            <tr>
-                <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $student->name }}</td>
-                <td>{{ $student->phone_number }}</td>
-                <td>{{ $student->gender }}</td>
-                <td>{{ $student->disability }}</td>
-                <td>{{ $student->center }}</td>
-                @if( $student->status == 'continous' )
-                <td><span
-                        class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $student->status }}</span>
-                </td>
-                @elseif( $student->status == 'Graduate' )
-                <td><span
-                        class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $student->status }}</span>
-                </td>
-                @else
-                <td><span
-                class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $student->status }}</span>
-                </td>
-                @endif
+    
+    <div class="">
+              <div class="card recent-sales overflow-auto">
 
-                @can('is_hoc')
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
 
-                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $student->id }}"
-                        data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
-                    <button type="button" value="{{ $student->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                </td>
-                @endcan
-            </tr>
-            @endforeach
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Phone number</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Disability</th>
+                        <th scope="col">Center</th>
+                        <th scope="col">Status</th>
+                        @can('is_hoc')
+                        <th scope="col">Action</th>
+                        @endcan
+                    </tr>
+                    </thead>
+                    <tbody>
+                 
+                    @foreach ($students as $key => $student)
+                    <tr>
+                        <th scope="row">{{ $key + 1 }}</th>
+                        <td>{{ $student->name }}</td>
+                        <td>{{ $student->phone_number }}</td>
+                        <td>{{ $student->gender }}</td>
+                        <td>{{ $student->disability }}</td>
+                        <td>{{ $student->center }}</td>
+                        @if( $student->status == 'continous' )
+                        <td><span
+                                class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $student->status }}</span>
+                        </td>
+                        @elseif( $student->status == 'Graduate' )
+                        <td><span
+                                class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $student->status }}</span>
+                        </td>
+                        @else
+                        <td><span
+                        class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $student->status }}</span>
+                        </td>
+                        @endif
 
-        </tbody>
-    </table>
+                        @can('is_hoc')
+
+                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $student->id }}"
+                                data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
+                            <button type="button" value="{{ $student->id }}"
+                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                        </td>
+                        @endcan
+                    </tr>
+                    @endforeach
+                   
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
+
+
     @endcan
 
     @can('is_reg_cordinator')
+    @cannot('is_admin')
     <div class="">
               <div class="card recent-sales overflow-auto">
 
@@ -187,19 +157,13 @@
 
               </div>
             </div>
+     @endcannot       
     @endcan
 
     @can('is_dist_cordinator')
-<!--    
-        <div class="card">
-            <div class="card-body">
-               
-            <h5 class="card-title">Select students from centers</h5>
-            <a href="#" class="mr-3">All students</a> <br> 
-            <a href="#" class="mr-3">Ihanda</a>
-            <a href="#" class="mr-3">Chitete</a>
-            </div>
-        </div> -->
+    @cannot('is_admin')
+    
+
 
         <div class="">
               <div class="card recent-sales overflow-auto">
@@ -252,64 +216,75 @@
 
               </div>
             </div>
-              
+    @endcannot          
     @endcan
     
     @can('is_hoc')
     @cannot('is_admin')
-    <table class="table table-striped bg-light">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Course</th>
-                <th scope="col">Phone number</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Disability</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($students1 as $key => $students1)
-            <tr>
-                <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $students1->name1 }}</td>
-                <td>{{ $students1->course1 }}</td>
-                <td>{{ $students1->phone_number1 }}</td>
-                <td>{{ $students1->gender1 }}</td>
-                @if( $students1->disability1 == NULL)
-                <td>None</td>
-                @else
-                <td>{{ $students1->disability1}}</td>
-                @endif
+    <div class="">
+              <div class="card recent-sales overflow-auto">
 
-                @if( $students1->status1 == 'continous' )
-                <td><span
-                        class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $students1->status1 }}</span>
-                </td>
-                @elseif( $students1->status1 == 'Graduate' )
-                <td><span
-                        class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $students1->status1 }}</span>
-                </td>
-                @else
-                <td><span
-                class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $students1->status1 }}</span>
-                </td>
-                @endif
-                @can('is_hoc')
+                <div class="card-body">
+                  <h5 class="card-title">Recent Reports</h5>
 
-                <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"
-                        data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
-                    <button type="button" value="{{ $students1->id }}"
-                        class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                </td>
-                @endcan
-            </tr>
-            @endforeach
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Phone number</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Disability</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                 
+                    @foreach ($students1 as $key => $students1)
+                    <tr>
+                        <th scope="row">{{ $key + 1 }}</th>
+                        <td>{{ $students1->name1 }}</td>
+                        <td>{{ $students1->course1 }}</td>
+                        <td>{{ $students1->phone_number1 }}</td>
+                        <td>{{ $students1->gender1 }}</td>
+                        @if( $students1->disability1 == NULL)
+                        <td>None</td>
+                        @else
+                        <td>{{ $students1->disability1}}</td>
+                        @endif
 
-        </tbody>
-    </table>
+                        @if( $students1->status1 == 'continous' )
+                        <td><span
+                                class="bg-success text-light px-2 py-auto border border-success rounded-5">{{ $students1->status1 }}</span>
+                        </td>
+                        @elseif( $students1->status1 == 'Graduate' )
+                        <td><span
+                                class="bg-primary text-light px-2 py-auto border border-primary rounded-5">{{ $students1->status1 }}</span>
+                        </td>
+                        @else
+                        <td><span
+                        class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $students1->status1 }}</span>
+                        </td>
+                        @endif
+                        @can('is_hoc')
+
+                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"
+                                data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
+                            <button type="button" value="{{ $students1->id }}"
+                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                        </td>
+                        @endcan
+                    </tr>
+                    @endforeach
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div>
     @endcannot
     @endcan
     
