@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Student extends Model
+class Guardian extends Model
 {
     /**
      * Set the attribute value with first letter of each word capitalized.
@@ -30,23 +30,7 @@ class Student extends Model
      */
     public function getCapitalizeAttributesAttribute()
     {
-        return ['name', 'education_level', 'region', 'district', 'ward', 'street'];
+        return ['name', 'address', 'occupation', 'region', 'ward'];
     }
-
     use HasFactory;
-
-    protected $fillable = [
-        'name',
-        'age',
-        'gender',
-        'profile_picture',
-        'birth_certificate',
-        'letter',
-        'center_id',
-        'region_id'
-    ];
-
-    public function center() {
-        return $this->hasOne(Center::class);
-    }
 }
