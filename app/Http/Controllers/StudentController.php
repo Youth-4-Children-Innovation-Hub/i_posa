@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Center;
 use App\Models\Region;
 use App\Models\Student;
+use App\Models\Guardian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,11 @@ class StudentController extends Controller
             ->first();
 
         $centers = Center::all();
+        $centerCourses = Course::select('courses.*')
+        ->join('course_centers', 'course_centers.course_id', '=', 'courses.id')
+        ->join('centers', 'course_centers.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', auth()->user()->id)
+        ->get();
         $regions = Region::all();
         $students = Student::select('students.id', 'students.disability as disability', 'students.status', 'students.phone_number', 'students.name AS name', 'students.gender', 'students.profile_picture', 'centers.name AS center')
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
@@ -70,7 +76,7 @@ class StudentController extends Controller
       
         return view('students.students', ['centers' => $centers, 'center1' => $center1, 'students1' => $students1, 'regions' => $regions,
         'districtStudents' => $districtStudents, 'students' => $students, 'userData' => $userData, 'userRole' => $userRole, 'courses' => $courses, 
-        'regionStudents' => $regionStudents]);
+        'regionStudents' => $regionStudents, 'centerCourses' => $centerCourses]);
         
     }
 
@@ -91,21 +97,11 @@ class StudentController extends Controller
             'passport' => 'required|image',
             'letter' => 'required|mimes:pdf',
             'birth_certificate' => 'required|mimes:pdf',
-            'gender' => 'required',
-            'course_id' => 'required'
-            // 'center' => 'required'
         ];
 
         $messages = [
-            'passport.required' => 'Please upload the passport',
-            'letter.required' => 'Please upload the letter',
             'letter.pdf' => 'The selected letter must be a pdf',
-            'birth_certificate.required' => 'Please upload the birth certificate',
             'birth_certificate.pdf' => 'The selected certificate must be a pdf',
-            'gender.required' => 'Select the Gender',
-            'region.required' => 'Select the Region'
-            // 'center.required' => 'Select the Center'
-
         ];
 
 
@@ -151,23 +147,44 @@ class StudentController extends Controller
             } else {
                 $centerId = $request->centerId;
             }
-            
+           
             $student = new Student();
             $student->name = $request->name;
-            $student->parent = $request->parent;
             $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;
+            $student->nida = $request->nida;
+            $student->region = $request->region;
+            $student->district = $request->district;
+            $student->ward = $request->ward;
+            $student->street = $request->street;
+            $student->education_level = $request->education_level;
+            $student->education_type = $request->education_type;
+            $student->marital_status = $request->marital_status;
+            $student->employment_status = $request->employment_status;
             $student->disability = $request->disability;
             $student->phone_number = $request->phone_number;
-            $student->email = "";   
+            $student->email = $request->student_email;   
             $student->center_id = $centerId;
             $student->profile_picture = Storage::path($path_passport);
             $student->birth_certificate = Storage::path($path_certificate);
             $student->letter = Storage::path($path_letter);
             $student->status = "continous";
-            $student->term = $request->term;
             $student->stage = $request->stage;
             $student->save();
+
+            $parent = new Guardian();
+            $parent->name = $request->parent;
+            $parent->phone = $request->parent_phone;
+            $parent->email = $request->parent_email;
+            $parent->address = $request->parent_address;
+            $parent->occupation = $request->parent_occupation;
+            $parent->disability = $request->pdissability;
+            $parent->region = $request->pregion;
+            $parent->district = $request->pdistrict;
+            $parent->ward = $request->pward;
+            $parent->student_id = $student->id;
+            $parent->save();
+
             $student_id = Student::select('id')
                 ->where('name', $request->name)
                 ->where('phone_number', $request->phone_number)
@@ -192,25 +209,46 @@ class StudentController extends Controller
         try {
             $student = Student::find($request->student_id);
             $student->name = $request->name;
-            $student->phone_number = $request->phone_number;
-            $student->gender = $request->gender;
-            $student->email = "";
             $student->status = $request->status;
             $student->date_of_birth = $request->dob;
-            $student->center_id = $request->center;
-
+            $student->gender = $request->gender;
+            $student->nida = $request->nida;
+            $student->region = $request->region;
+            $student->district = $request->district;
+            $student->ward = $request->ward;
+            $student->stage = $request->stage;
+            $student->street = $request->street;
+            $student->education_level = $request->education_level;
+            $student->education_type = $request->education_type;
+            $student->marital_status = $request->marital_status;
+            $student->employment_status = $request->employment_status;
+            $student->disability = $request->dissability;
+            $student->phone_number = $request->phone_number;
+            $student->email = $request->student_email;  
+           
             $student->save();
-            $student_id = Student::select('id')
-                ->where('name', $request->name)
-                ->where('phone_number', $request->phone_number)
-                ->first();
+
+            $parent = Guardian::find($request->parent_id);
+            $parent->name = $request->parent;
+            $parent->phone = $request->parent_phone;
+            $parent->email = $request->parent_email;
+            $parent->address = $request->parent_address;
+            $parent->occupation = $request->parent_occupation;
+            $parent->disability = $request->pdissability;
+            $parent->region = $request->pregion;
+            $parent->district = $request->pdistrict;
+            $parent->ward = $request->pward;
+            $parent->save();
+
+
+            $student_id = $request->student_id;
             if($request->course_id) {
                 for ($i = 0; $i < sizeof($request->course_id); $i++) {
                     $student_courses = new StudentCourses();
-                    $student_courses->student_id = $student_id->id;
+                    $student_courses->student_id = $student_id;
                     $student_courses->course_id = $request->course_id[$i];
                     $student_courses->state = "not complete";
-                    DB::update('update student_courses set course_id = ? where student_id = ?' ,[$request->course_id[$i], $student_id->id]);
+                    DB::update('update student_courses set course_id = ? where student_id = ?' ,[$request->course_id[$i], $student_id]);
                     // $student_courses->save();
                 }
             }
@@ -223,8 +261,11 @@ class StudentController extends Controller
 
     public function edit($id)
     {
-        $student = Student::select('students.*', 'student_courses.course_id')
+        $student = Student::select('students.*' ,'guardians.phone as phone', 'guardians.id as gid', 'guardians.name as gname', 'guardians.email as gemail', 'guardians.region as gregion',
+         'guardians.district as gdistrict', 'guardians.ward as gward', 'guardians.disability as gdissability', 'student_courses.course_id', 'guardians.occupation as occupation',
+         'guardians.address as address')
         ->join('student_courses', 'students.id', '=', 'student_courses.student_id')
+        ->join('guardians', 'guardians.student_id', '=', 'students.id')
         ->where('students.id', $id)->first();
 
         return response()->json(
