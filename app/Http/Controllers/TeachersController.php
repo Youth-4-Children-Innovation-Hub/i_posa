@@ -33,14 +33,14 @@ class TeachersController extends Controller
 
 
          //for the head of center
+         $teachers1 = Teacher::select('*')->where('created_by', '=', $userData->id)->get();
 
-         $teachers1 = CourseCenter::select('course_centers.id AS id', 'teachers.name AS name1', 'courses.name AS course1', 'teachers.email AS email1', 'teachers.phone_number AS phone_number1')
-         ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
-         ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
-         ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
-         ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
-         ->where('users.id', '=', $userData->id)
-         ->get();    
+        //  $teachers1 = CourseCenter::select('course_centers.id AS id', 'teachers.name AS name1', 'teachers.email AS email1', 'teachers.phone_number AS phone_number1')
+        //  ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+        //  ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
+        //  ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
+        //  ->where('teachers.created_by', '=', $userData->id)
+        //  ->get();    
      return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData, 'teachers1' => $teachers1, 
     'districtTeachers' => $districtTeachers, 'regionTeachers' =>  $regionTeachers]);
 
@@ -94,6 +94,9 @@ class TeachersController extends Controller
 
         $teacher->name = $request->name;
         $teacher->email = $request->email;
+        $teacher->gender = $request->gender;
+        $teacher->qualification = $request->qualification;
+        $teacher->ANFE_training = $request->anfe;
         $teacher->phone_number = $request->phone_number;
 
         if($teacher->save()) {

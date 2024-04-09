@@ -21,8 +21,6 @@
     <div class="">
               <div class="card recent-sales overflow-auto">
 
-                <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -150,7 +148,6 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -167,9 +164,9 @@
                     @foreach ($teachers1 as $key => $teachers1)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $teachers1->name1 }}</td>
-                        <td>{{ $teachers1->email1 }}</td>
-                        <td>{{ $teachers1->phone_number1 }}</td>
+                        <td>{{ $teachers1->name }}</td>
+                        <td>{{ $teachers1->email }}</td>
+                        <td>{{ $teachers1->phone_number }}</td>
                         @can('is_hoc')
 
                         <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers1->id }}"
@@ -200,7 +197,7 @@
                     <h5 class="modal-title">Add Teacher</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('create_teacher') }}">
+                <form method="POST" action="{{ route('create_teacher') }}" id="teacherForm">
                     @csrf
                     <div class="modal-body">
                         <div class="" id="add_region">
@@ -226,11 +223,11 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Qualification</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="qualification" id="name" required>
+                                        <input type="text" class="form-control" name="qualification" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Attended ANFE</label>
+                                    <label for="inputText" class="col-sm-2 col-form-label">Attended ANFE training</label>
                                     <div class="col-sm-10">
                                         <select class="form-select" aria-label="Default select example" name="anfe"
                                             required>
@@ -243,14 +240,16 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="email" class="form-control" name="email" required>
+                                        <input type="email" id="email1" class="form-control" name="email" required>
                                     </div>
+                                    <div id="email-error" style="color: red;"></div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
                                     <div class="col-sm-10">
-                                        <input type="tel" class="form-control" name="phone_number" required>
+                                        <input type="tel" class="form-control" id="phone" name="phone_number" required>
                                     </div>
+                                    <div id="phone-error" style="color: red;"></div>
                                 </div>
                             </div>
                         </div>
@@ -274,7 +273,7 @@
                     <h5 class="modal-title">Edit Teacher</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('update_teacher') }}">
+                <form method="POST" action="{{ route('update_teacher') }}" id="teacherEditForm">
                     @csrf
                     <div class="modal-body">
                         <div class="" id="add_region">
@@ -288,10 +287,39 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Gender</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" id="gender" aria-label="Default select example" name="gender"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="F">Female</option>
+                                            <option value="M">Male</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Qualification</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="qualification" class="form-control" name="qualification" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Attended ANFE training</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" id="anfe" aria-label="Default select example" name="anfe"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
                                         <input type="email" class="form-control" name="email" id="email" required>
                                     </div>
+                                    <div id="email-edit-error" style="color: red;"></div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
@@ -299,6 +327,7 @@
                                         <input type="tel" class="form-control" name="phone_number" id="phone_number"
                                             required>
                                     </div>
+                                    <div id="phone2-edit-error" style="color: red;"></div>
                                 </div>
                             </div>
                         </div>
@@ -321,6 +350,114 @@
 
 @section('scripts')
 <script>
+    document.getElementById('teacherForm').addEventListener('submit', function(event) {
+        var emailInput = document.getElementById('email1');
+        var errorMessage = document.getElementById('email-error');
+
+        // Remove any existing error message
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+
+        if (!validateEmail(emailInput.value)) {
+            errorMessage = document.createElement('div');
+            errorMessage.id = 'email-error';
+            errorMessage.innerText = 'Invalid email address';
+            errorMessage.style.color = 'red';
+            emailInput.parentNode.insertBefore(errorMessage, emailInput.nextSibling);
+            emailInput.focus(); // Focus back on the email input field
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    function validateEmail(email) {
+        // Regular expression for validating email addresses
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+</script>
+<script>
+    document.getElementById('teacherForm').addEventListener('submit', function(event) {
+        var emailInput = document.getElementById('email');
+        var errorMessage = document.getElementById('email-edit-error');
+
+        // Remove any existing error message
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+
+        if (!validateEmail(emailInput.value)) {
+            errorMessage = document.createElement('div');
+            errorMessage.id = 'email-edit-error';
+            errorMessage.innerText = 'Invalid email address';
+            errorMessage.style.color = 'red';
+            emailInput.parentNode.insertBefore(errorMessage, emailInput.nextSibling);
+            emailInput.focus(); // Focus back on the email input field
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    function validateEmail(email) {
+        // Regular expression for validating email addresses
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+</script>
+<script>
+    document.getElementById('teacherForm').addEventListener('submit', function(event) {
+        var phoneNumberInput = document.getElementById('phone');
+        var errorMessage = document.getElementById('phone-error');
+
+        // Remove any existing error message
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+
+        if (!validatePhoneNumber(phoneNumberInput.value)) {
+            errorMessage = document.createElement('div');
+            errorMessage.id = 'phone-error';
+            errorMessage.innerText = 'Invalid phone number. Must start with 07 or 06 and be 10 digits long';
+            errorMessage.style.color = 'red';
+            phoneNumberInput.parentNode.insertBefore(errorMessage, phoneNumberInput.nextSibling);
+            phoneNumberInput.focus(); // Focus back on the phone number input field
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    function validatePhoneNumber(phoneNumber) {
+        // Regular expression for validating phone numbers
+        var re = /^(07|06)\d{8}$/;
+        return re.test(phoneNumber);
+    }
+</script>
+<script>
+    document.getElementById('teacherEditForm').addEventListener('submit', function(event) {
+        var phoneNumberInput = document.getElementById('phone_number');
+        var errorMessage = document.getElementById('phone2-edit-error');
+
+        // Remove any existing error message
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+
+        if (!validatePhoneNumber(phoneNumberInput.value)) {
+            errorMessage = document.createElement('div');
+            errorMessage.id = 'phone2-edit-error';
+            errorMessage.innerText = 'Invalid phone number. Must start with 07 or 06 and be 10 digits long';
+            errorMessage.style.color = 'red';
+            phoneNumberInput.parentNode.insertBefore(errorMessage, phoneNumberInput.nextSibling);
+            phoneNumberInput.focus(); // Focus back on the phone number input field
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    function validatePhoneNumber(phoneNumber) {
+        // Regular expression for validating phone numbers
+        var re = /^(07|06)\d{8}$/;
+        return re.test(phoneNumber);
+    }
+</script>
+<script>
 $(document).on('click', '.editBtn', function() {
     var id = $(this).val();
     console.log(id);
@@ -333,6 +470,9 @@ $(document).on('click', '.editBtn', function() {
             $('#name').val(response.teacher.name);
             $('#phone_number').val(response.teacher.phone_number);
             $('#email').val(response.teacher.email);
+            $('#anfe').val(response.teacher.ANFE_training);
+            $('#qualification').val(response.teacher.qualification);
+            $('#gender').val(response.teacher.gender);
 
         },
 

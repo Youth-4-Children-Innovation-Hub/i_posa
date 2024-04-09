@@ -38,7 +38,13 @@ class CourseController extends Controller
         ->where('regions.cordinator_id', '=', $userData->id)
         ->get();
 
-        $centercourses1 = CourseCenter::select('courses.name AS course1', 'teachers.name AS teacher1', 'course_centers.id AS id')
+        $centerCourses = Course::select('courses.*')
+        ->join('course_centers', 'course_centers.course_id', '=', 'courses.id')
+        ->join('centers', 'course_centers.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', auth()->user()->id)
+        ->get();
+
+        $centercourses1 = CourseCenter::select('courses.name AS course1', 'courses.id as id1', 'teachers.name AS teacher1', 'course_centers.id AS id')
             ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
             ->leftJoin('courses', 'courses.id', '=', 'course_centers.course_id')
             ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
@@ -55,7 +61,8 @@ class CourseController extends Controller
                 'centercourses1' => $centercourses1,
                 'userData' =>   $userData,
                 'districtCourses' => $districtCourses,
-                'regionCourses' =>  $regionCourses
+                'regionCourses' =>  $regionCourses,
+                'centerCourses' => $centerCourses 
             ]
         );
     }
@@ -180,6 +187,18 @@ class CourseController extends Controller
 
     public function updateCourse(Request $request)
     {
+        if( auth()->user()->role->role == 'admin'){
+            try {
+                $course = Course::find($request->courseId);
+                $course->name = $request->course;
+                $course->save();
+    
+                return redirect('courses')->with('success', "Course Center Updated Successiful");
+            } catch (\Throwable $th) {
+                //throw $th;
+                return redirect('courses');
+            }
+        } else{
         $coursecenter = CourseCenter::find($request->course_center_id);
 
         try {
@@ -193,6 +212,7 @@ class CourseController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return redirect('courses');
+        }
         }
     }
 

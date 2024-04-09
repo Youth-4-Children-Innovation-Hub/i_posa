@@ -7,12 +7,14 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Courses</li>
-               
+                @cannot('is_admin')
                 <li>
+                   
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateNewCenterCourseModal">Add Center course</button>
 
                 </li>
+                @endcannot
                 @can('is_reg_cordinator')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
@@ -31,7 +33,6 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -54,7 +55,7 @@
                         @can('is_hoc')
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
                                 value="{{ $course->id }}" data-bs-toggle="modal"
-                                data-bs-target="#EditNewCenterCourseModal">Update</button>
+                                data-bs-target="#editCourse" onclick="populateEditModal('{{ $course->id }}', '{{ $course->name }}')">Update</button>
                             <button type="button" value="{{ $course->id }}"
                                 class="btn btn-outline-danger btn-sm delBtnAdmin">Delete</button>
                         </td>
@@ -76,7 +77,6 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <!-- <h5 class="card-title">Recent Reports</h5> -->
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -112,7 +112,6 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <!-- <h5 class="card-title">Recent Reports</h5> -->
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -148,7 +147,6 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -263,7 +261,6 @@
                                             <option value="{{ $course->id }}">{{ $course->name }}</option>
                                             @endforeach
 
-
                                         </select>
                                     </div>
                                 </div>
@@ -301,9 +298,42 @@
         </div>
     </div><!-- End of model add new  course-->
 
-    <!-- Add new center course model -->
+ <!--admin edit course -->
+ <div class="modal fade" id="editCourse" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('update_course') }}">
+                    @csrf
 
-    <!-- add center course -->
+                    <div class="modal-body">
+                        <div class="" id="add_region">
+                            <div class="card-body">
+                                <!-- General Form Elements -->
+                                <input type="hidden" id="course_id" name="courseId">
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Course Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="edit-name" class="form-control" name="course" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update </button>
+                    </div>
+                </form><!-- End General Form Elements -->
+
+            </div>
+        </div>
+    </div><!-- End admin edit course-->
+
+    <!-- edit center course -->
     <div class="modal fade" id="EditNewCenterCourseModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -328,7 +358,7 @@
                                             <option selected="selected" hidden="hidden" value="">Open this
                                                 select menu
                                             </option>
-                                            @foreach ($courses as $course)
+                                            @foreach ($centerCourses as $course)
                                             <option value="{{ $course->id }}">{{ $course->name }}</option>
                                             @endforeach
                                         </select>
@@ -382,6 +412,13 @@
 @endsection
 
 @section('scripts')
+<script>
+    function populateEditModal(id, name) {
+        document.getElementById('course_id').value = id;
+        document.getElementById('edit-name').value = name;
+        $('#editCourse').modal('show');
+    }
+</script>
 <script>
 $(document).on('click', '.editBtn', function() {
     var id = $(this).val();
