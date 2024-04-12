@@ -150,26 +150,75 @@ class DashboardController extends Controller
     }
 
     public static function getCourseDistribution(){
-        $user_id = Auth::user()->id;
-        $courses = DB::select(
-            "
-                    SELECT
-                        courses.id,
-                        courses.name,
-                        count(courses.id) AS students_count
-                    FROM
-                        courses
-                        INNER JOIN student_courses ON courses.id = student_courses.course_id
-                        INNER JOIN course_centers ON courses.id = course_centers.course_id
-                        INNER JOIN centers ON course_centers.center_id = centers.id
-                    WHERE
-                        centers.hod_id = :user_id
-                    GROUP BY
-                        courses.id,
-                        courses.name
-            ",
-            ['user_id' => $user_id]
-        );
+
+//         $user_id = Auth::user()->id;
+
+// $courses = DB::select(
+//     "
+//     SELECT
+//         courses.id,
+//         courses.name,
+//         count(student_courses.student_id) AS students_count
+//     FROM
+//         courses
+//         INNER JOIN student_courses ON courses.id = student_courses.course_id
+//         INNER JOIN course_centers ON courses.id = course_centers.course_id
+//         INNER JOIN centers ON course_centers.center_id = centers.id
+//     WHERE
+//         centers.hod_id = :user_id
+//         AND student_courses.center_id = centers.id
+//     GROUP BY
+//         courses.id,
+//         courses.name
+//     ",
+//     ['user_id' => $user_id]
+// );
+
+// return $courses;
+
+        // $user_id = Auth::user()->id;
+        
+
+        // $courses = DB::select(
+        //     "
+        //             SELECT
+        //                 courses.id,
+        //                 courses.name,
+        //                 count(students.id) AS students_count
+        //             FROM
+        //                 courses
+        //                 INNER JOIN student_courses ON courses.id = student_courses.course_id
+        //                 INNER JOIN course_centers ON courses.id = course_centers.course_id
+        //                 INNER JOIN centers ON course_centers.center_id = centers.id
+        //             WHERE
+        //                 centers.hod_id = :user_id
+        //             GROUP BY
+        //                 courses.id,
+        //                 courses.name
+        //     ",
+        //     ['user_id' => $user_id]
+        // );
+        // $centerId = auth()->user()->id;
+
+        // $courses = DB::table('courses')
+        //     ->select('courses.id', 'courses.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
+        //     ->join('course_centers', 'courses.id', '=', 'course_centers.course_id')
+        //     ->join('students', 'course_centers.center_id', '=', 'students.center_id')
+        //     ->join('student_courses', 'students.id', '=', 'student_courses.student_id')
+        //     ->join('centers', 'students.center_id', '=', 'centers.id')
+        //     ->where('centers.hod_id', $centerId)
+        //     ->groupBy('courses.id', 'courses.name')
+        //     ->get();
+        $centerId = auth()->user()->id;
+
+        $courses = DB::table('courses')
+            ->select('courses.id', 'courses.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
+            ->join('student_courses', 'courses.id', '=', 'student_courses.course_id')
+            ->join('students', 'students.id', '=', 'student_courses.student_id')
+            ->join('centers', 'centers.id', '=', 'students.center_id')
+            ->where('centers.hod_id', $centerId)
+            ->groupBy('courses.id', 'courses.name')
+            ->get();
       
         return $courses;
 
