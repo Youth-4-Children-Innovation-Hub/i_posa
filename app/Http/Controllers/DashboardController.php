@@ -25,11 +25,22 @@ class DashboardController extends Controller
         $teachersCount = Teacher::all()->count();
         $regionCount = Region::all()->count();
         $districtCount = District::all()->count();
+        $studentReg = DashboardController::studentRegDist();
+        $studentCent = DashboardController::studentCenterDist();
+        $studentDistrict2 = DashboardController::studentDistrict2();
+        $studentCent1 = DashboardController::studentCenterDist1();
+        $studentCent2 = DashboardController::studentCenterDist2();
         $regionDistribution = DashboardController::getRegionDistribution();
+        $centerGender = DashboardController::centerGenderDist();
+        $centerGender1 = DashboardController::centerGenderDist1();
+        $centerGender2 = DashboardController::centerGenderDist2();
         $ageDistribution = DashboardController::getAgeDistribution();
+        $centerDistrict = DashboardController::centerDistrictDist();
+        $centerDistrict1 = DashboardController::centerDistrictDist1();
         $coursesDistribution = DashboardController::getCourseDistribution();
         $centersDistribution = DashboardController::getCentersDistribution();
-
+        
+        // head of center statistics
         $studentsCount1 = Student::select('id')
             ->join('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
@@ -43,6 +54,61 @@ class DashboardController extends Controller
         $teachersCount1 = Teacher::select('id')
         ->where('created_by', '=', Auth::user()->id)
         ->count();
+        // end head of center statistics
+
+          // districts statistics
+          $studentsCount2 = Student::select('id')
+          ->join('centers', 'students.center_id', '=', 'centers.id')
+          ->join('districts', 'districts.id', '=', 'centers.district_id')
+          ->where('districts.cordinator_id', '=', Auth::user()->id)
+          ->count();
+
+            $courseCount2 = CourseCenter::select('id')
+            ->join('centers', 'course_centers.center_id', '=', 'centers.id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->where('districts.cordinator_id', '=', Auth::user()->id)
+            ->count();
+
+            $teachersCount2 = Teacher::select('id')
+            ->join('centers', 'centers.id', '=', 'teachers.created_by')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->where('districts.cordinator_id', '=', Auth::user()->id)
+            ->count();
+
+            $centersCount2 = Center::select('id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->where('districts.cordinator_id', '=', Auth::user()->id)
+            ->count();
+            // end districts statistics
+
+             // regions statistics
+          $studentsCount3 = Student::select('id')
+          ->join('centers', 'students.center_id', '=', 'centers.id')
+          ->join('districts', 'districts.id', '=', 'centers.district_id')
+          ->join('regions', 'regions.id', '=', 'districts.region_id')
+          ->where('regions.cordinator_id', '=', Auth::user()->id)
+          ->count();
+
+            $courseCount3 = CourseCenter::select('id')
+            ->join('centers', 'course_centers.center_id', '=', 'centers.id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->join('regions', 'regions.id', '=', 'districts.region_id')
+            ->where('regions.cordinator_id', '=', Auth::user()->id)
+            ->count();
+
+            $teachersCount3 = Teacher::select('id')
+            ->join('centers', 'centers.id', '=', 'teachers.created_by')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->join('regions', 'regions.id', '=', 'districts.region_id')
+            ->where('regions.cordinator_id', '=', Auth::user()->id)
+            ->count();
+
+            $centersCount3 = Center::select('id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->join('regions', 'regions.id', '=', 'districts.region_id')
+            ->where('regions.cordinator_id', '=', Auth::user()->id)
+            ->count();
+            // end regions statistics
         
            
            
@@ -50,9 +116,17 @@ class DashboardController extends Controller
             compact(
                 'userData',
                 'coursesCount',
+                'courseCount2',
+                'courseCount3',
                 'centersCount',
+                'centersCount2',
+                'centersCount3',
                 'studentsCount',
+                'studentsCount2',
+                'studentsCount3',
                 'teachersCount',
+                'teachersCount2',
+                'teachersCount3',
                 'regionDistribution',
                 'ageDistribution',
                 'coursesDistribution',
@@ -61,7 +135,17 @@ class DashboardController extends Controller
                 'coursesCount1',
                 'teachersCount1',
                 'regionCount',
-                'districtCount'
+                'districtCount',
+                'centerGender',
+                'centerGender1',
+                'centerGender2',
+                'studentReg',
+                'studentCent',
+                'studentCent1',
+                'studentCent2',
+                'studentDistrict2',
+                'centerDistrict',
+                'centerDistrict1'
             ));
     }
 
@@ -101,19 +185,19 @@ class DashboardController extends Controller
             if (!array_key_exists($region_name, $rows)) {
                 $row = [];
                 $row["region"] = $region_name;
-                if ($gender === "M") {
+                if ($gender === "F") {
                     $row["female"] = $students_count;
                 }
-                if ($gender == "F") {
+                if ($gender == "M") {
                     $row["male"] = $students_count;
                 }
                 $rows[$region_name] = $row;
             } else {
                 $row = $rows[$region_name];
-                if ($gender === "M") {
+                if ($gender === "F") {
                     $row["female"] = $students_count;
                 }
-                if ($gender == "F") {
+                if ($gender == "M") {
                     $row["male"] = $students_count;
                 }
                 $rows[$region_name] = $row;
@@ -151,64 +235,7 @@ class DashboardController extends Controller
 
     public static function getCourseDistribution(){
 
-//         $user_id = Auth::user()->id;
 
-// $courses = DB::select(
-//     "
-//     SELECT
-//         courses.id,
-//         courses.name,
-//         count(student_courses.student_id) AS students_count
-//     FROM
-//         courses
-//         INNER JOIN student_courses ON courses.id = student_courses.course_id
-//         INNER JOIN course_centers ON courses.id = course_centers.course_id
-//         INNER JOIN centers ON course_centers.center_id = centers.id
-//     WHERE
-//         centers.hod_id = :user_id
-//         AND student_courses.center_id = centers.id
-//     GROUP BY
-//         courses.id,
-//         courses.name
-//     ",
-//     ['user_id' => $user_id]
-// );
-
-// return $courses;
-
-        // $user_id = Auth::user()->id;
-        
-
-        // $courses = DB::select(
-        //     "
-        //             SELECT
-        //                 courses.id,
-        //                 courses.name,
-        //                 count(students.id) AS students_count
-        //             FROM
-        //                 courses
-        //                 INNER JOIN student_courses ON courses.id = student_courses.course_id
-        //                 INNER JOIN course_centers ON courses.id = course_centers.course_id
-        //                 INNER JOIN centers ON course_centers.center_id = centers.id
-        //             WHERE
-        //                 centers.hod_id = :user_id
-        //             GROUP BY
-        //                 courses.id,
-        //                 courses.name
-        //     ",
-        //     ['user_id' => $user_id]
-        // );
-        // $centerId = auth()->user()->id;
-
-        // $courses = DB::table('courses')
-        //     ->select('courses.id', 'courses.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
-        //     ->join('course_centers', 'courses.id', '=', 'course_centers.course_id')
-        //     ->join('students', 'course_centers.center_id', '=', 'students.center_id')
-        //     ->join('student_courses', 'students.id', '=', 'student_courses.student_id')
-        //     ->join('centers', 'students.center_id', '=', 'centers.id')
-        //     ->where('centers.hod_id', $centerId)
-        //     ->groupBy('courses.id', 'courses.name')
-        //     ->get();
         $centerId = auth()->user()->id;
 
         $courses = DB::table('courses')
@@ -221,6 +248,59 @@ class DashboardController extends Controller
             ->get();
       
         return $courses;
+
+    }
+
+    public static function studentRegDist(){
+
+        $studentReg = DB::table('regions')
+            ->select('regions.id', 'regions.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
+            ->join('districts', 'districts.region_id', '=', 'regions.id')
+            ->join('centers', 'centers.district_id', '=', 'districts.id')
+            ->join('students', 'students.center_id', '=', 'centers.id')
+            ->groupBy('regions.id', 'regions.name')
+            ->get();
+      
+        return $studentReg;
+
+    }
+
+
+    public static function studentCenterDist(){
+
+        $studentCenter = DB::table('centers')
+            ->select('centers.id', 'centers.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
+            ->join('students', 'students.center_id', '=', 'centers.id')
+            ->groupBy('centers.id', 'centers.name')
+            ->get();
+      
+        return $studentCenter;
+
+    }
+
+    public static function centerDistrictDist(){
+
+        $centerDistrict = DB::table('districts')
+            ->select('districts.id', 'districts.name', DB::raw('COUNT(DISTINCT centers.id) as centers_count'))
+            ->join('centers', 'centers.district_id', '=', 'districts.id')
+            ->groupBy('districts.id', 'districts.name')
+            ->get();
+      
+        return $centerDistrict;
+
+    }
+
+    public static function centerGenderDist(){
+        $centerId = auth()->user()->id;
+
+        $studentGenderCounts = DB::table('students')
+            ->select(DB::raw('SUM(CASE WHEN gender = "M" THEN 1 ELSE 0 END) as male_count'),
+             DB::raw('SUM(CASE WHEN gender = "F" THEN 1 ELSE 0 END) as female_count'))
+            ->join('centers', 'centers.id', '=', 'students.center_id')
+            ->where('centers.hod_id', $centerId)
+            ->first();
+        
+        return $studentGenderCounts;
 
     }
 
@@ -245,4 +325,96 @@ class DashboardController extends Controller
         ");
         return $centers;
     }
+
+    // for districts statistics
+    public static function studentCenterDist1(){
+
+        $studentCenter1 = DB::table('centers')
+            ->select('centers.id', 'centers.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
+            ->join('students', 'students.center_id', '=', 'centers.id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->where('districts.cordinator_id', '=', auth()->user()->id)
+            ->groupBy('centers.id', 'centers.name')
+            ->get();
+      
+        return $studentCenter1;
+
+    }
+
+    public static function centerGenderDist1(){
+        $centerId = auth()->user()->id;
+
+        $studentGenderCounts1 = DB::table('students')
+            ->select(DB::raw('SUM(CASE WHEN gender = "M" THEN 1 ELSE 0 END) as male_count'),
+             DB::raw('SUM(CASE WHEN gender = "F" THEN 1 ELSE 0 END) as female_count'))
+            ->join('centers', 'centers.id', '=', 'students.center_id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->where('districts.cordinator_id', auth()->user()->id)
+            ->first();
+        
+        return $studentGenderCounts1;
+
+    }
+    // end districts statistics
+
+     // for region statistics
+     public static function centerDistrictDist1(){
+
+        $centerDistrict = DB::table('districts')
+            ->select('districts.id', 'districts.name', DB::raw('COUNT(DISTINCT centers.id) as centers_count'))
+            ->join('centers', 'centers.district_id', '=', 'districts.id')
+            ->join('regions', 'districts.region_id', '=', 'regions.id')
+            ->where('regions.cordinator_id', '=', auth()->user()->id)
+            ->groupBy('districts.id', 'districts.name')
+            ->get();
+      
+        return $centerDistrict;
+
+    }
+     public static function studentCenterDist2(){
+
+        $studentCenter1 = DB::table('centers')
+            ->select('centers.id', 'centers.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
+            ->join('students', 'students.center_id', '=', 'centers.id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->join('regions', 'regions.id', '=', 'districts.region_id')
+            ->where('regions.cordinator_id', '=', auth()->user()->id)
+            ->groupBy('centers.id', 'centers.name')
+            ->get();
+      
+        return $studentCenter1;
+
+    }
+
+    public static function studentDistrict2(){
+
+        $studentDist2 = DB::table('districts')
+            ->select('districts.id', 'districts.name', DB::raw('COUNT(DISTINCT students.id) as students_count'))
+            ->join('centers', 'centers.district_id', '=', 'districts.id')
+            ->join('students', 'students.center_id', '=', 'centers.id')
+            ->join('regions', 'regions.id', '=', 'districts.region_id')
+            ->where('regions.cordinator_id', '=', auth()->user()->id)
+            ->groupBy('districts.id', 'districts.name')
+            ->get();
+      
+        return $studentDist2;
+
+    }
+
+    public static function centerGenderDist2(){
+        $centerId = auth()->user()->id;
+
+        $studentGenderCounts2 = DB::table('students')
+            ->select(DB::raw('SUM(CASE WHEN gender = "M" THEN 1 ELSE 0 END) as male_count'),
+             DB::raw('SUM(CASE WHEN gender = "F" THEN 1 ELSE 0 END) as female_count'))
+            ->join('centers', 'centers.id', '=', 'students.center_id')
+            ->join('districts', 'districts.id', '=', 'centers.district_id')
+            ->join('regions', 'regions.id', '=', 'districts.region_id')
+            ->where('regions.cordinator_id', auth()->user()->id)
+            ->first();
+        
+        return $studentGenderCounts2;
+
+    }
+    // end region statistics
 }
