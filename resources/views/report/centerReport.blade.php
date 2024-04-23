@@ -313,13 +313,16 @@
     </center>
 
     <p><b>7.0 Challenges and the way to overcome those challenges</b></p>
-    @php
+    <p>
+        {{ $challenge->challenges }}
+    </p>
+    <!-- @php
         $string = "1.dfkhsdhfs\n2.dhifsdfisdfsd\n3.hfdjsfhisdfs";
         $lines = preg_split('/^\d+\./m', $string, -1, PREG_SPLIT_NO_EMPTY);
     @endphp
     @foreach ($lines as $key => $line)
         <p>{{ $key + 1 }}. {{ $line }}</p>
-    @endforeach
+    @endforeach -->
    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>

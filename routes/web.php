@@ -164,6 +164,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/clubs', [clubController::class, 'getClubs']);
     Route::post('/create_club', [clubController::class, 'createClubs'])->name('create_club');
+    Route::delete('/delete_club/{id}', [clubController::class, 'delete'])->name('delete_club');
     Route::get('/club_details/{id}', [clubController::class, 'clubDetails']);
     Route::get('/national_center_clubs/{id}', [clubController::class, 'nationalClubs']);
 

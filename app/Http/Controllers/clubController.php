@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Club;
 use App\Models\Center;
+use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,8 +34,14 @@ class clubController extends Controller
         ->join('regions', 'regions.id', '=', 'districts.region_id')
         ->get();
 
+        $students = Student::select('students.*')
+        ->Join('centers', 'students.center_id', '=', 'centers.id')
+        ->where('centers.hod_id', '=', Auth()->user()->id)
+        ->get();
+
       
-        return view('clubs.club', ['clubs' => $clubs, 'distclubs' => $distclubs, 'regclubs' => $regclubs, 'adminClubs' =>  $adminClubs ]);
+        return view('clubs.club', ['clubs' => $clubs, 'distclubs' => $distclubs, 'regclubs' => $regclubs, 'adminClubs' =>  $adminClubs, 
+        'students' => $students ]);
     }
 
     public function createClubs(Request $request){
@@ -67,5 +74,22 @@ class clubController extends Controller
         ->join('centers', 'centers.id', '=', 'clubs.Center_id')
         ->where('centers.id', '=', $id)->get();
         return view('clubs.nationalClub', ['clubs' => $clubs]);
+    }
+
+    public function delete($id)
+    {
+        $club = Club::find($id);
+        $club->delete();
+
+        $clubsData = $this->getClubs();
+        
+        $clubs = $clubsData['clubs'];
+        $distclubs = $clubsData['distclubs'];
+        $regclubs = $clubsData['regclubs'];
+        $adminClubs = $clubsData['adminClubs'];
+        $students = $clubsData['students'];
+
+        return view('clubs.club', ['clubs' => $clubs, 'distclubs' => $distclubs, 'regclubs' => $regclubs, 'adminClubs' =>  $adminClubs, 
+        'students' => $students ]);
     }
 }

@@ -18,14 +18,17 @@
                 </li>
                
                 <li>
-                  <a href="{{ url('challenge') }}" type="submit" class="btn btn-outline-primary mx-3 py-0 my-1">Upload Report</a>
-                    <!-- <form action="{{ url('upload_center_report') }}" method="post">
+                  <a href="{{ url('challenge') }}" type="submit" class="btn btn-outline-primary mx-3 py-0 my-1">Write report</a>
+                   
+                     <!-- <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1">Upload Report</button> -->
+
+ 
+                </li>
+                <li>
+                <form action="{{ url('upload_center_report') }}" method="post">
                         @csrf
                         <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to upload this report?')">Upload Report</button>
-                    </form> -->
-                    <!-- <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1">Upload Report</button> -->
-
-                   
+                    </form> 
                 </li>
                 @endcannot
                 @endcan
@@ -33,6 +36,13 @@
             </ol>
         </nav>
     </div>
+    @if(session('errorIntro'))
+    <div class="alert alert-danger" role="alert">
+        {{ session('errorIntro') }}
+    </div>
+    @endif
+
+
      <!-- Recent reports -->
      @can('is_admin')
      <div class="col-12">

@@ -285,35 +285,36 @@ class reportController extends Controller
             $stage1Students = Student::select('id')
             ->join('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
-            ->where('stage', '=', 'stage 1' )->count();
+            ->where('stage', '=', 'Stage one' )->count();
 
             $stage2Students = Student::select('id')
             ->join('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
-            ->where('stage', '=', 'stage 2' )->count();
+            ->where('stage', '=', 'Stage two' )->count();
 
             $with3rs = Student::select('id')
             ->join('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
-            ->where('three_rs', '=', 'Yes' )->count();
+            ->where('stage', '=', 'Stage two' )->count();
 
             $without3rs = Student::select('id')
             ->join('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
-            ->where('three_rs', '=', 'No' )->count();
+            ->where('stage', '=', 'Stage one' )->count();
 
             $longTerm = Student::select('id')
             ->join('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
-            ->where('term', '=', 'Long term' )->count();
+            ->where('stage', '=', 'Stage one' )->count();
 
             $shortTerm = Student::select('id')
             ->join('centers', 'students.center_id', '=', 'centers.id')
             ->where('centers.hod_id', '=', Auth::user()->id)
-            ->where('term', '=', 'Short term' )->count();
+            ->where('stage', '=', 'Stage two')->count();
 
-            $allLearners = Student::select('centers.name AS center_name','students.phone_number AS phone_number', 'students.name AS name', 'students.stage AS stage', 'students.parent AS parent')
+            $allLearners = Student::select('centers.name AS center_name','students.phone_number AS phone_number', 'students.name AS name', 'students.stage AS stage', 'guardians.name AS parent')
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+            ->leftJoin('guardians', 'students.id', '=', 'guardians.student_id')
             ->where('centers.hod_id', '=', Auth::user()->id)
             ->get();
 
@@ -334,6 +335,27 @@ class reportController extends Controller
             $challenge = Challenge::select('*')
             ->where('challenges.user_id', '=', Auth::user()->id)
             ->first();
+            
+
+            try {
+                $challenge = Challenge::select('*')
+                ->where('challenges.user_id', '=', Auth::user()->id)
+                ->first();
+               
+                if ($challenge->introduction === null) {
+                    // If introduction is null, inform the user to write it first
+                    $errorIntro = "Please write the introduction first.";
+                    // You can then display this message to the user or log it
+                    return redirect()->back()->with(['errorIntro' => $errorIntro]);
+                } 
+            } catch (\Throwable $e) {
+              
+                    $errorIntro = "Write the introduction and challenges first";
+                    // You can then display this message to the user or log it
+                    return redirect()->back()->with(['errorIntro' => $errorIntro]);
+            }
+            
+           
 
             $title = "Quarter report";
             $pdf = Pdf::loadView('report.centerReport', ['owner_funder' => $owner_funder, 'title' => $title,
@@ -380,29 +402,30 @@ class reportController extends Controller
         ->where('stage', '=', 'stage 2' )->count();
 
         $with3rs = Student::select('id')
-        ->join('centers', 'students.center_id', '=', 'centers.id')
-        ->where('centers.hod_id', '=', Auth::user()->id)
-        ->where('three_rs', '=', 'Yes' )->count();
+            ->join('centers', 'students.center_id', '=', 'centers.id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->where('stage', '=', 'Stage two' )->count();
 
         $without3rs = Student::select('id')
         ->join('centers', 'students.center_id', '=', 'centers.id')
         ->where('centers.hod_id', '=', Auth::user()->id)
-        ->where('three_rs', '=', 'No' )->count();
+        ->where('stage', '=', 'Stage one' )->count();
 
         $longTerm = Student::select('id')
         ->join('centers', 'students.center_id', '=', 'centers.id')
         ->where('centers.hod_id', '=', Auth::user()->id)
-        ->where('term', '=', 'Long term' )->count();
+        ->where('stage', '=', 'Stage one' )->count();
 
         $shortTerm = Student::select('id')
         ->join('centers', 'students.center_id', '=', 'centers.id')
         ->where('centers.hod_id', '=', Auth::user()->id)
-        ->where('term', '=', 'Short term' )->count();
+        ->where('stage', '=', 'Stage two')->count();
 
-        $allLearners = Student::select('centers.name AS center_name','students.phone_number AS phone_number', 'students.name AS name', 'students.stage AS stage', 'students.parent AS parent')
-        ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
-        ->where('centers.hod_id', '=', Auth::user()->id)
-        ->get();
+        $allLearners = Student::select('centers.name AS center_name','students.phone_number AS phone_number', 'students.name AS name', 'students.stage AS stage', 'guardians.name AS parent')
+            ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+            ->leftJoin('guardians', 'students.id', '=', 'guardians.student_id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->get();
 
         $club1 = Club::select('clubs.name AS club_name','clubs.Funding_sources AS funding', 'centers.name AS center')
         ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
@@ -418,12 +441,35 @@ class reportController extends Controller
         ->where('created_by', '=', Auth::user()->id)
         ->get();
 
+        $challenge = Challenge::select('*')
+        ->where('challenges.user_id', '=', Auth::user()->id)
+        ->first();
+
+        try {
+            $challenge = Challenge::select('*')
+            ->where('challenges.user_id', '=', Auth::user()->id)
+            ->first();
+           
+            if ($challenge->introduction === null) {
+                // If introduction is null, inform the user to write it first
+                $errorIntro = "Please write the introduction first.";
+                // You can then display this message to the user or log it
+                return redirect()->back()->with(['errorIntro' => $errorIntro]);
+            } 
+        } catch (\Throwable $e) {
+          
+                $errorIntro = "Write the introduction and challenges first";
+                // You can then display this message to the user or log it
+                return redirect()->back()->with(['errorIntro' => $errorIntro]);
+        }
+        
+
         $title = "Quarter report";
         $pdf = Pdf::loadView('report.centerReport', ['owner_funder' => $owner_funder, 'title' => $title,
          'malesCount' => $malesCount, 'femalesCount' => $femalesCount, 'learnersCount' => $learnersCount,
          'stage1Students' => $stage1Students, 'stage2Students' => $stage2Students, 'without3rs' => $without3rs,
          'longTerm' => $longTerm, 'shortTerm' => $shortTerm, 'allLearners' => $allLearners, 'club1' => $club1,
-          'clubInfo' => $clubInfo, 'facilitators' => $facilitators] );
+          'clubInfo' => $clubInfo, 'facilitators' => $facilitators, 'challenge' => $challenge] );
 
         $filename = 'Quarter_report_' . time() . '.pdf';
         $pdf->save(storage_path('app/public/reports/' . $filename));
@@ -496,8 +542,7 @@ class reportController extends Controller
                 ->where('centers.hod_id', '=',   $id_of_center)
                 ->where('districts.cordinator_id', '=',  Auth::user()->id)->first();
 
-                dd($district_details->dist_name);
-
+          
                 $name_of_dist = $district_details->dist_name;
 
               

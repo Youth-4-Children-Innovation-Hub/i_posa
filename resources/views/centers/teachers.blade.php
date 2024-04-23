@@ -377,7 +377,7 @@
     }
 </script>
 <script>
-    document.getElementById('teacherForm').addEventListener('submit', function(event) {
+    document.getElementById('teacherEditForm').addEventListener('submit', function(event) {
         var emailInput = document.getElementById('email');
         var errorMessage = document.getElementById('email-edit-error');
 

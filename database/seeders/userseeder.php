@@ -32,12 +32,30 @@ class userseeder extends Seeder
             // 'role_id'=> $roles->random()->id,
             // 'password' => bcrypt('bashiri2000')
             // ],
-            [
-                'name' => 'simon mpembee',
-                'email' => 'mpembee@gmail.com',
-                'role_id'=> $roles->random()->id,
-                'password' => Hash::make('simon mpembee123')
-                ]
+            // [
+            //     'name' => 'Kobbie Maino',
+            //     'email' => 'maino@gmail.com',
+            //     'role_id'=> 3,
+            //     'password' => Hash::make('12345678')
+            //     ]
+                [
+                    'name' => 'Enzo Fernandez',
+                    'email' => 'enzo@gmail.com',
+                    'role_id'=> 2,
+                    'password' => Hash::make('12345678')
+                ],
+                [
+                    'name' => 'Thiago Silver',
+                    'email' => 'silver@gmail.com',
+                    'role_id'=> 3,
+                    'password' => Hash::make('12345678')
+                ],
+                [
+                    'name' => 'Alex Disasi',
+                    'email' => 'disasi@gmail.com',
+                    'role_id'=> 4,
+                    'password' => Hash::make('12345678')
+                    ]
             // [
             //     'name' => 'Gadafi japhaly',
             //     'email' => 'gadafijaphaly@gmail.com',

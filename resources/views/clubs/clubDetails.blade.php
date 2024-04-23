@@ -67,7 +67,15 @@
               </table>
               <!-- End Tables without borders -->
               <button type="submit" class="btn btn-outline-primary py-0 my-1" data-bs-toggle="modal" value="{{ $club_details->id }}" data-bs-target="#EditModal">Edit Club</button>
-              <button type="submit" class="btn btn-outline-danger py-0 my-1" data-bs-toggle="modal" value="{{ $club_details->id }}" data-bs-target="#EditModal">Delete Club</button>
+              <button type="submit" class="btn btn-outline-primary py-0 my-1">Members</button>
+              <form action="{{ route('delete_club', ['id' => $club_details->id]) }}" method="POST">
+                    @csrf
+                    @method('DELETE') 
+                    <button type="submit" class="btn btn-outline-danger py-0 my-1" onclick="return confirm('Are you sure you want to delete this club?')">Delete Club</button>
+             
+                </form>
+
+                           
             </div>
           </div>
 
@@ -191,35 +199,6 @@ $(document).on('click', '.editBtn', function() {
     });
 });
 
-$('.delBtn').on('click', function() {
-    var confirmation = confirm('Are you sure you want to delete this Teacher?');
-    if (confirmation) {
-        // delete it
-        var teacher = $(this).val();
-        console.log(teacher);
 
-        $.ajax({
-            type: 'POST',
-            url: '/delete_teacher',
-            data: {
-                id: teacher
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                console.log(response);
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr);
-                console.log(status);
-                console.log(error);
-            }
-        });
-    } else {
-        //canceled
-    }
-});
 </script>
 @endsection

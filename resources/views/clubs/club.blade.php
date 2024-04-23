@@ -138,7 +138,16 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Chairperson Name</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="chairName" required>
+                                        <select class="selectpicker" aria-label="Default select example"
+                                            name="chairName" id="chair_name" required data-width=100%
+                                            data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Open this
+                                                select menu
+                                            </option>
+                                            @foreach ($students as $student)
+                                            <option value="{{ $student->name }}">{{ $student->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -241,35 +250,5 @@ $(document).on('click', '.editBtn', function() {
     });
 });
 
-$('.delBtn').on('click', function() {
-    var confirmation = confirm('Are you sure you want to delete this Teacher?');
-    if (confirmation) {
-        // delete it
-        var teacher = $(this).val();
-        console.log(teacher);
-
-        $.ajax({
-            type: 'POST',
-            url: '/delete_teacher',
-            data: {
-                id: teacher
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                console.log(response);
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr);
-                console.log(status);
-                console.log(error);
-            }
-        });
-    } else {
-        //canceled
-    }
-});
 </script>
 @endsection
