@@ -946,7 +946,7 @@ function showDiv() {
 
 <script>
     document.getElementById('studentForm').addEventListener('submit', function(event) {
-        var numberInput = document.getElementById('nida-edit');
+        var numberInput = document.getElementById('nida');
         var errorMessage = document.getElementById('error-message');
         
         if (errorMessage) {
@@ -959,8 +959,8 @@ function showDiv() {
             errorMessage.innerText = 'NIDA number must be exactly 20 characters long';
             errorMessage.style.color = 'red';
             numberInput.parentNode.insertBefore(errorMessage, numberInput.nextSibling);
-            numberInput.focus(); // Focus back on the input field
-            event.preventDefault(); // Prevent form submission
+            numberInput.focus();
+            event.preventDefault(); 
         }
     });
 </script>

@@ -51,8 +51,7 @@ class UserController extends Controller
 
         $users = User::select('users.id', 'users.name', 'users.phone_number', 'users.email', 'roles.role')
             ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
-            ->orderBy('users.created_at', 'DESC')
-            ->paginate($request->session()->get('pagination_number'));
+            ->orderBy('users.created_at', 'DESC')->get();
 
         return view('users.users', ['roles' => $roles, 'users' => $users, 'userData' => $userData, 'userRole' => $userRole, 'paginate' => $request->session()->get('pagination_number')]);
     }
@@ -123,16 +122,16 @@ class UserController extends Controller
                     $userToEmail = User::where('email', $request->email)->first();
 
                   
-                    $details = [
-                        'greeting'=>'hi ' . $userToEmail->name,
-                        'body'=>'You have been registered in the IPOSA system. Click the button below to set password
-                        for access.',
-                        'actiontext'=>'Set password',
-                        'actionurl'=>'http://127.0.0.1:8000/reports_page',
-                        'lastline'=>'This is the last line',
-                    ];
+                    // $details = [
+                    //     'greeting'=>'hi ' . $userToEmail->name,
+                    //     'body'=>'You have been registered in the IPOSA system. Click the button below to set password
+                    //     for access.',
+                    //     'actiontext'=>'Set password',
+                    //     'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                    //     'lastline'=>'This is the last line',
+                    // ];
         
-                    Notification::send($userToEmail, new mailNotification($details));
+                    // Notification::send($userToEmail, new mailNotification($details));
                    
                 return redirect('users')->with('success', 'User added successfully.');
             } catch (\Exception $e) {
