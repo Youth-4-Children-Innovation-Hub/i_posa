@@ -221,6 +221,12 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Current Employer</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="employer" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Qualification</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="qualification" required>
@@ -295,6 +301,12 @@
                                             <option value="F">Female</option>
                                             <option value="M">Male</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Current Employer</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="employer" class="form-control" name="employer" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -469,6 +481,7 @@ $(document).on('click', '.editBtn', function() {
             $('#teacher_id').val(id);
             $('#name').val(response.teacher.name);
             $('#phone_number').val(response.teacher.phone_number);
+            $('#employer').val(response.teacher.employer);
             $('#email').val(response.teacher.email);
             $('#anfe').val(response.teacher.ANFE_training);
             $('#qualification').val(response.teacher.qualification);

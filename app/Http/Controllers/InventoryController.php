@@ -92,9 +92,9 @@ class InventoryController extends Controller
             $inventory = new Inventory();
 
             $inventory->name = $request->name;
-            $inventory->number = $request->number;
+            $inventory->number = $request->existing;
+            $inventory->inuse = $request->inuse;
             $inventory->course_id = $request->course;
-            $inventory->condition = $request->condition;
             $inventory->center_id = $centerId->id;
             $inventory->save();
             return redirect()->back();
@@ -126,9 +126,9 @@ class InventoryController extends Controller
 
         try {
             $inventory->name = $request->name;
-            $inventory->number = $request->number;
+            $inventory->number = $request->existing;
+            $inventory->inuse = $request->inuse;
             $inventory->course_id = $request->course;
-            $inventory->condition = $request->condition;
 
             $inventory->save();
 

@@ -33,8 +33,9 @@
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Head of Center</th>
-                        <th scope="col">District</th>
-                        <th scope="col">Region</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Ownership</th>
+                        <th scope="col">Funders</th>
                         <th scope="col">Action</th>
                     </tr>
                     </thead>
@@ -46,8 +47,9 @@
 
                             <td>{{ $center->name }}</td>
                             <td>{{ $center->hod }}</td>
-                            <td>{{ $center->district }}</td>
-                            <td>{{ $center->region }}</td>
+                            <td>{{ $center->district }}, {{ $center->region }}</td>
+                            <td>{{ $center->Ownership }}</td>
+                            <td>{{ $center->Funders }}</td>
                             <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal"
                                     value="{{ $center->id }}" class="btn btn-outline-primary btn-sm editBtn">Update</button>
                                 <button type="button" value="{{ $center->id }}"
@@ -186,6 +188,18 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class=" row mb-3">
+                                        <label for="inputText" class="col-sm-2 col-form-label">Ownership</label>
+                                        <div class="col-sm-10">
+                                            <input name="ownership" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class=" row mb-3">
+                                        <label for="inputText" class="col-sm-2 col-form-label">Funders</label>
+                                        <div class="col-sm-10">
+                                            <input name="funders" type="text" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -249,6 +263,18 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class=" row mb-3">
+                                        <label for="inputText" class="col-sm-2 col-form-label">Ownership</label>
+                                        <div class="col-sm-10">
+                                            <input name="ownership" id="ownership" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class=" row mb-3">
+                                        <label for="inputText" class="col-sm-2 col-form-label">Funders</label>
+                                        <div class="col-sm-10">
+                                            <input name="funders" id="funders" type="text" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -284,6 +310,8 @@
                     $('#center_id').val(id);
                     $('#name').val(response.center.name);
                     $('#hod').val(response.center.hod_id);
+                    $('#ownership').val(response.center.Ownership);
+                    $('#funders').val(response.center.Funders);
                     $('#hod').selectpicker('refresh');
 
                     $('#district').val(response.center.district_id);

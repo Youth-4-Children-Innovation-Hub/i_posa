@@ -27,7 +27,7 @@ class CenterController extends Controller
             ->select('roles.role')
             ->first();
 
-        $centers = Center::select('centers.id AS id', 'centers.name', 'regions.name AS region', 'users.name AS hod', 'districts.name AS district')
+        $centers = Center::select('centers.*', 'centers.id AS id', 'centers.name', 'regions.name AS region', 'users.name AS hod', 'districts.name AS district')
             ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
             ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
             ->leftJoin('regions', 'regions.id', '=', 'districts.region_id')
@@ -58,6 +58,8 @@ class CenterController extends Controller
         $center->name = $request->name;
         $center->district_id = $request->district;
         $center->hod_id = $request->hod;
+        $center->Ownership = $request->ownership;
+        $center->Funders = $request->funders;
         $center->save();
         return redirect('centers')->with('success', 'User added successfully.');
     }
@@ -82,6 +84,8 @@ class CenterController extends Controller
         $center->name = $request->name;
         $center->district_id = $request->district;
         $center->hod_id = $request->hod;
+        $center->Ownership = $request->ownership;
+        $center->Funders = $request->funders;
 
         if ($center->save()) {
             return redirect('centers')->with('success', 'Center added successfully.');

@@ -32,9 +32,9 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Number</th>
+                        <th scope="col">Existing</th>
+                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
-                        <th scope="col">Condition</th>
                         <th scope="col">Action</th>
                     </tr>
                     </thead>
@@ -47,8 +47,8 @@
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $inventory_list->name }}</td>
                         <td>{{ $inventory_list->number }}</td>
+                        <td>{{ $inventory_list->inuse }}</td>
                         <td>{{ $inventory_list->course_name }}</td>
-                        <td>{{ $inventory_list->condition }}</td>
                         @can('is_hoc')
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
                                 data-bs-target="#EditModal" value="{{ $inventory_list->id }}">Update</button>
@@ -84,10 +84,10 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Number</th>
+                        <th scope="col">Existing</th>
+                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
                         <th scope="col">Location</th>
-                        <th scope="col">Condition</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -100,9 +100,10 @@
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $admin_inventory->name }}</td>
                         <td>{{ $admin_inventory->number }}</td>
+                        <td>{{ $admin_inventory->inuse }}</td>
                         <td>{{ $admin_inventory->course_name }}</td>
                         <td>{{ $admin_inventory->cName }}, {{ $admin_inventory->distName }}, {{ $admin_inventory->rName }}</td>
-                        <td>{{ $admin_inventory->condition }}</td>
+                      
                     </tr>
                     
                     @php
@@ -131,10 +132,10 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Number</th>
+                        <th scope="col">Existing</th>
+                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
                         <th scope="col">Center</th>
-                        <th scope="col">Condition</th>
                     
                     </tr>
                     </thead>
@@ -148,9 +149,9 @@
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $dist_inventory->name }}</td>
                         <td>{{ $dist_inventory->number }}</td>
+                        <td>{{ $dist_inventory->inuse }}</td>
                         <td>{{ $dist_inventory->course_name }}</td>
                         <td>{{ $dist_inventory->cName }}</td>
-                        <td>{{ $dist_inventory->condition }}</td>
                     </tr>
                     
                     @php
@@ -180,11 +181,11 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Number</th>
+                        <th scope="col">Existing</th>
+                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
                         <th scope="col">Center</th>
                         <th scope="col">District</th>
-                        <th scope="col">Condition</th>
                     
                     </tr>
                     </thead>
@@ -198,10 +199,10 @@
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $reg_inventory->name }}</td>
                         <td>{{ $reg_inventory->number }}</td>
+                        <td>{{ $reg_inventory->number }}</td>
                         <td>{{ $reg_inventory->course_name }}</td>
                         <td>{{ $reg_inventory->cName }}</td>
                         <td>{{ $reg_inventory->distName }}</td>
-                        <td>{{ $reg_inventory->condition }}</td>
                     </tr>
                     
                     @php
@@ -238,15 +239,18 @@
                                         <input name="name" type="text" class="form-control">
                                     </div>
                                 </div>
-
                                 <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Number</label>
+                                    <label for="inputText" class="col-sm-2 col-form-label">Existing equipment</label>
                                     <div class="col-sm-10">
-                                        <input name="number" type="number" class="form-control">
+                                        <input name="existing" type="number" class="form-control">
                                     </div>
                                 </div>
-
-
+                                <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">In use equipment</label>
+                                    <div class="col-sm-10">
+                                        <input name="inuse" type="number" class="form-control">
+                                    </div>
+                                </div>
                                 <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Course</label>
                                     <div class="col-sm-10">
@@ -259,15 +263,6 @@
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Condition</label>
-                                    <div class="col-sm-10">
-                                        <input name="condition" type="text" class="form-control">
-                                    </div>
-                                </div>
-
-
                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Submit Button</label>
                                     <div class="col-sm-10">
@@ -292,7 +287,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Center Course</h5>
+                <h5 class="modal-title">Edit Inventory</h5>
             </div>
             <form method="POST" action="{{ route('update_inventory') }}">
                 @csrf
@@ -312,9 +307,15 @@
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Number</label>
+                                    <label for="inputText" class="col-sm-2 col-form-label">Existing equipment</label>
                                     <div class="col-sm-10">
-                                        <input name="number" type="number" id="number" class="form-control">
+                                        <input name="existing" id="existing" type="existing" class="form-control">
+                                    </div>
+                                </div>
+                                <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">In use equipment</label>
+                                    <div class="col-sm-10">
+                                        <input name="inuse" id="inuse" type="inuse" class="form-control">
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
@@ -326,12 +327,6 @@
                                             <option value="{{ $course->id }}">{{ $course->name }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                </div>
-                                <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Condition</label>
-                                    <div class="col-sm-10">
-                                        <input name="condition" type="text" id="condition" class="form-control">
                                     </div>
                                 </div>
                         </div>
@@ -371,9 +366,10 @@ $(document).on('click', '.editBtn', function() {
             $('#course').val(response.inventory.course_id);
             $('#course').selectpicker('refresh');
             $('#inv_id').val(id);
-            $('#condition').val(response.inventory.condition);
             $('#name').val(response.inventory.name);
             $('#number').val(response.inventory.number);
+            $('#existing').val(response.inventory.number);
+            $('#inuse').val(response.inventory.inuse);
         },
         error: function(xhr, status, error) {
             console.log(xhr);
