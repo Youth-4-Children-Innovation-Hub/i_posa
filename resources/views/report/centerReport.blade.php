@@ -56,7 +56,6 @@
            <thead>
                <tr>
                    <th>No.</th>
-                   <th>Name Of the Center</th>
                    <th>Number Of Learners</th>
                    <th>Males</th> 
                    <th>Females</th>
@@ -67,7 +66,6 @@
            <tbody>
                <tr>
                    <td>1</td>
-                   <td>{{$owner_funder->name}}</td>
                    <td>{{$learnersCount}}</td>
                    <td>{{$malesCount}}</td>
                    <td>{{$femalesCount}}</td>  
@@ -83,7 +81,6 @@
             <thead>
                 <tr>
                     <th>NO.</th>
-                    <th>Name Of The Center</th>
                     <th>NO. of Learners stg 1</th>
                     <th>NO. of Learners without 3Rs</th>
                     <th>NO. of learners stage 11</th> 
@@ -94,7 +91,6 @@
                 <tr>
                    
                     <td>1</td>
-                    <td>{{$owner_funder->name}}</td>
                     <td>{{ $stage1Students }}</td>
                     <td>{{ $without3rs }}</td>
                     <td>{{ $stage2Students }}</td>
@@ -110,7 +106,6 @@
             <thead>
                 <tr>
                     <th>NO</th>
-                    <th>Name of the Center</th>
                     <th>No. of Learners</th>
                     <th>No. of Learners on Long-term training</th> 
                     <th>No. of Learners on Short-term training</th>
@@ -121,7 +116,6 @@
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>{{$owner_funder->name}}</td>
                     <td>{{$learnersCount}}</td>
                     <td>{{ $longTerm }}</td>
                     <td>{{ $shortTerm }}</td>
@@ -136,68 +130,53 @@
    
    <center>
    <table class="table table-bordered">
-           <thead>
-               <tr>
-                   <th>NO</th>
-                   <th>Name of the Center</th>
-                   <th>Learners Name</th>
-                   <th>Learning stage</th> 
-                   <th>Learners contact</th>
-                   <th>Name of Parent/ Guardian</th> 
-                   <th>Parent contact</th>
-               </tr>
-           </thead>
-           <tbody>
-           @php
-            $centerName = null; // Initialize centerName variable
-           @endphp
-              
-                @foreach($allLearners as $learner)
+    <thead>
+        <tr>
+            <th>NO</th>
+            <th>Learners Name</th>
+            <th>Learning stage</th>
+            <th>Learners contact</th>
+            <th>Name of Parent/ Guardian</th>
+            <th>Parent contact</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+            @foreach($allLearners as $key => $learner)
                 <tr>
-                
-                   @if ($centerName != $learner->center_name)
-                   <td rowspan="{{ $allLearners->where('center_name', $learner->center_name)->count() }}">1</td>
-                    <td rowspan="{{ $allLearners->where('center_name', $learner->center_name)->count() }}">
-                        {{ $learner->center_name }}
-                    </td>
-                    @php
-                        $centerName = $learner->center_name; // Update centerName
-                    @endphp
-                   @endif
-                   <td>{{ $learner->name }}</td>
-                   <td>{{ $learner->stage }}</td>
-                   <td>{{ $learner->phone_number }}</td>
-                   <td>{{ $learner->parent }}</td>   
-                   <td>100</td>
-                   </tr>
-                @endforeach   
-              
-            
-           </tbody>
-       </table>
+                    <td>{{ $key+1 }}</td>
+                    <td>{{ $learner->name }}</td>
+                    <td>{{ $learner->stage }}</td>
+                    <td>{{ $learner->phone_number }}</td>
+                    <td>{{ $learner->parent }}</td>
+                    <td>{{ $learner->gPhone }}</td>
+                </tr>
+            @endforeach
+      
+    </tbody>
+</table>
+
    </center>
 
-   <p><b>5.0 IPOSA Facilitators</b></p>
+   <p><b>4.0 IPOSA Facilitators</b></p>
    
    <center>
    <table class="table table-bordered">
            <thead>
                <tr>
                    <th>NO</th>
-                   <th>Name of the Center</th>
                    <th>Name of facilitator</th>
                    <th>Qualifications</th> 
                    <th>Current employer</th>
                </tr>
            </thead>
            <tbody>
-            @foreach($facilitators as $facilitator)
+            @foreach($facilitators as $key => $facilitator)
                <tr>
-                   <td>1</td>
-                   <td>Chitete</td>
+                   <td>{{ $key+1 }}</td>
                    <td>{{ $facilitator->name }}</td>
                    <td>{{ $facilitator->qualification }}</td>
-                   <td>dfids</td>
+                   <td>{{ $facilitator->employer }}</td>
                </tr>
             @endforeach
            </tbody>
@@ -213,21 +192,20 @@
            <thead>
                <tr>
                    <th>NO</th>
-                   <th>Name of the Center</th>
                    <th>Type of trade</th>
                    <th>Existing Equipment</th> 
                    <th>In use Equipment</th>
                </tr>
            </thead>
            <tbody>
+             @foreach( $inventories as $key => $inventory )
                <tr>
-                   <td>1</td>
-                   <td>dar es salaam</td>
-                   <td>ilala</td>
-                   <td>ilala</td>
-                   <td>100</td>
+                   <td>{{ $key+1 }}</td>
+                   <td>{{ $inventory->course }}</td>
+                   <td>{{ $inventory->number }}</td>
+                   <td>{{ $inventory->inuse }}</td>
                </tr>
-            
+            @endforeach
            </tbody>
        </table>
    </center>
@@ -240,26 +218,15 @@
             <thead>
                 <tr>
                     <th>NO</th>
-                    <th>Name of the Center</th>
                     <th>Name of the Empowerment Club</th>
                     <th>Funding Sources</th> 
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $centerName = null; // Initialize centerName variable
-                @endphp
-           
                 @foreach($club1 as $club)
                 
                 <tr>
                     <td>1</td>
-                    @if($centerName != $club->center)
-                    <td rowspan="{{ $club1->where('center', $club->center)->count(); }}">{{ $club->center }}</td>
-                    @php
-                        $centerName = $club->center; // Update centerName
-                    @endphp
-                    @endif
                     <td>{{ $club->club_name }}</td>
                     <td>{{ $club->funding }}</td>
                 </tr>
@@ -275,7 +242,6 @@
             <thead>
                 <tr>
                     <th>NO</th>
-                    <th>Name of the Center</th>
                     <th>Name of IEC</th> 
                     <th>Registration Status</th>
                     <th>Chaiperson Name</th>
@@ -287,25 +253,16 @@
                
             </thead>
             <tbody>
-                @php
-                    $centerName = null; // Initialize centerName variable
-                @endphp
-                @foreach($clubInfo as $info)
+                @foreach( $clubInfo as $key => $clubInfo )
                 <tr>
-                @if($centerName != $info->center)
-                    <td rowspan="{{ $clubInfo->where('center', $info->center)->count(); }}">1</td>
-                    <td rowspan="{{ $clubInfo->where('center', $info->center)->count(); }}">{{ $info->center }}</td>
-                    @php
-                        $centerName = $info->center; // Update centerName
-                    @endphp
-                @endif
-                    <td>{{ $info->club_name }}</td>
-                    <td>{{ $info->Registration_status }}</td>
-                    <td>{{ $info->Chairperson }}</td>
-                    <td>{{ $info->Contact }}</td>
-                    <td>{{ $info->Asset }}</td>
-                    <td>{{ $info->Capital }}</td>
-                    <td>{{ $info->QA_Contact }}</td>    
+                    <td>{{ $key+1 }}</td>
+                    <td>{{ $clubInfo->club_name }}</td>
+                    <td>{{ $clubInfo->Registration_status }}</td>
+                    <td>{{ $clubInfo->Chairperson }}</td>
+                    <td>{{ $clubInfo->Contact }}</td>
+                    <td>{{ $clubInfo->Asset }}</td>
+                    <td>{{ $clubInfo->Capital }}</td>
+                    <td>{{ $clubInfo->QA_Contact }}</td>    
                 </tr>
                 @endforeach
             </tbody>

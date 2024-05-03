@@ -61,6 +61,8 @@ class TeachersController extends Controller
     public function Create(Request $request)
     {
         try {
+            
+            $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->get();
             $teacher = new Teacher();
             $teacher->name = $request->name;
             $teacher->gender = $request->gender;
@@ -68,7 +70,7 @@ class TeachersController extends Controller
             $teacher->ANFE_training = $request->anfe;
             $teacher->email = $request->email;
             $teacher->phone_number = $request->phone_number;
-            $teacher->created_by = Auth::user()->id;
+            $teacher->created_by = $centerId->id;
             $teacher->save();
             return redirect('teachers');
         } catch (Exception $e) {
@@ -98,6 +100,7 @@ class TeachersController extends Controller
         $teacher->qualification = $request->qualification;
         $teacher->ANFE_training = $request->anfe;
         $teacher->phone_number = $request->phone_number;
+        $teacher->employer = $request->employer;
 
         if($teacher->save()) {
             return redirect('teachers')->with('success', 'Teacher Updated Successufil');
