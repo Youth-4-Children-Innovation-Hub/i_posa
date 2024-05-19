@@ -67,7 +67,12 @@
               </table>
               <!-- End Tables without borders -->
               <button type="submit" class="btn btn-outline-primary py-0 my-1" data-bs-toggle="modal" value="{{ $club_details->id }}" data-bs-target="#EditModal">Edit Club</button>
-              <button type="submit" class="btn btn-outline-primary py-0 my-1">Members</button>
+              
+              <form action="{{ route('club_members', ['id' => $club_details->id]) }}" method="GET">
+                    @csrf
+                    @method('DELETE') 
+                    <button type="submit" class="btn btn-outline-primary py-0 my-1">Members</button>
+                </form>
               <form action="{{ route('delete_club', ['id' => $club_details->id]) }}" method="POST">
                     @csrf
                     @method('DELETE') 
@@ -87,11 +92,11 @@
                     <h5 class="modal-title">Edit Club</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="">
+                <form method="POST" action="{{ route('edit_club') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="" id="add_region">
-                            <input type="hidden" name="teacher_id" id="teacher_id">
+                            <input type="hidden" name="club_id" id="club_id" value="{{ $club_details->id }}">
                             <div class="card-body">
                                 <!-- General Form Elements -->
                                 <div class="row mb-3">

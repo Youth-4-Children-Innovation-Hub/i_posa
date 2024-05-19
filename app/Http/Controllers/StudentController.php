@@ -279,6 +279,7 @@ class StudentController extends Controller
     public function delete(Request $request)
     {
         StudentCourses::where('student_id', $request->id)->delete();
+        Guardian::where('student_id', '=', $request->id)->delete();
         $student = Student::find($request->id);
 
         if($student->delete()){

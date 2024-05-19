@@ -8,12 +8,13 @@
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Clubs</li>
 
-                
+                @cannot('is_admin')
               
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Club</button>
                 </li>
+                @endcannot
                 
 
             </ol>
@@ -120,7 +121,9 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
+                   
                     <h5 class="modal-title">Add Club</h5>
+                    
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" action="{{ route('create_club') }}" enctype="multipart/form-data">

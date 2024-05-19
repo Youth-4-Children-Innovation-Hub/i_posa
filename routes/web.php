@@ -146,7 +146,7 @@ Route::middleware(['auth'])->group(function(){
     
     Route::get('/reports_page', [reportController::class, 'index']);
     Route::post('/upload_report', [reportController::class, 'upload']);
-    Route::get('/download/{file}', [reportController::class, 'download']);
+    Route::get('/download/{id}', [reportController::class, 'download']);
     Route::get('/view/{id}', [reportController::class, 'view']);
     Route::post('delete_report', [reportController::class, 'delete'])->name('delete_report');
     Route::delete('erase_report/{id}', [reportController::class, 'erase']);
@@ -167,6 +167,8 @@ Route::middleware(['auth'])->group(function(){
     Route::delete('/delete_club/{id}', [clubController::class, 'delete'])->name('delete_club');
     Route::get('/club_details/{id}', [clubController::class, 'clubDetails']);
     Route::get('/national_center_clubs/{id}', [clubController::class, 'nationalClubs']);
+    Route::post('/editclub',[clubController::class,'editClubs'])->name('edit_club');
+    Route::get('/members/{id}', [clubController::class, 'getMembers'])->name('club_members');
 
    
     // pdf testing

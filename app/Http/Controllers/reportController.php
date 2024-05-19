@@ -103,14 +103,24 @@ class reportController extends Controller
         
     }
 
-    public function download(Request $request, $file){
-        return response()->download(public_path('assets/'.$file));
+    public function download(Request $request, $id){
+        $file = centerReport::find($id);
+        if( $file->nat_status != 'opened' ){
+            $file->nat_status = 'opened';
+            $file->save();
+        }
+        
+        $filePath = storage_path('app/public/reports/' . $file->name); 
+        return response()->download($filePath);
     }
 
     public function view($id){
         $data = centerReport::find($id);
-        $data->nat_status = 'opened';
-        $data->save();
+        if( $data->nat_status != 'opened' ){
+             $data->nat_status = 'opened';
+             $data->save();
+        }
+       
         $filePath = storage_path('app/public/reports/' . $data->name);
         return response()->file($filePath, ['Content-Type' => 'application/pdf']);
    
@@ -614,7 +624,15 @@ class reportController extends Controller
         public function erase($id)
         {
             $report = CenterReport::find($id);
-            $report->delete();
+            $roleId = Role::select('id')->where('role', 'head of center')->value('id');
+            if (Auth::user()->role_id == $roleId){
+                $remark = Remark::where('report_id', $report->id);
+                $remark->delete();
+                $report->delete();
+            }else{
+                $report->delete();
+            }
+           
             return redirect()->back()->with('success', 'Report deleted successfully');
         }
     
