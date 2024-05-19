@@ -27,7 +27,7 @@
                 <li>
                 <form action="{{ url('upload_center_report') }}" method="post">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to upload this report?')">Upload Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to upload this report?')">Generate Report</button>
                     </form> 
                 </li>
                 @endcannot
@@ -65,7 +65,10 @@
                     @if( $reports->dist_approval == 2 && $reports->reg_approval == 2 )
                       <tr>
                         <th scope="row"><a href="#">{{ $key+1}}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a></td>
+                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
+                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
+                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                        </td>
                         @if( $reports->nat_status == 'new' )
                         <td>{{ $reports->hoc_name }} on {{ $reports->date }} <span class="badge bg-success">new</span></td>
                         @else
@@ -117,7 +120,10 @@
                     @if($reports->dist_id == auth()->user()->id)
                       <tr>
                         <th scope="row"><a href="#">{{ $key+1}}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a></td>
+                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
+                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
+                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                      </td>
                         <td>{{ $reports->hoc_name }} on {{ $reports->date }}</td>
                         @if( $reports->dist_approval == 1 )
                         <td><span class="badge bg-warning">Pending</span></td> 
@@ -177,7 +183,10 @@
                     @if($reports->reg_id == auth()->user()->id && $reports->dist_approval == 2)
                     <tr>
                         <th scope="row"><a href="#">{{ $key+1}}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a></td>
+                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
+                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
+                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                      </td>
                         <td>{{ $reports->hoc_name }} on {{ $reports->date }}</td>
                         @if( $reports->dist_approval == 2 && $reports->reg_approval == 1 )
                         <td><span class="badge bg-warning">Pending</span></td> 
@@ -222,6 +231,7 @@
                         <th scope="col">Report</th>
                         <th scope="col">Date sent</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -229,7 +239,10 @@
                     @if($reports->hod_id == auth()->user()->id)
                       <tr>
                         <th scope="row"><a href="#">{{ $key+1 }}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a></td>
+                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
+                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
+                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                      </td>
                         <td>{{ $reports->date }}</td>
                         @if( ($reports->dist_approval == 1 && $reports->reg_approval == 2) || ($reports->dist_approval == 2 && $reports->reg_approval == 1) || 
                         ($reports->dist_approval == 1 && $reports->reg_approval == 1) )
@@ -241,6 +254,15 @@
                         <td><a class="btn btn-outline-success btn-sm seeRemarksBtn" type="button" data-bs-toggle="modal"
                          data-bs-target="#seeRemarks" data-remarks="{{ $reports->remark }}">
                           See remarks</a></td> 
+                          <td>
+                          @if($reports->dist_approval == 3 || $reports->reg_approval == 3)  
+                          <form action="{{ url('/erase_report', $reports->id) }}" method="POST">
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this report?')">Delete</button>
+                          </form>
+                          @endif
+                       </td>  
                         @endif 
                       </tr>
                     @endif  

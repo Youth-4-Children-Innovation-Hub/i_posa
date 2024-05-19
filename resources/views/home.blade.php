@@ -6,8 +6,8 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
-                <img src="assets/img/logo.png" alt="">
+            <a href="{{ url('/') }}" class="logo d-flex align-items-center" style="text-decoration: none;">
+                <img src="assetz/img/iae.png" alt="">
                 <span class="d-none d-lg-block">IPOSA</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -81,10 +81,11 @@
 
                 <li class="nav-item dropdown">
 
-                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    <!-- <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-chat-left-text"></i>
                         <span class="badge bg-success badge-number">3</span>
-                    </a><!-- End Messages Icon -->
+                    </a> -->
+                    <!-- End Messages Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
                         <li class="dropdown-header">
