@@ -351,19 +351,6 @@
                                     </div>
                                     <div id="error-message" style="color: red;"></div>
                                 </div>
-                             
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Region</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="region" required>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">District</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="district" required>
-                                    </div>
-                                </div>
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Ward</label>
                                     <div class="col-sm-10">
@@ -524,18 +511,6 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Region</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="pregion" required>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">District</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="pdistrict" required>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Ward</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="pward" required>
@@ -622,18 +597,7 @@
                                     </div>
                                     <div id="nida-error1" style="color: red;"></div>
                                 </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Region</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="region-edit" class="form-control" name="region" required>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">District</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="district-edit" class="form-control" name="district" required>
-                                    </div>
-                                </div>
+                                
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Ward</label>
                                     <div class="col-sm-10">
@@ -812,18 +776,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Region</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="gregion-edit" class="form-control" name="pregion" required>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">District</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="gdistrict-edit" class="form-control" name="pdistrict" required>
-                                    </div>
-                                </div>
+                               
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Ward</label>
                                     <div class="col-sm-10">
@@ -1232,8 +1185,6 @@ $(document).on('click', '.editBtn', function() {
             $('#course-edit').val(response.student.course_id);
             $('#edit-status').val(response.student.status);
             $('#gid').val(response.student.gid);
-            $('#region-edit').val(response.student.region);
-            $('#district-edit').val(response.student.district);
             $('#ward-edit').val(response.student.ward);
             $('#street-edit').val(response.student.street);
             $('#edit-dissability').val(response.student.disability);
@@ -1242,8 +1193,6 @@ $(document).on('click', '.editBtn', function() {
             $('#education-edit').val(response.student.education_level);
             $('#education-type-edit').val(response.student.education_type);
             $('#email-edit').val(response.student.email);
-            $('#gregion-edit').val(response.student.gregion);
-            $('#gdistrict-edit').val(response.student.gdistrict);
             $('#gward-edit').val(response.student.gward);
             $('#gemail-edit').val(response.student.gemail);
             $('#gaddress-edit').val(response.student.address);

@@ -20,6 +20,17 @@ use Illuminate\Support\Facades\File;
 class StudentController extends Controller
 {
     //
+    protected $center_location;
+
+    public function setCenterLocation()
+    {
+        $this->center_location = Region::select('regions.name as rname', 'districts.name as dname')
+            ->join('districts', 'districts.region_id', '=', 'regions.id')
+            ->join('centers', 'districts.id', '=', 'centers.district_id')
+            ->where('centers.hod_id', '=', Auth::user()->id)
+            ->first();
+    }
+
     public function GetStudents()
     {
         $userData = auth()->user();
@@ -140,6 +151,9 @@ class StudentController extends Controller
         ->join('users', 'roles.id', '=', 'users.role_id')
         ->where('users.id', '=', Auth::user()->id)
         ->first();
+
+        $this->setCenterLocation();
+        $location = $this->center_location;
      
         try {
             if ($user_role->role == 'head of center') {
@@ -153,8 +167,8 @@ class StudentController extends Controller
             $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;
             $student->nida = $request->nida;
-            $student->region = $request->region;
-            $student->district = $request->district;
+            $student->region = $location->rname;
+            $student->district = $location->dname;
             $student->ward = $request->ward;
             $student->street = $request->street;
             $student->education_level = $request->education_level;
@@ -179,8 +193,8 @@ class StudentController extends Controller
             $parent->address = $request->parent_address;
             $parent->occupation = $request->parent_occupation;
             $parent->disability = $request->pdissability;
-            $parent->region = $request->pregion;
-            $parent->district = $request->pdistrict;
+            $parent->region = $location->rname;
+            $parent->district = $location->dname;
             $parent->ward = $request->pward;
             $parent->student_id = $student->id;
             $parent->save();
@@ -206,15 +220,20 @@ class StudentController extends Controller
     public function update(Request $request)
     {
 
+        
+
         try {
+            $this->setCenterLocation();
+            $location = $this->center_location;
+
             $student = Student::find($request->student_id);
             $student->name = $request->name;
             $student->status = $request->status;
             $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;
             $student->nida = $request->nida;
-            $student->region = $request->region;
-            $student->district = $request->district;
+            $student->region = $location->rname;
+            $student->district = $location->dname;
             $student->ward = $request->ward;
             $student->stage = $request->stage;
             $student->street = $request->street;
@@ -235,8 +254,8 @@ class StudentController extends Controller
             $parent->address = $request->parent_address;
             $parent->occupation = $request->parent_occupation;
             $parent->disability = $request->pdissability;
-            $parent->region = $request->pregion;
-            $parent->district = $request->pdistrict;
+            $parent->region = $location->rname;
+            $parent->district = $location->dname;
             $parent->ward = $request->pward;
             $parent->save();
 
