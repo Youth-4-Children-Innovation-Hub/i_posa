@@ -92,6 +92,7 @@ class InventoryController extends Controller
             $inventory = new Inventory();
 
             $inventory->name = $request->name;
+            $inventory->code = $request->code;
             $inventory->number = $request->existing;
             $inventory->inuse = $request->inuse;
             $inventory->course_id = $request->course;
@@ -126,6 +127,7 @@ class InventoryController extends Controller
 
         try {
             $inventory->name = $request->name;
+            $inventory->code = $request->code;
             $inventory->number = $request->existing;
             $inventory->inuse = $request->inuse;
             $inventory->course_id = $request->course;

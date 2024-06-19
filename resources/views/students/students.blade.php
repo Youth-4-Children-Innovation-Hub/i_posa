@@ -15,6 +15,10 @@
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Student</button>
                 </li>
+                <li>
+                <a href="{{ url('excel_import') }}" type="submit" class="btn btn-outline-success mx-3 py-0 my-1">Import from Excel</a>
+                </li>
+               
                 @endcan
             </ol>
         </nav>
@@ -311,6 +315,12 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Registration Number</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="reg_no" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Gender</label>
                                     <div class="col-sm-10">
                                         <select class="form-select" aria-label="Default select example" name="gender"
@@ -392,8 +402,14 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Education level</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="education_level" required>
-                                    </div>
+                                        <select class="form-select" aria-label="Default select example" name="gender"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Primary">Primary</option>
+                                            <option value="Secondary">Secondary</option>
+                                            <option value="None">None</option>
+                                        </select>                                   
+                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Education Type</label>
@@ -401,8 +417,9 @@
                                         <select class="form-select" aria-label="Default select example" name="education_type"
                                             required>
                                             <option selected>Open this select menu</option>
-                                            <option value="Married">Formal</option>
-                                            <option value="Single">Non-formal</option>
+                                            <option value="Formal">Formal</option>
+                                            <option value="Non-Formal">Non-formal</option>
+                                            <option value="Non-Formal">None</option>
                                         </select>
                                     </div>
                                 </div>
@@ -556,6 +573,12 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Registration Number</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="reg_no" id="reg_no" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Gender</label>
                                     <div class="col-sm-10">
                                         <select class="form-select" aria-label="Default select example" name="gender"
@@ -639,17 +662,24 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Education level</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="education-edit" class="form-control" name="education_level" required>
-                                    </div>
+                                        <select class="form-select" aria-label="Default select example" name="gender"
+                                            required>
+                                            <option selected>Open this select menu</option>
+                                            <option value="Primary">Primary</option>
+                                            <option value="Secondary">Secondary</option>
+                                            <option value="None">None</option>
+                                        </select> 
+                                   </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Education Type</label>
                                     <div class="col-sm-10">
-                                        <select class="form-select" id="education-type-edit" aria-label="Default select example" name="education_type"
+                                        <select class="form-select" aria-label="Default select example" name="education_type"
                                             required>
                                             <option selected>Open this select menu</option>
-                                            <option value="Married">Formal</option>
-                                            <option value="Single">Non-formal</option>
+                                            <option value="Formal">Formal</option>
+                                            <option value="Non-Formal">Non-formal</option>
+                                            <option value="Non-Formal">None</option>
                                         </select>
                                     </div>
                                 </div>
@@ -726,7 +756,7 @@
                                             <option selected>Open this select menu</option>
                                             <option value="continous">Continuous</option>
                                             <option value="Graduate">Graduate</option>
-                                            <option value="Dropout">dropout</option>
+                                            <option value="Dropout">Dropout</option>
                                         </select>
                                     </div>
                                 </div>
@@ -796,6 +826,8 @@
             </div>
         </div>
     </div><!-- End of model add student-->
+
+    
 
 </div>
 <script>
@@ -1178,6 +1210,7 @@ $(document).on('click', '.editBtn', function() {
             console.log(response);
             $('#student_id').val(id);
             $('#name').val(response.student.name);
+            $('#reg_no').val(response.student.registration_number);
             $('#phone-edit').val(response.student.phone_number);
             $('#dob').val(response.student.date_of_birth);
             $('#nida-edit').val(response.student.nida);
