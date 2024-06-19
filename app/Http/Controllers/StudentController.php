@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Course;
 use App\Models\Role;
-use App\Models\StudentCourses;
+use App\Models\StudentCourses; 
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CoursesImport; 
+use App\Imports\StudentsImport;
+use Illuminate\Support\Facades\Response;
 
 use Illuminate\Support\Facades\File;
 
@@ -29,6 +34,22 @@ class StudentController extends Controller
             ->join('centers', 'districts.id', '=', 'centers.district_id')
             ->where('centers.hod_id', '=', Auth::user()->id)
             ->first();
+    }
+
+    public function excelData()
+    {
+        return view('students.excel');
+    }
+
+    public function downloadTemplate()
+    {
+        $filePath = public_path('excel/student.xlsx'); 
+
+        if (file_exists($filePath)) {
+            return Response::download($filePath);
+        } else {
+            return redirect()->back()->with('error', 'File not found.');
+        }
     }
 
     public function GetStudents()
@@ -101,6 +122,12 @@ class StudentController extends Controller
 
     }
 
+    public function import(Request $request)
+    {
+        Excel::import(new StudentsImport, $request->file('excel_file'));
+        return redirect()->back();
+    }
+
     public function Create(Request $request)
     {
         //validating
@@ -164,6 +191,7 @@ class StudentController extends Controller
            
             $student = new Student();
             $student->name = $request->name;
+            $student->registration_number = $request->reg_no;
             $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;
             $student->nida = $request->nida;
@@ -228,6 +256,7 @@ class StudentController extends Controller
 
             $student = Student::find($request->student_id);
             $student->name = $request->name;
+            $student->registration_number = $request->reg_no;
             $student->status = $request->status;
             $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;

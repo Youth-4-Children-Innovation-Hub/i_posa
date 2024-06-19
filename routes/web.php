@@ -84,6 +84,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('update_district', [DistrictController::class, 'updateDistrict'])->name('update_district');
     Route::post('delete_district', [DistrictController::class, 'deleteDistrict'])->name('delete_district');
     Route::get('select_region/{id}', [DistrictController::class, 'regionDistricts']);
+
    
     
     
@@ -122,6 +123,9 @@ Route::middleware(['auth'])->group(function(){
     Route::post('delete_student', [StudentController::class, 'delete'])->name('delete_student');
     Route::get('search_student',[StudentController::class,'Search']);
     Route::get('national_center_students/{id}',[StudentController::class,'nationalStudents']);
+    Route::post('import', [StudentController::class, 'import'])->name('import_student');
+    Route::get('excel_import', [StudentController::class, 'excelData']);
+    Route::get('/download-template', [StudentController::class, 'downloadTemplate']);
 
     
     Route::get('dashboard',[DashboardController::class,'GetDashboard']);

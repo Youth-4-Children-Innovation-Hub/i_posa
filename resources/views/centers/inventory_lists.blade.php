@@ -25,13 +25,14 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
+                  <h5 class="card-title">Inventory</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Code</th>
                         <th scope="col">Existing</th>
                         <th scope="col">In Use</th>
                         <th scope="col">Course</th>
@@ -46,6 +47,7 @@
                     <tr>
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $inventory_list->name }}</td>
+                        <td>{{ $inventory_list->code }}</td>
                         <td>{{ $inventory_list->number }}</td>
                         <td>{{ $inventory_list->inuse }}</td>
                         <td>{{ $inventory_list->course_name }}</td>
@@ -240,6 +242,12 @@
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Code</label>
+                                    <div class="col-sm-10">
+                                        <input name="code" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Existing equipment</label>
                                     <div class="col-sm-10">
                                         <input name="existing" type="number" class="form-control">
@@ -304,6 +312,12 @@
                                     <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                     <div class="col-sm-10">
                                         <input name="name" id="name" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class=" row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Code</label>
+                                    <div class="col-sm-10">
+                                        <input name="code" id="name" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
