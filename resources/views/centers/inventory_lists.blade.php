@@ -33,8 +33,6 @@
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Code</th>
-                        <th scope="col">Existing</th>
-                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -48,8 +46,6 @@
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $inventory_list->name }}</td>
                         <td>{{ $inventory_list->code }}</td>
-                        <td>{{ $inventory_list->number }}</td>
-                        <td>{{ $inventory_list->inuse }}</td>
                         <td>{{ $inventory_list->course_name }}</td>
                         @can('is_hoc')
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
@@ -86,8 +82,6 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Existing</th>
-                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
                         <th scope="col">Location</th>
                     </tr>
@@ -101,8 +95,6 @@
                     <tr>
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $admin_inventory->name }}</td>
-                        <td>{{ $admin_inventory->number }}</td>
-                        <td>{{ $admin_inventory->inuse }}</td>
                         <td>{{ $admin_inventory->course_name }}</td>
                         <td>{{ $admin_inventory->cName }}, {{ $admin_inventory->distName }}, {{ $admin_inventory->rName }}</td>
                       
@@ -134,8 +126,6 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Existing</th>
-                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
                         <th scope="col">Center</th>
                     
@@ -150,8 +140,6 @@
                     <tr>
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $dist_inventory->name }}</td>
-                        <td>{{ $dist_inventory->number }}</td>
-                        <td>{{ $dist_inventory->inuse }}</td>
                         <td>{{ $dist_inventory->course_name }}</td>
                         <td>{{ $dist_inventory->cName }}</td>
                     </tr>
@@ -183,8 +171,6 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Existing</th>
-                        <th scope="col">In Use</th>
                         <th scope="col">Course</th>
                         <th scope="col">Center</th>
                         <th scope="col">District</th>
@@ -200,13 +186,10 @@
                     <tr>
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $reg_inventory->name }}</td>
-                        <td>{{ $reg_inventory->number }}</td>
-                        <td>{{ $reg_inventory->number }}</td>
                         <td>{{ $reg_inventory->course_name }}</td>
                         <td>{{ $reg_inventory->cName }}</td>
                         <td>{{ $reg_inventory->distName }}</td>
                     </tr>
-                    
                     @php
                     $i++;
                     @endphp
@@ -225,7 +208,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Center Course</h5>
+                    <h5 class="modal-title">Add Inventories</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <!-- General Form Elements -->
@@ -238,8 +221,13 @@
                                 <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                     <div class="col-sm-10">
-                                        <input name="name" type="text" class="form-control">
-                                    </div>
+                                    <select class="form-control selectpicker" data-mdb-container="#exampleModal"
+                                            data-mdb-filter="true" name="name">
+                                            @foreach ($inv_type as $inv)
+                                            <option value="{{ $inv->id }}">{{ $inv->name }}</option>
+                                            @endforeach
+
+                                    </select>                                    </div>
                                 </div>
                                 <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Code</label>
@@ -248,15 +236,13 @@
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Existing equipment</label>
+                                    <label for="inputText" class="col-sm-2 col-form-label">Use status</label>
                                     <div class="col-sm-10">
-                                        <input name="existing" type="number" class="form-control">
-                                    </div>
-                                </div>
-                                <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">In use equipment</label>
-                                    <div class="col-sm-10">
-                                        <input name="inuse" type="number" class="form-control">
+                                        <select class="form-control selectpicker" data-mdb-container="#exampleModal"
+                                            data-mdb-filter="true" name="course">
+                                            <option value="use">Use</option>
+                                            <option value="store">Store</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
@@ -311,25 +297,19 @@
                                 <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                     <div class="col-sm-10">
-                                        <input name="name" id="name" type="text" class="form-control">
+                                    <select class="form-control selectpicker" data-mdb-container="#exampleModal"
+                                            data-mdb-filter="true" name="name">
+                                            @foreach ($inv_type as $inv)
+                                            <option value="{{ $inv->id }}">{{ $inv->name }}</option>
+                                            @endforeach
+
+                                    </select> 
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Code</label>
                                     <div class="col-sm-10">
                                         <input name="code" id="name" type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Existing equipment</label>
-                                    <div class="col-sm-10">
-                                        <input name="existing" id="existing" type="existing" class="form-control">
-                                    </div>
-                                </div>
-                                <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">In use equipment</label>
-                                    <div class="col-sm-10">
-                                        <input name="inuse" id="inuse" type="inuse" class="form-control">
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
