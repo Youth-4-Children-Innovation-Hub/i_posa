@@ -430,10 +430,25 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/inventory') }}">
-                    <i class="bi bi-file-ruled-fill"></i>
-                        <span>Inventory list</span>
+                    <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi bi-file-ruled-fill"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
+                    <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="{{ url('/inventory_type') }}">
+                                <i class="bi bi-circle"></i><span>Inventory type</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                    <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="{{ url('/inventory') }}">
+                                <i class="bi bi-circle"></i><span>Inventory list</span>
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
                 
             @endcannot

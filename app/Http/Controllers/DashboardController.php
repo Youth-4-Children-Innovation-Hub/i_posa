@@ -34,7 +34,6 @@ class DashboardController extends Controller
         $centerGender = DashboardController::centerGenderDist();
         $centerGender1 = DashboardController::centerGenderDist1();
         $centerGender2 = DashboardController::centerGenderDist2();
-        $ageDistribution = DashboardController::getAgeDistribution();
         $centerDistrict = DashboardController::centerDistrictDist();
         $centerDistrict1 = DashboardController::centerDistrictDist1();
         $coursesDistribution = DashboardController::getCourseDistribution();
@@ -128,7 +127,6 @@ class DashboardController extends Controller
                 'teachersCount2',
                 'teachersCount3',
                 'regionDistribution',
-                'ageDistribution',
                 'coursesDistribution',
                 'centersDistribution',
                 'studentsCount1',
@@ -210,28 +208,28 @@ class DashboardController extends Controller
         return $completeRows;
     }
 
-    public static function getAgeDistribution()
-    {
-        $ageDistribution = [];
-        $students = Student::all(['date_of_birth', 'id']);
-        foreach ($students as $student) {
-            $birthDate = $student->date_of_birth;
-            $currentDate = new \DateTime();
-            $oldDate = new \DateTime($birthDate);
-            $interval = $currentDate->diff($oldDate);
-            $years = $interval->y;
+    // public static function getAgeDistribution()
+    // {
+    //     $ageDistribution = [];
+    //     $students = Student::all(['date_of_birth', 'id']);
+    //     foreach ($students as $student) {
+    //         $birthDate = $student->date_of_birth;
+    //         $currentDate = new DateTime();
+    //         $oldDate = new DateTime($birthDate);
+    //         $interval = $currentDate->diff($oldDate);
+    //         $years = $interval->y;
 
-            if (array_key_exists($years, $ageDistribution)) {
-                $ageDistribution[$years] = $ageDistribution[$years] + 1;
-            } else {
-                $ageDistribution[$years] = 1;
-            }
-        }
+    //         if (array_key_exists($years, $ageDistribution)) {
+    //             $ageDistribution[$years] = $ageDistribution[$years] + 1;
+    //         } else {
+    //             $ageDistribution[$years] = 1;
+    //         }
+    //     }
 
-        return $ageDistribution;
+    //     return $ageDistribution;
 
 
-    }
+    // }
 
     public static function getCourseDistribution(){
 

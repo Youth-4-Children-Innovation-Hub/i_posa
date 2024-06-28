@@ -7,6 +7,7 @@ use App\Models\CourseCenter;
 use App\Models\Center;  
 use Illuminate\Http\Request;
 use App\Models\Inventory;
+use App\Models\Equipment;
 use App\Models\InventoryRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 class InventoryController extends Controller
 {
     public function getInventory() {
-        // $inventory_lists = Inventory::all();
 
         $userData = auth()->user();
         $id = $userData->id;
@@ -27,6 +27,10 @@ class InventoryController extends Controller
         $courses = Course::select('courses.name as name', 'courses.id as id')
         ->join('course_centers', 'course_centers.course_id', '=', 'courses.id')
         ->join('centers', 'centers.id', '=', 'course_centers.center_id')
+        ->where('centers.hod_id', '=', auth()->user()->id)->get();
+
+        $inv_type = Equipment::select('equipment.*')
+        ->join('centers', 'centers.id', '=', 'equipment.center_id')
         ->where('centers.hod_id', '=', auth()->user()->id)->get();
 
         $reg_inventory = Inventory::select('inventories.*', 'courses.name as course_name', 'centers.name as cName', 'districts.name as distName')
@@ -59,7 +63,17 @@ class InventoryController extends Controller
                                 ->where('centers.hod_id', '=', auth()->user()->id)
                                 ->select('inventories.*', 'courses.name as course_name')
                                 ->get();
-        return view('centers.inventory_lists', compact('inventory_lists', 'userData', 'userRole', 'courses', 'reg_inventory', 'dist_inventory', 'admin_inventory'));
+        return view('centers.inventory_lists', compact('inventory_lists', 'userData', 'userRole', 'courses', 'reg_inventory', 'dist_inventory',
+         'admin_inventory', 'inv_type'));
+    }
+
+    public function getInventoryType(){
+        $inventory_types = DB::table('equipment')
+                                ->join('centers', 'centers.id', '=', 'equipment.center_id')
+                                ->where('centers.hod_id', '=', auth()->user()->id)
+                                ->select('equipment.*')
+                                ->get();
+        return view('centers.inventory_type', compact('inventory_types'));
     }
 
     public function getInventoryRequest(){
@@ -89,12 +103,13 @@ class InventoryController extends Controller
             $centerId = Center::select('id')
             ->where('hod_id', '=', auth()->user()->id)->first();
 
+
+
+
             $inventory = new Inventory();
 
             $inventory->name = $request->name;
             $inventory->code = $request->code;
-            $inventory->number = $request->existing;
-            $inventory->inuse = $request->inuse;
             $inventory->course_id = $request->course;
             $inventory->center_id = $centerId->id;
             $inventory->save();
@@ -128,8 +143,6 @@ class InventoryController extends Controller
         try {
             $inventory->name = $request->name;
             $inventory->code = $request->code;
-            $inventory->number = $request->existing;
-            $inventory->inuse = $request->inuse;
             $inventory->course_id = $request->course;
 
             $inventory->save();
@@ -145,6 +158,57 @@ class InventoryController extends Controller
         $inventory = Inventory::find($request->id);
 
         if($inventory->delete()){
+            return response()->json(['status' => true]);
+        }
+
+        return response()->json(['status' => false]);
+    }
+
+    public function addType(Request $request){
+        // $role = Role::select('roles.role')
+        // ->join('users', 'roles.id', '=', 'users.role_id')
+        // ->where('users.id', '=', auth()->user()->id)->first();
+
+        $role = auth()->user()->role->role;
+       
+
+        if( $role == 'head of center'){
+
+            $centerId = Center::select('id')
+            ->where('hod_id', '=', auth()->user()->id)->first();
+        }
+            
+        try{
+            $inventory_type = New Equipment();
+            $inventory_type->name = $request->name;
+            $inventory_type->center_id = $centerId->id;
+            $inventory_type->save();
+            
+            return redirect()->back()->with('success', "Inventory type added successfully");
+        } catch (\Throwable $th) {
+            // throw $th;
+            return redirect()->back()->with('error', "Failed to add inventory type");
+        }
+    }
+
+    public function updateType(Request $request){
+        $inventory_type = Equipment::find($request->id);
+
+        try {
+            $inventory_type->name = $request->name;
+            $inventory_type->save();
+
+            return redirect()->back()->with('success', "Inventory Updated Successiful");
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with('error', "Failed to update inventory");;
+        }
+    }
+
+    public function deleteType(){
+        $inventory_type = Equipment::find($request->id);
+
+        if($inventory_type->delete()){
             return response()->json(['status' => true]);
         }
 
