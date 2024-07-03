@@ -436,7 +436,7 @@
                     <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
                             <a href="{{ url('/inventory_type') }}">
-                                <i class="bi bi-circle"></i><span>Inventory type</span>
+                                <i class="bi bi-circle"></i><span>Inventory Type</span>
                             </a>
                         </li>
 
