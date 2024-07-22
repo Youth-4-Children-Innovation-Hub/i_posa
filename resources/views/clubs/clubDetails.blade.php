@@ -46,6 +46,13 @@
                     <td>{{ $club_details->Funding_sources }}</td>
                   
                   </tr>  
+
+                  <tr>
+             
+                    <td> <b>Registration status</b></td>
+                    <td>{{ $club_details->Registration_status }}</td>
+                  
+                  </tr> 
             
                   <td> <b>Assets</b></td>
                     <td>{{ $club_details->Asset }}</td>
@@ -65,22 +72,23 @@
                   </tr>
                 </tbody>
               </table>
+              @cannot('is_reg_cordinator')
+              @cannot('is_dist_cordinator')
               <!-- End Tables without borders -->
               <button type="submit" class="btn btn-outline-primary py-0 my-1" data-bs-toggle="modal" value="{{ $club_details->id }}" data-bs-target="#EditModal">Edit Club</button>
               
               <form action="{{ route('club_members', ['id' => $club_details->id]) }}" method="GET">
                     @csrf
-                    @method('DELETE') 
                     <button type="submit" class="btn btn-outline-primary py-0 my-1">Members</button>
                 </form>
-              <form action="{{ route('delete_club', ['id' => $club_details->id]) }}" method="POST">
+              <!-- <form action="{{ route('delete_club', ['id' => $club_details->id]) }}" method="POST">
                     @csrf
                     @method('DELETE') 
                     <button type="submit" class="btn btn-outline-danger py-0 my-1" onclick="return confirm('Are you sure you want to delete this club?')">Delete Club</button>
              
-                </form>
-
-                           
+                </form> -->
+                @endcannot
+               @endcannot            
             </div>
           </div>
 
@@ -108,26 +116,34 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Chairperson Name</label>
                                     <div class="col-sm-10">
+                                        <select class="selectpicker" aria-label="Default select example"
+                                            name="chairId" id="chair_name" data-width=100%
+                                            data-live-search="true" required>
+                                            <option value="" selected hidden>Open this select menu</option>
+                                            @foreach ($students as $student)
+                                            <option value="{{ $student->id }}">{{ $student->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- <div class="row mb-3">
+                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Name</label>
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="chairName" value="{{ $club_details->Chairperson }}" required>
                                     </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Phone Number</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="contact" value="{{ $club_details->Contact }}" required>
-                                    </div>
-                                </div>
-                               
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" name="email" id="name" value="{{ $club_details->Email }}"  placeholder="optional">
-                                    </div>
-                                </div>
+                                </div> -->
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Registration Status</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="registration" id="name" value="{{ $club_details->Registration_status }}" required>
+                                    <select class="selectpicker" aria-label="Default select example"
+                                            name="registration" id="chair_name" data-width=100%
+                                            data-live-search="true" required>
+                                            <option selected="selected" hidden="hidden" value="{{ $club_details->Registration_status }}">Open this
+                                                select menu
+                                            </option>
+                                            <option value="Registered">Registered</option>
+                                            <option value="Not registered">Not registered</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">

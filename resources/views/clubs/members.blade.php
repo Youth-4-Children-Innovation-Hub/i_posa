@@ -20,26 +20,22 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
+                  <h5 class="card-title">MEMBERS</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Course</th>
-                        <th scope="col">Action</th>
                     </tr>
                     </thead>
                     <tbody>
+                        @foreach($students as $key => $student)
                         <tr>
-                            <th scope="row"></th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>   
-                        </tr>               
+                            <th scope="row">{{ $key + 1 }}</th>
+                            <td>{{ $student->name }}</td>  
+                        </tr>  
+                        @endforeach             
                     </tbody>
                   </table>
 
@@ -56,23 +52,23 @@
                     <h5 class="modal-title">Add Members</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="" enctype="multipart/form-data" id="membersForm">
+                <form method="POST" action="{{ route('add_members') }}" enctype="multipart/form-data" id="membersForm">
                     @csrf
 
                     <div class="modal-body">
 
                         <div class="" id="add_region">
                             <div class="card-body ">
-
+                                <input type="hidden" name="club_id" value="{{ $club->id }}">
                                 <!-- General Form Elements -->
                                 <div class="row mb-3">
                                     <label for="inputNumber" class="col-sm-2 col-form-label">Student</label>
                                     <div class="col-sm-10">
                                         <select class="form-control selectpicker" multiple data-live-search="true"
                                             data-mdb-container="#exampleModal" data-mdb-filter="true"
-                                            name="">
-                                            @foreach($students as $student)
-                                            <option value="">{{ $student->name }}</option>
+                                            name="member_id[]">
+                                            @foreach($members as $member)
+                                            <option value="{{ $member->id }}">{{ $member->name }}</option>
                                             @endforeach
                                           
                                         </select>

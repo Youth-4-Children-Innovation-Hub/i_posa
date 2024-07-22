@@ -24,7 +24,7 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
+                  <h5 class="card-title">Regions</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -47,7 +47,7 @@
                         @can('is_admin')
 
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $region->id }}"
-                                data-bs-toggle="modal" data-bs-target="#EditModal">Update</button>
+                                data-bs-toggle="modal" data-bs-target="#EditModal">Edit</button>
                             <button type="button" class="btn btn-outline-danger btn-sm delBtn"
                                 value="{{ $region->id }}">Delete</button>
                         </td>
@@ -111,7 +111,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save </button>
+                        <button type="submit" class="btn btn-primary">Add</button>
 
                     </div>
                 </form><!-- End General Form Elements -->
@@ -164,7 +164,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update </button>
+                        <button type="submit" class="btn btn-primary">Update</button>
 
                     </div>
 

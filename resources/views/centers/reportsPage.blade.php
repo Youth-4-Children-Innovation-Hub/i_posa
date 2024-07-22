@@ -27,7 +27,7 @@
                 <li>
                 <form action="{{ url('upload_center_report') }}" method="post">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to upload this report?')">Generate Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
                     </form> 
                 </li>
                 @endcannot

@@ -1,14 +1,39 @@
 @extends('home')
 @section('contente')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="card">
             <div class="card-body">
                 <center><h5 class="card-title">EXCEL</h5></center>
                 <center> <ol class="breadcrumb">
                 <li>
-                <a href="{{ url('download-template') }}" class="btn btn-outline-success mx-3 py-0 my-1">Download template</a>                </li>
+                <a href="{{ url('download-template') }}" class="btn btn-outline-success mx-3 py-0 my-1">Download template</a>  
+                          </li>
                 <li>
                     <button type="submit" class="btn btn-outline-success mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#excelModal">Import</button>
+                </li>
+                <li>
+               
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="excel_file" type="file" id="excel" required>
+                                    </div>
+                </li>
+                <li>
+                <button type="submit" class="btn btn-primary">Import </button>
                 </li>
             </ol></center>
                         

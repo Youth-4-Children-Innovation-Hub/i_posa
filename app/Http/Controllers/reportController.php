@@ -349,6 +349,7 @@ class reportController extends Controller
             ->first();
 
             $inventories = Inventory::select('inventories.*', 'courses.name as course')
+            ->distinct()
             ->join('centers', 'centers.id', '=', 'inventories.center_id')
             ->join('courses', 'inventories.course_id', '=', 'courses.id')
             ->where('centers.hod_id', '=', auth()->user()->id)

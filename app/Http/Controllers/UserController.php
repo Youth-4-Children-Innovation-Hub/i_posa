@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\password;
 use App\Mail\HelloMail;
+use App\Notifications\mailNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
@@ -75,14 +77,17 @@ class UserController extends Controller
     public function Update(Request $request)
     {
         try {
+            
             $user = User::find($request->user_id);
             $user->name = $request->name;
+            $user->phone_number = $request->phone;
             $user->email = $request->email;
-            $user->national_id = $request->nida;
             $user->role_id = $request->role;
             $user->save();
-            return redirect('users')->with('success', 'User added successfully.');
+            
+            return redirect()->back();
         } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -102,36 +107,37 @@ class UserController extends Controller
 
     public function Create(Request $request)
     {
-      
+            $request->validate([
+                'email' => 'required|email',
+                'phone' => ['required', 'regex:/^0[67][0-9]{8}$/']
+            ]);
            
-        try {
-            $name1 = $request->name;
-            // $nameArray = explode(' ', $name1);
-            // $firstName = $nameArray[0];
-          
             try {
                 // Mail::to($request->email)
                 //     ->send(new HelloMail($firstName . 123456, $request->name));
                     $user = new User();
                     $user->name = $request->name;
+                    $user->phone_number = $request->phone;
                     $user->email = $request->email;
                     $user->password = Hash::make('12345678');
                     $user->role_id = $request->input('role');
                     $user->save();
+                    
 
                     $userToEmail = User::where('email', $request->email)->first();
 
                   
-                    // $details = [
-                    //     'greeting'=>'hi ' . $userToEmail->name,
-                    //     'body'=>'You have been registered in the IPOSA system. Click the button below to set password
-                    //     for access.',
-                    //     'actiontext'=>'Set password',
-                    //     'actionurl'=>'http://127.0.0.1:8000/reports_page',
-                    //     'lastline'=>'This is the last line',
-                    // ];
+                    $details = [
+                        'greeting'=>'hi ' . $userToEmail->name,
+                        'body'=>'You have been registered in the IPOSA system. Click the button below to set password
+                        for access.',
+                        'actiontext'=>'Set password',
+                        'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                        'lastline'=>'This is the last line',
+                    ];
         
-                    // Notification::send($userToEmail, new mailNotification($details));
+                    Notification::send($userToEmail, new mailNotification($details));
+                    
                    
                 return redirect('users')->with('success', 'User added successfully.');
             } catch (\Exception $e) {
@@ -139,11 +145,6 @@ class UserController extends Controller
             }
 
             
-
-            
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
     }
 
     public function Search()

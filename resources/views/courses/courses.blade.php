@@ -8,6 +8,8 @@
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Courses</li>
                 @cannot('is_admin')
+                @cannot('is_reg_cordinator')
+                @cannot('is_dist_cordinator')
                 <li>
                    
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
@@ -15,12 +17,19 @@
 
                 </li>
                 @endcannot
-                @can('is_reg_cordinator')
+                @endcannot
+                @endcannot
+
+                @cannot('is_reg_cordinator')
+                @cannot('is_dist_cordinator')
+                @cannot('is_hoc')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateNewCourseModal">Add New course</button>
                 </li>
-                @endcan
+                @endcannot
+                @endcannot
+                @endcannot
 
             </ol>
         </nav>

@@ -1,6 +1,17 @@
 @extends('home')
 @section('contente')
 <div class="container">
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
     <div class="pagetitle">
         <h1>Inventory</h1>
@@ -224,7 +235,7 @@
                                     <select class="form-control selectpicker" data-mdb-container="#exampleModal"
                                             data-mdb-filter="true" name="name">
                                             @foreach ($inv_type as $inv)
-                                            <option value="{{ $inv->id }}">{{ $inv->name }}</option>
+                                            <option value="{{ $inv->name }}">{{ $inv->name }}</option>
                                             @endforeach
 
                                     </select>                                    </div>
@@ -239,9 +250,9 @@
                                     <label for="inputText" class="col-sm-2 col-form-label">Use status</label>
                                     <div class="col-sm-10">
                                         <select class="form-control selectpicker" data-mdb-container="#exampleModal"
-                                            data-mdb-filter="true" name="course">
-                                            <option value="use">Use</option>
-                                            <option value="store">Store</option>
+                                            data-mdb-filter="true" name="usage">
+                                            <option value="use">For Use</option>
+                                            <option value="store">For Storage</option>
                                         </select>
                                     </div>
                                 </div>

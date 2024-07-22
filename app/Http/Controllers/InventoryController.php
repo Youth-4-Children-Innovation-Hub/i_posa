@@ -103,17 +103,35 @@ class InventoryController extends Controller
             $centerId = Center::select('id')
             ->where('hod_id', '=', auth()->user()->id)->first();
 
-
-
+            
 
             $inventory = new Inventory();
 
             $inventory->name = $request->name;
             $inventory->code = $request->code;
+            $inventory->use_status = $request->usage;
             $inventory->course_id = $request->course;
             $inventory->center_id = $centerId->id;
             $inventory->save();
-            return redirect()->back();
+
+            $equipment = Equipment::where('name', $request->name)
+            ->where('center_id', $centerId->id)
+            ->first();
+            
+            // If the equipment record exists, increment the `in_use` value
+            if ($request->usage == 'use') {
+                $equipment->inuse = $equipment->inuse + 1;
+                $equipment->total = $equipment->total + 1;
+                $equipment->save();
+                return redirect('inventory')->with('success', 'Inventory added successfully');
+            } elseif($request->usage == 'store'){
+                $equipment->total = $equipment->total + 1;
+                $equipment->save();
+                return redirect('inventory')->with('success', 'Inventory added successfully');
+            }else{
+                return redirect('inventory')->with('error', 'Failed to add Inventory due to wrong input');
+            }
+
 
         //         return redirect('inventory')->with('success', 'Inventory added');
         //     }else {

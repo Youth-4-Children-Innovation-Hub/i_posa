@@ -25,7 +25,7 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
+                  <h5 class="card-title">Districts</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -47,7 +47,7 @@
                             <td>{{ $district->region }}</td>
                             @can('is_reg_cordinator')
                                 <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
-                                        data-bs-target="#EditModal" value="{{ $district->Id }}">Update</button>
+                                        data-bs-target="#EditModal" value="{{ $district->Id }}">Edit</button>
                                     <button type="button" value="{{ $district->Id }}"
                                         class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                                 </td>
@@ -70,7 +70,7 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
+                  <h5 class="card-title">Districts</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -165,7 +165,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save </button>
+                            <button type="submit" class="btn btn-primary">Add </button>
 
                         </div>
                     </form><!-- End General Form Elements -->
@@ -239,7 +239,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save </button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </form><!-- End General Form Elements -->
 
