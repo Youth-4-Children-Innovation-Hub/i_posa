@@ -7,11 +7,14 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Teachers</li>
+                @cannot('is_reg_cordinator')
+                @cannot('is_dist_cordinator')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Teacher</button>
                 </li>
-                
+                @endcannot
+                @endcannot
 
             </ol>
         </nav>

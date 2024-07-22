@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('students', function (Blueprint $table) {
-            $table->string('registration_number')->nullable()->unique()->after('id');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::table('teachers', function (Blueprint $table) {
+            $table->dropForeign(['created_by']);
         });
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     /**
@@ -21,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('students', function (Blueprint $table) {
-            //
+        Schema::table('teachers', function (Blueprint $table) {
+            $table->foreign('created_by')->references('id')->on('users');
         });
     }
 };

@@ -9,11 +9,14 @@
                 <li class="breadcrumb-item active">Clubs</li>
 
                 @cannot('is_admin')
-              
+                @cannot('is_reg_cordinator')
+                @cannot('is_dist_cordinator')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Club</button>
                 </li>
+                @endcannot
+                @endcannot
                 @endcannot
                 
 
@@ -23,24 +26,41 @@
 
        <!-- Default Card -->
        @can('is_hoc')
-       <div class="row align-items-top">
-            @foreach($clubs as $clubs)
-            
-                <div class="col-lg-3">
-                  
-                        <a href="{{ url('club_details', ['id' => $clubs->id]) }}" style="text-decoration: none;">
-                        <div class="card">
-                        <div class="card-body">
-                        <h5 class="card-title" style="text-align: center;">{{ $clubs->Name }}</h5>
-                        </div>
-                        </div>
-                        </a>
-                    
-               
+       <div class="">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                       
+                        <th scope="col">Name</th>
+                        <th scope="col">Chairperson</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody> 
+                    @foreach($clubs as $key => $clubs)    
+                    <tr>
+                        <td>{{ $clubs->Name }}</td>
+                        <td>{{ $clubs->Chairperson }}</td>
+                        <td>{{ $clubs->Contact }}</td>
+                        <td>
+                            <a href="{{ url('club_details', ['id' => $clubs->id]) }}" type="button" class="btn btn-outline-success btn-sm editBtn" value="">View</a>
+                            
+                        </td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                  </table>
+
                 </div>
-           @endforeach
-            
-       </div>
+
+              </div>
+            </div>
+      
        @endcan
        @can('is_admin')
        <div class="">
@@ -142,34 +162,27 @@
                                     <label for="inputText" class="col-sm-2 col-form-label">Chairperson Name</label>
                                     <div class="col-sm-10">
                                         <select class="selectpicker" aria-label="Default select example"
-                                            name="chairName" id="chair_name" required data-width=100%
+                                            name="chairId" id="chair_name" required data-width=100%
                                             data-live-search="true">
                                             <option selected="selected" hidden="hidden" value="">Open this
                                                 select menu
                                             </option>
                                             @foreach ($students as $student)
-                                            <option value="{{ $student->name }}">{{ $student->name }}</option>
+                                            <option value="{{ $student->id }}">{{ $student->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Phone Number</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="contact" required>
-                                    </div>
-                                </div>
-                               
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Chairperson Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" name="email" id="name" placeholder="optional">
-                                    </div>
-                                </div>
+
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Registration Status</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="registration" id="name" required>
+                                         <select class="selectpicker" aria-label="Default select example"
+                                            name="registration" id="chair_name" required data-width=100%
+                                            data-live-search="true">
+                                            <option value="Registered">Registered</option>
+                                            <option value="Not registered">Not registered</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -213,8 +226,8 @@
         </div>
     </div>
 
-    <!-- Add new teacher model -->
-
+    <!-- end club model -->
+     
    
 
 </div>
@@ -235,23 +248,25 @@
 </script>
 
 <script>
+<script>
 $(document).on('click', '.editBtn', function() {
     var id = $(this).val();
     console.log(id);
     $.ajax({
         type: "GET",
-        url: "/edit_teacher/" + id,
+        url: "/edit_club/" + id,
         success: function(response) {
             console.log(response);
-            $('#teacher_id').val(id);
-            $('#name').val(response.teacher.name);
-            $('#phone_number').val(response.teacher.phone_number);
-            $('#email').val(response.teacher.email);
+            // $('#teacher_id').val(id);
+            // $('#name').val(response.teacher.name);
+            // $('#phone_number').val(response.teacher.phone_number);
+            // $('#email').val(response.teacher.email);
 
         },
 
     });
 });
+
 
 </script>
 @endsection

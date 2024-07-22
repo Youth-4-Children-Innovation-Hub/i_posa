@@ -54,14 +54,26 @@ class CenterController extends Controller
 
     public function Create(Request $request)
     {
-        $center = new Center();
-        $center->name = $request->name;
-        $center->district_id = $request->district;
-        $center->hod_id = $request->hod;
-        $center->Ownership = $request->ownership;
-        $center->Funders = $request->funders;
-        $center->save();
-        return redirect('centers')->with('success', 'User added successfully.');
+        $request->validate([
+            'name' => 'required',
+            'district' => 'required',
+            'hod' => 'required',
+            'ownership' => 'required'
+        ]);
+
+        try{
+            $center = new Center();
+            $center->name = $request->name;
+            $center->district_id = $request->district;
+            $center->hod_id = $request->hod;
+            $center->Ownership = $request->ownership;
+            $center->Funders = $request->funders;
+            $center->save();
+            return redirect('centers')->with('success', 'User added successfully.');
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        
     }
 
     public function edit($id)
@@ -77,23 +89,34 @@ class CenterController extends Controller
     }
 
     public function update_center(Request $request)
-    {
+    { 
+        $request->validate([
+            'name' => 'required',
+            'district' => 'required',
+            'hod' => 'required',
+            'ownership' => 'required'
+        ]);
 
-        $center = Center::find($request->center_id);
+        try{
+            $center = Center::find($request->center_id);
 
-        $center->name = $request->name;
-        $center->district_id = $request->district;
-        $center->hod_id = $request->hod;
-        $center->Ownership = $request->ownership;
-        $center->Funders = $request->funders;
+            $center->name = $request->name;
+            $center->district_id = $request->district;
+            $center->hod_id = $request->hod;
+            $center->Ownership = $request->ownership;
+            $center->Funders = $request->funders;
 
-        if ($center->save()) {
-            return redirect('centers')->with('success', 'Center added successfully.');
+            if ($center->save()) {
+                return redirect('centers')->with('success', 'Center added successfully.');
+            }
+            else {
+                return redirect()->back()->with('error', 'Failed');
+
+            } 
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
-        else {
-            return redirect()->back()->with('error', 'Failed');
-
-        }
+        
     }
 
     public function delete(Request $request)

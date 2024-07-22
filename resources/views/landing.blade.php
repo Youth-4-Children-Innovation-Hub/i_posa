@@ -50,7 +50,7 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto active" href="{{ url('/') }}">Home</a></li>
-          <li><a class="nav-link scrollto" href="#about">About</a></li>
+          <!-- <li><a class="nav-link scrollto" href="#about">About</a></li> -->
           <li><a class="getstarted scrollto" href="{{ url('/log-in') }}">Login</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -65,7 +65,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 d-flex flex-column justify-content-center">
-          <h1 data-aos="fade-up">We offer free training for out of school adolescents and youths</h1>
+          <h1 data-aos="fade-up">Welcome to IPOSA management system</h1>
           <h2 data-aos="fade-up" data-aos-delay="400"></h2>
           <div data-aos="fade-up" data-aos-delay="600">
             <!-- <div class="text-center text-lg-start">
@@ -188,36 +188,7 @@
 
    
 
-    <div class="footer-top">
-      <div class="container">
-        <div class="row gy-4">
-          <div class="col-lg-5 col-md-12 footer-info">
-            <a href="index.html" class="logo d-flex align-items-center">
-              <span>IPOSA</span>
-            </a>
-            <div class="social-links mt-3">
-              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-            </div>
-          </div>
-
-          
-
-          <div class="col-lg-2 col-6 footer-links">
-            <h4>Our Services</h4>
-          
-          </div>
-
-          <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-           
-
-          </div>
-
-        </div>
-      </div>
-    </div>
+   
 
     <div class="container">
       <div class="copyright">

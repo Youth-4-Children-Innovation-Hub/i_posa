@@ -18,12 +18,15 @@ class CourseController extends Controller
 {
     public function GetCenterCourses()
     {
+        $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
+
         $courses = Course::all();
-        $teachers = Teacher::all()->where('created_by', '=', Auth()->user()->id);
+        $teachers = Teacher::all()->where('created_by', '=', $centerId->id);
         $centers = Center::all();
         $userData = Auth::user();
 
         $districtCourses = Course::select('courses.*')
+        ->distinct()
         ->Join('course_centers', 'course_centers.course_id', '=', 'courses.id')
         ->Join('centers', 'course_centers.center_id', '=', 'centers.id')
         ->Join('districts', 'districts.id', '=', 'centers.district_id')
@@ -31,6 +34,7 @@ class CourseController extends Controller
         ->get();
 
         $regionCourses = Course::select('courses.*')
+        ->distinct()
         ->Join('course_centers', 'course_centers.course_id', '=', 'courses.id')
         ->Join('centers', 'course_centers.center_id', '=', 'centers.id')
         ->Join('districts', 'districts.id', '=', 'centers.district_id')

@@ -81,6 +81,7 @@ class StudentController extends Controller
             ->get();
         $students1 = Student::select('students.id AS id', 'students.disability as disability1', 'students.status AS status1', 'students.phone_number AS phone_number1',
          'students.name AS name1', 'students.gender AS gender1', 'courses.name AS course1')
+            ->distinct()
             ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id') 
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
             ->leftJoin('users', 'users.id', '=', 'hod_id')
@@ -124,22 +125,67 @@ class StudentController extends Controller
 
     public function import(Request $request)
     {
-        Excel::import(new StudentsImport, $request->file('excel_file'));
-        return redirect()->back();
+      
+        $import = new StudentsImport;
+        Excel::import($import, $request->file('excel_file'));
+        $errors = $import->getErrors();
+        if (!empty($errors)) {
+            $formattedErrors = [];
+
+            foreach ($errors as $index => $error) {
+                $formattedErrors[] = sprintf(
+                    'Student: %s - Errors: %s',
+                    $error['name'],
+                    implode(', ', $error['errors'])
+                );
+            }
+
+        return redirect()->back()->withErrors($formattedErrors)->withInput();
+        }
+        return redirect()->back()->with('success', 'Data imported successfully');
     }
 
     public function Create(Request $request)
     {
         //validating
+
         $rules = [
             'passport' => 'required|image',
             'letter' => 'required|mimes:pdf',
             'birth_certificate' => 'required|mimes:pdf',
+            'name' => 'required',
+            'reg_no' => 'required',
+            'gender' => 'required',
+            'disability' => 'required',
+            'dob' => 'required',
+            'ward' => 'required',
+            'street' => 'required',
+            'education_level' => 'required',
+            'education_type' => 'required',
+            'marital_status' => 'required',
+            'employment_status' => 'required',
+            'parent' => 'required',
+            'parent_phone' => 'required',
+            'pdissability' => 'required'
         ];
 
         $messages = [
             'letter.pdf' => 'The selected letter must be a pdf',
             'birth_certificate.pdf' => 'The selected certificate must be a pdf',
+            'name.required' => 'Student name field is required',
+            'reg_no.required' => 'Registration number field is required',
+            'gender.required' => 'Gender field is required',
+            'disability.required' => 'Student dissability field is required',
+            'dob.required' => 'Date of birth field is required',
+            'ward.required' => 'Ward field is required',
+            'street.required' => 'Street field is required',
+            'education_level.required' => 'Education level field is required',
+            'education_type.required' => 'Education type field is required',
+            'marital_status.required' => 'Marital staus field is required',
+            'employment_status.required' => 'Employment status field is required',
+            'parent.required' => 'Parent name field is required',
+            'parent_phone.required' => 'Parent phone field is required',
+            'pdissability.required' => 'Parent dissability field is required',
         ];
 
 
@@ -247,7 +293,49 @@ class StudentController extends Controller
 
     public function update(Request $request)
     {
+        $rules = [
+            'name' => 'required',
+            'reg_no' => 'required',
+            'gender' => 'required',
+            'dissability' => 'required',
+            'dob' => 'required',
+            'ward' => 'required',
+            'street' => 'required',
+            'education_level' => 'required',
+            'education_type' => 'required',
+            'marital_status' => 'required',
+            'employment_status' => 'required',
+            'parent' => 'required',
+            'parent_phone' => 'required',
+            'pdissability' => 'required',
+            'stage' => 'required'
+        ];
 
+        $messages = [
+            'letter.pdf' => 'The selected letter must be a pdf',
+            'birth_certificate.pdf' => 'The selected certificate must be a pdf',
+            'name.required' => 'Student name field is required',
+            'reg_no.required' => 'Registration number field is required',
+            'gender.required' => 'Gender field is required',
+            'disability.required' => 'Student dissability field is required',
+            'dob.required' => 'Date of birth field is required',
+            'ward.required' => 'Ward field is required',
+            'street.required' => 'Street field is required',
+            'education_level.required' => 'Education level field is required',
+            'education_type.required' => 'Education type field is required',
+            'marital_status.required' => 'Marital staus field is required',
+            'employment_status.required' => 'Employment status field is required',
+            'parent.required' => 'Parent name field is required',
+            'parent_phone.required' => 'Parent phone field is required',
+            'pdissability.required' => 'Parent dissability field is required',
+            'stage.required' => 'Stage field is required'
+        ];
+
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }    
         
 
         try {
@@ -288,17 +376,18 @@ class StudentController extends Controller
             $parent->ward = $request->pward;
             $parent->save();
 
-
             $student_id = $request->student_id;
             if($request->course_id) {
-                for ($i = 0; $i < sizeof($request->course_id); $i++) {
-                    $student_courses = new StudentCourses();
-                    $student_courses->student_id = $student_id;
-                    $student_courses->course_id = $request->course_id[$i];
-                    $student_courses->state = "not complete";
-                    DB::update('update student_courses set course_id = ? where student_id = ?' ,[$request->course_id[$i], $student_id]);
-                    // $student_courses->save();
-                }
+                    StudentCourses::where('student_id', $student_id)->delete();
+                    for ($i = 0; $i < sizeof($request->course_id); $i++) {
+                        $student_courses = new StudentCourses();
+                        $student_courses->student_id = $student_id;
+                        $student_courses->course_id = $request->course_id[$i];
+                        $student_courses->state = "not complete";
+                        // DB::update('update student_courses set course_id = ? where student_id = ?' ,[$request->course_id[$i], $student_id]);
+                        $student_courses->save();
+                    }
+                
             }
             return redirect('students')->with('success', 'User added successfully.');
         } catch (\Exception $e) {

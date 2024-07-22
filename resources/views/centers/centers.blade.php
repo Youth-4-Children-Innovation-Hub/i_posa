@@ -25,7 +25,7 @@
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
+                  <h5 class="card-title">Add Center</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -51,7 +51,7 @@
                             <td>{{ $center->Ownership }}</td>
                             <td>{{ $center->Funders }}</td>
                             <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal"
-                                    value="{{ $center->id }}" class="btn btn-outline-primary btn-sm editBtn">Update</button>
+                                    value="{{ $center->id }}" class="btn btn-outline-primary btn-sm editBtn">Edit</button>
                                 <button type="button" value="{{ $center->id }}"
                                     class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                             </td>
@@ -161,14 +161,14 @@
                                     <div class=" row mb-3">
                                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                         <div class="col-sm-10">
-                                            <input name="name" type="text" class="form-control">
+                                            <input name="name" type="text" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">Head of Center</label>
                                         <div class="col-sm-10">
                                             <select class="selectpicker" aria-label="Default select example" name="hod"
-                                                data-width=100% data-live-search="true">
+                                                data-width=100% data-live-search="true" required>
                                                 <option selected>Open this select menu</option>
                                                 @foreach ($heads as $head)
                                                     <option value="{{ $head->id }}">{{ $head->name }}</option>
@@ -180,7 +180,7 @@
                                         <label class="col-sm-2 col-form-label">District</label>
                                         <div class="col-sm-10">
                                             <select class="selectpicker" aria-label="Default select example"
-                                                name="district" data-width=100% data-live-search="true">
+                                                name="district" data-width=100% data-live-search="true" required>
                                                 <option selected>Open this select menu</option>
                                                 @foreach ($districts as $district)
                                                     <option value="{{ $district->id }}">{{ $district->name }}</option>
@@ -191,13 +191,13 @@
                                     <div class=" row mb-3">
                                         <label for="inputText" class="col-sm-2 col-form-label">Ownership</label>
                                         <div class="col-sm-10">
-                                            <input name="ownership" type="text" class="form-control">
+                                            <input name="ownership" type="text" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class=" row mb-3">
                                         <label for="inputText" class="col-sm-2 col-form-label">Funders</label>
                                         <div class="col-sm-10">
-                                            <input name="funders" type="text" class="form-control">
+                                            <input name="funders" type="text" placeholder="Optional" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -272,7 +272,7 @@
                                     <div class=" row mb-3">
                                         <label for="inputText" class="col-sm-2 col-form-label">Funders</label>
                                         <div class="col-sm-10">
-                                            <input name="funders" id="funders" type="text" class="form-control">
+                                            <input name="funders" id="funders" type="text" placeholder="Optional" class="form-control">
                                         </div>
                                     </div>
                                 </div>

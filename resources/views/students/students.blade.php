@@ -11,6 +11,7 @@
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Students</li>
                 @can('is_hoc')
+                @cannot('is_admin')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Student</button>
@@ -18,7 +19,7 @@
                 <li>
                 <a href="{{ url('excel_import') }}" type="submit" class="btn btn-outline-success mx-3 py-0 my-1">Import from Excel</a>
                 </li>
-               
+                @endcannot
                 @endcan
             </ol>
         </nav>
@@ -84,7 +85,7 @@
                         @can('is_hoc')
 
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $student->id }}"
-                                data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
+                                data-bs-toggle="modal" data-bs-target="#EditStudent">Edit</button>
                             <button type="button" value="{{ $student->id }}"
                                 class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                         </td>
@@ -121,7 +122,7 @@
                         <th scope="col">Status</th>
                         <th scope="col">Center</th>
                         <th scope="col">District</th>
-                        <th scope="col">Action</th>
+                   
                       </tr>
                     </thead>
                     <tbody>
@@ -147,7 +148,7 @@
                         @endif
                         <td>{{ $regionStudents->centerName2 }}</td>
                         <td>{{ $regionStudents->distName }}</td>
-                        <td>jkfhd</td>
+                      
                       </tr> 
                       @endforeach 
                     </tbody>
@@ -179,7 +180,7 @@
                         <th scope="col">Gender</th>
                         <th scope="col">Status</th>
                         <th scope="col">Center</th>
-                        <th scope="col">Action</th>
+                      
                       </tr>
                     </thead>
                     <tbody>
@@ -204,7 +205,7 @@
                         </td>
                         @endif
                         <td>{{ $districtStudents->centerName2 }}</td>
-                        <td>jkfhd</td>
+                       
                       </tr> 
                       @endforeach 
                     </tbody>
@@ -268,9 +269,8 @@
                         @can('is_hoc')
 
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"
-                                data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
-                            <!-- <button type="button" value="{{ $students1->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button> -->
+                                data-bs-toggle="modal" data-bs-target="#EditStudent">Edit</button>
+                            
                         </td>
                         @endcan
                     </tr>
@@ -402,7 +402,7 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Education level</label>
                                     <div class="col-sm-10">
-                                        <select class="form-select" aria-label="Default select example" name="gender"
+                                        <select class="form-select" aria-label="Default select example" name="education_level"
                                             required>
                                             <option selected>Open this select menu</option>
                                             <option value="Primary">Primary</option>
@@ -419,14 +419,14 @@
                                             <option selected>Open this select menu</option>
                                             <option value="Formal">Formal</option>
                                             <option value="Non-Formal">Non-formal</option>
-                                            <option value="Non-Formal">None</option>
+                                            <option value="None">None</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
                                     <div class="col-sm-10">
-                                        <input type="tel" id="sphone" class="form-control" name="phone_number" required>
+                                        <input type="tel" id="sphone" placeholder="optional" class="form-control" name="phone_number">
                                     </div>
                                     <div id="sphone-error" style="color: red;"></div>
                                 </div>
@@ -517,7 +517,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Disability</label>
+                                    <label class="col-sm-2 col-form-label">Dissability</label>
                                     <div class="col-sm-10">
                                         <select class="form-select" aria-label="Default select example" name="pdissability"
                                             required>
@@ -590,7 +590,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Disability</label>
+                                    <label class="col-sm-2 col-form-label">Dissability</label>
                                     <div class="col-sm-10">
                                         <select class="form-select" id="edit-dissability" aria-label="Default select example" name="dissability"
                                             required>
@@ -609,7 +609,7 @@
                                 <div class="row mb-3">
                                     <label for="inputDate" class="col-sm-2 col-form-label">Date of birth</label>
                                     <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="dob" id="dob">
+                                        <input type="date" class="form-control" name="dob" id="dob" required>
                                     </div>
                                     <div id="dob-error" style="color: red;"></div>
                                 </div>
@@ -662,7 +662,7 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Education level</label>
                                     <div class="col-sm-10">
-                                        <select class="form-select" aria-label="Default select example" name="gender"
+                                        <select class="form-select" aria-label="Default select example" id="education-edit" name="education_level"
                                             required>
                                             <option selected>Open this select menu</option>
                                             <option value="Primary">Primary</option>
@@ -674,19 +674,19 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Education Type</label>
                                     <div class="col-sm-10">
-                                        <select class="form-select" aria-label="Default select example" name="education_type"
+                                        <select class="form-select" aria-label="Default select example" id="education-type-edit" name="education_type"
                                             required>
                                             <option selected>Open this select menu</option>
                                             <option value="Formal">Formal</option>
                                             <option value="Non-Formal">Non-formal</option>
-                                            <option value="Non-Formal">None</option>
+                                            <option value="None">None</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
                                     <div class="col-sm-10">
-                                        <input type="tel" id="phone-edit" class="form-control" name="phone_number" required>
+                                        <input type="tel" id="phone-edit" placeholder="optional" class="form-control" name="phone_number">
                                     </div>
                                     <div id="sphone-error1" style="color: red;"></div>
                                 </div>
@@ -852,7 +852,7 @@ function showDiv() {
             errorMessage.remove();
         }
 
-        if (!validateEmail(emailInput.value)) {
+        if (emailInput.value && !validateEmail(emailInput.value)) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'email-error2';
             errorMessage.innerText = 'Invalid email address';
@@ -880,7 +880,7 @@ function showDiv() {
             errorMessage.remove();
         }
 
-        if (!validateEmail(emailInput.value)) {
+        if (emailInput.value && !validateEmail(emailInput.value)) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'email-error1';
             errorMessage.innerText = 'Invalid email address';
@@ -909,7 +909,7 @@ function showDiv() {
             errorMessage.remove();
         }
 
-        if (!validateEmail(emailInput.value)) {
+        if (emailInput.value && !validateEmail(emailInput.value)) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'email-error';
             errorMessage.innerText = 'Invalid email address';
@@ -936,7 +936,7 @@ function showDiv() {
             errorMessage.remove();
         }
 
-        if (numberInput.value.length !== 20) {
+        if (numberInput.value && numberInput.value.length !== 20) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'error-message';
             errorMessage.innerText = 'NIDA number must be exactly 20 characters long';
@@ -956,7 +956,7 @@ function showDiv() {
             errorMessage.remove();
         }
 
-        if (numberInput.value.length !== 20) {
+        if (numberInput.value && numberInput.value.length !== 20) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'nida-error1';
             errorMessage.innerText = 'NIDA number must be exactly 20 characters long';
@@ -1095,7 +1095,7 @@ function showDiv() {
             errorMessage.remove();
         }
 
-        if (!validatePhoneNumber(phoneNumberInput.value)) {
+        if (phoneNumberInput.value && !validatePhoneNumber(phoneNumberInput.value)) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'sphone-error';
             errorMessage.innerText = 'Invalid phone number. Must start with 07 or 06 and be 10 digits long';
@@ -1123,7 +1123,7 @@ function showDiv() {
             errorMessage.remove();
         }
 
-        if (!validatePhoneNumber(phoneNumberInput.value)) {
+        if (phoneNumberInput.value && !validatePhoneNumber(phoneNumberInput.value)) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'sphone-error1';
             errorMessage.innerText = 'Invalid phone number. Must start with 07 or 06 and be 10 digits long';

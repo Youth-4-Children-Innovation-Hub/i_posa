@@ -11,16 +11,38 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ImportStudentRequest;
+use Carbon\Carbon;
 
 class StudentsImport implements ToCollection, WithHeadingRow
 {
     /**
     * @param Collection $collection
     */
+    protected $errors = [];
+    
     public function collection(Collection $collection)
     {
-        foreach ($collection as $row) 
-        {
+        foreach ($collection as $index => $row) 
+        {   
+            
+            $data = $row->toArray();
+            // Convert Excel serial date number to a Carbon date
+            $excelDate = $data['date_of_birth'] ?? null;
+            $data['date_of_birth'] = $this->excelDateToDate($excelDate);
+            // validate
+            $validator = Validator::make($data, (new ImportStudentRequest)->rules());
+
+            if ($validator->fails()) {
+                // Collect validation errors
+                $this->errors[$index] = [
+                    'name' => $data['student_name'] ?? 'Unknown',
+                    'errors' => $validator->errors()->all()
+                ];
+                continue; // Skip to the next row
+            }
+
             $location = $this->getLocation();
 
             $student = new Student();
@@ -41,7 +63,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
             $student->phone_number = $row['phone_number'];
             $student->email = $row['email'];   
             $student->center_id = $this->getCenterId();
-            $student->status = "continuous";
+            $student->status = "continous";
             $student->stage = $row['stage'];
             $student->save();
 
@@ -60,17 +82,35 @@ class StudentsImport implements ToCollection, WithHeadingRow
         }
     }
 
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
     private function getLocation()
     {
         return Region::select('regions.name as rname', 'districts.name as dname')
             ->join('districts', 'districts.region_id', '=', 'regions.id')
             ->join('centers', 'districts.id', '=', 'centers.district_id')
             ->where('centers.hod_id', '=', Auth::user()->id)
-            ->first();
+            ->first();    
     }
 
     private function getCenterId()
     {
         return Center::where('hod_id', Auth::user()->id)->value('id');
     }
+
+    private function excelDateToDate($serialDate)
+{
+    if (is_null($serialDate) || $serialDate <= 0) {
+        return null;
+    }
+
+    // Convert Excel serial date to Carbon date
+    $carbonDate = Carbon::createFromFormat('Y-m-d', gmdate('Y-m-d', ($serialDate - 25569) * 86400));
+    
+    // Format to 'Y-m-d'
+    return $carbonDate->format('Y-m-d');
+}
 }

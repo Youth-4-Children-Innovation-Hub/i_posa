@@ -185,33 +185,10 @@
 
    
 
-   <p><b>5.0 IPOSA Centers and the type of trades</b></p>
-   
-   <center>
-   <table class="table table-bordered">
-           <thead>
-               <tr>
-                   <th>NO</th>
-                   <th>Type of trade</th>
-                   <th>Existing Equipment</th> 
-                   <th>In use Equipment</th>
-               </tr>
-           </thead>
-           <tbody>
-             @foreach( $inventories as $key => $inventory )
-               <tr>
-                   <td>{{ $key+1 }}</td>
-                   <td>{{ $inventory->course }}</td>
-                   <td>{{ $inventory->number }}</td>
-                   <td>{{ $inventory->inuse }}</td>
-               </tr>
-            @endforeach
-           </tbody>
-       </table>
-   </center>
+  
    
 
-    <p><b>6:0 IPOSA Centers and the IPOSA Empowerment Clubs (IECs)</b></p>
+    <p><b>5:0 IPOSA Centers and the IPOSA Empowerment Clubs (IECs)</b></p>
    
     <center>
     <table class="table table-bordered">
@@ -235,7 +212,7 @@
         </table>
     </center>
 
-    <p><b>6:1 IPOSA Empowerment Clubs Information(IECs)</b></p>
+    <p><b>5:1 IPOSA Empowerment Clubs Information(IECs)</b></p>
    
     <center>
     <table class="table table-bordered">
@@ -269,7 +246,7 @@
         </table>
     </center>
 
-    <p><b>7.0 Challenges and the way to overcome those challenges</b></p>
+    <p><b>6.0 Challenges and the way to overcome those challenges</b></p>
     <p>
         {{ $challenge->challenges }}
     </p>

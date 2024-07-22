@@ -6,7 +6,8 @@ use App\Models\Teacher;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CourseCenter;
-
+use App\Models\Center;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use PHPUnit\Event\Code\Test;
 
@@ -14,6 +15,12 @@ class TeachersController extends Controller
 {
     public function GetTeachers()
     {
+        $userRole = DB::table('users')
+        ->join('roles', 'users.role_id', '=', 'roles.id')
+        ->where('users.id', Auth::user()->id)
+        ->select('roles.role as role')
+        ->first();
+
         $userData = Auth::user();
         $teachers = Teacher::orderBy('created_at', 'DESC')
         ->get();
@@ -33,16 +40,23 @@ class TeachersController extends Controller
 
 
          //for the head of center
-         $teachers1 = Teacher::select('*')->where('created_by', '=', $userData->id)->get();
+         if($userRole->role == 'head of center'){
+            $centerId = Center::select('centers.id as id')->where('centers.hod_id', '=', auth()->user()->id)->first();
+            $teachers1 = Teacher::select('*')->where('created_by', '=', $centerId->id)->get();
+         }
+         
 
         //  $teachers1 = CourseCenter::select('course_centers.id AS id', 'teachers.name AS name1', 'teachers.email AS email1', 'teachers.phone_number AS phone_number1')
         //  ->leftJoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
         //  ->leftJoin('centers', 'centers.id', '=', 'course_centers.center_id')
         //  ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
         //  ->where('teachers.created_by', '=', $userData->id)
-        //  ->get();    
-     return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData, 'teachers1' => $teachers1, 
-    'districtTeachers' => $districtTeachers, 'regionTeachers' =>  $regionTeachers]);
+        //  ->get();  
+        if($userRole->role == 'head of center'){  
+            return view('centers.teachers', ['teachers1' => $teachers1]);
+        } else{
+            return view('centers.teachers', ['teachers' => $teachers, 'userData' => $userData, 'districtTeachers' => $districtTeachers, 'regionTeachers' =>  $regionTeachers]);
+        }
 
        
     }
@@ -62,7 +76,7 @@ class TeachersController extends Controller
     {
         try {
             
-            $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->get();
+            $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
             $teacher = new Teacher();
             $teacher->name = $request->name;
             $teacher->gender = $request->gender;

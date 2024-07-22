@@ -19,6 +19,16 @@
                         User</button>
 
                 </li>
+                @if ($errors->has('phone'))
+                    <div style="color: red;">
+                        {{ $errors->first('phone') }}
+                    </div>
+                @endif
+                @if ($errors->has('email'))
+                <div style="color: red;">
+                    {{ $errors->first('email') }}
+                </div>
+                @endif
     </div>
     </ol>
     </nav>
@@ -32,10 +42,10 @@
                   <table class="table table-borderless datatable">
                     <thead>
                       <tr>
-                        <th scope="col"></th>
+                        <th scope="col">S/N</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Email</th>
                         <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Role</th>
                         <th scope="col">Action</th>
                       </tr>
@@ -45,14 +55,14 @@
                         <tr>
                         <th scope="row">{{$key+1}}</th>
                         <td> {{$user->name}}</td>
-                        <td>{{$user->email}}</td>
                         <td>{{$user->phone_number}}</td>
+                        <td>{{$user->email}}</td>
                         <td>{{$user->role}}</td>
 
                         <!-- updateform/{{$user->id}} -->
                         <td>
                             <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
-                                data-bs-target="#UpdateModal">Update</button>
+                                data-bs-target="#UpdateModal">Edit</button>
                                 <button type="button" class="btn btn-outline-danger btn-sm py-0 delBtn" value="{{ $user->id }}">Delete</button>
                         </td>
                       </tr>  
@@ -90,12 +100,22 @@
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="name" required>
                                 </div>
+                               
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="phone" required>
+                                   
+                                </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="email" required>
+                                    
                                 </div>
                             </div>
 
@@ -121,7 +141,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save </button>
+                    <button type="submit" class="btn btn-primary">Update</button>
 
                 </div>
             </form><!-- End General Form Elements -->
@@ -151,6 +171,13 @@
                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="name" id="name" required value="">
+                        </div>
+                    </div>
+
+                    <div class=" row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="phone" id="phone" required value="">
                         </div>
                     </div>
 
@@ -220,6 +247,7 @@
                     console.log(response);
                     $('#user_id').val(id);
                     $('#name').val(response.user.name);
+                    $('#phone').val(response.user.phone_number);
                     $('#email').val(response.user.email);
                     $('#role').val(response.user.role_id);
                     $('#role').selectpicker('refresh');
