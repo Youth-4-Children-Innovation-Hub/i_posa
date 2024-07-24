@@ -54,6 +54,7 @@ class StudentController extends Controller
 
     public function GetStudents()
     {
+        
         $userData = auth()->user();
         $courses = Course::all();
         $id = $userData->id;
@@ -64,16 +65,26 @@ class StudentController extends Controller
             ->first();
 
         $centers = Center::all();
+        $courses = Course::all();
         $centerCourses = Course::select('courses.*')
         ->join('course_centers', 'course_centers.course_id', '=', 'courses.id')
         ->join('centers', 'course_centers.center_id', '=', 'centers.id')
         ->where('centers.hod_id', '=', auth()->user()->id)
         ->get();
         $regions = Region::all();
-        $students = Student::select('students.id', 'students.disability as disability', 'students.status', 'students.phone_number', 'students.name AS name', 'students.gender', 'students.profile_picture', 'centers.name AS center')
+        $students2 = Student::select('students.id', 'students.disability as disability', 'students.status', 'students.phone_number', 'students.name AS name', 'students.gender', 'students.profile_picture', 'centers.name AS center')
             ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
             ->orderBy('students.created_at','DESC')
             ->paginate(100);
+
+        $students = Student::select('students.*', 'centers.name AS center', 'courses.name AS course')
+        ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+        ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id')
+        ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
+        ->orderBy('students.created_at','DESC')
+        ->get();
+        
+          
         //for the head of center
 
         $center1 = Center::select('centers.name AS centerName1', 'centers.id AS id')
@@ -227,6 +238,12 @@ class StudentController extends Controller
 
         $this->setCenterLocation();
         $location = $this->center_location;
+
+        $centerLocation1 = Region::select('regions.name as rname', 'districts.name as dname')
+        ->join('districts', 'districts.region_id', '=', 'regions.id')
+        ->join('centers', 'districts.id', '=', 'centers.district_id')
+        ->where('centers.id', '=', $request->centerId)
+        ->first();
      
         try {
             if ($user_role->role == 'head of center') {
@@ -241,8 +258,13 @@ class StudentController extends Controller
             $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;
             $student->nida = $request->nida;
-            $student->region = $location->rname;
-            $student->district = $location->dname;
+            if ($user_role->role == 'head of center'){
+                $student->region = $location->rname;
+                $student->district = $location->dname;
+            } else{
+                $student->region = $centerLocation1->rname;
+                $student->district = $centerLocation1->dname;
+            } 
             $student->ward = $request->ward;
             $student->street = $request->street;
             $student->education_level = $request->education_level;
@@ -267,8 +289,13 @@ class StudentController extends Controller
             $parent->address = $request->parent_address;
             $parent->occupation = $request->parent_occupation;
             $parent->disability = $request->pdissability;
-            $parent->region = $location->rname;
-            $parent->district = $location->dname;
+            if ($user_role->role == 'head of center'){
+                $parent->region = $location->rname;
+                $parent->district = $location->dname;
+            } else{
+                $parent->region = $centerLocation1->rname;
+                $parent->district = $centerLocation1->dname;
+            } 
             $parent->ward = $request->pward;
             $parent->student_id = $student->id;
             $parent->save();
@@ -335,7 +362,24 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
-        }    
+        }   
+        
+        $user_role = Role::select('role')
+        ->join('users', 'roles.id', '=', 'users.role_id')
+        ->where('users.id', '=', Auth::user()->id)
+        ->first();
+
+        if ($user_role->role == 'head of center') {
+            $centerId = Center::where('hod_id', Auth::user()->id)->value('id');
+        } else {
+            $centerId = $request->centerId;
+        }
+
+        $centerLocation1 = Region::select('regions.name as rname', 'districts.name as dname')
+        ->join('districts', 'districts.region_id', '=', 'regions.id')
+        ->join('centers', 'districts.id', '=', 'centers.district_id')
+        ->where('centers.id', '=', $request->centerId)
+        ->first();
         
 
         try {
@@ -349,8 +393,13 @@ class StudentController extends Controller
             $student->date_of_birth = $request->dob;
             $student->gender = $request->gender;
             $student->nida = $request->nida;
-            $student->region = $location->rname;
-            $student->district = $location->dname;
+            if ($user_role->role == 'head of center'){
+                $student->region = $location->rname;
+                $student->district = $location->dname;
+            } else{
+                $student->region = $centerLocation1->rname;
+                $student->district = $centerLocation1->dname;
+            } 
             $student->ward = $request->ward;
             $student->stage = $request->stage;
             $student->street = $request->street;
@@ -371,8 +420,13 @@ class StudentController extends Controller
             $parent->address = $request->parent_address;
             $parent->occupation = $request->parent_occupation;
             $parent->disability = $request->pdissability;
-            $parent->region = $location->rname;
-            $parent->district = $location->dname;
+            if ($user_role->role == 'head of center'){
+                $parent->region = $location->rname;
+                $parent->district = $location->dname;
+            } else{
+                $parent->region = $centerLocation1->rname;
+                $parent->district = $centerLocation1->dname;
+            } 
             $parent->ward = $request->pward;
             $parent->save();
 
@@ -400,8 +454,9 @@ class StudentController extends Controller
     {
         $student = Student::select('students.*' ,'guardians.phone as phone', 'guardians.id as gid', 'guardians.name as gname', 'guardians.email as gemail', 'guardians.region as gregion',
          'guardians.district as gdistrict', 'guardians.ward as gward', 'guardians.disability as gdissability', 'student_courses.course_id', 'guardians.occupation as occupation',
-         'guardians.address as address')
+         'guardians.address as address', 'centers.name as cname')
         ->join('student_courses', 'students.id', '=', 'student_courses.student_id')
+        ->join('centers', 'students.center_id', '=', 'centers.id')
         ->join('guardians', 'guardians.student_id', '=', 'students.id')
         ->where('students.id', $id)->first();
 

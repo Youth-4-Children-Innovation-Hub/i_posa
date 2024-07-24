@@ -26,6 +26,7 @@
 
        <!-- Default Card -->
        @can('is_hoc')
+       @cannot('is_admin')
        <div class="">
               <div class="card recent-sales overflow-auto">
 
@@ -60,14 +61,14 @@
 
               </div>
             </div>
-      
+       @endcannot
        @endcan
        @can('is_admin')
        <div class="">
               <div class="card recent-sales overflow-auto">
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Reports</h5>
+                  <h5 class="card-title">Clubs</h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
@@ -75,6 +76,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Location</th>
+                        <th scope="col">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -83,7 +85,9 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $clubs->Name }}</td>
                         <td>{{ $clubs->rName }}, {{ $clubs->dName }}, {{ $clubs->cName }}</td>
-                    
+                        <td>
+                            <a href="{{ url('club_details', ['id' => $clubs->id]) }}" type="button" class="btn btn-outline-success btn-sm editBtn" value="">View</a>
+                        </td>    
                     </tr>
                     @endforeach
                     </tbody>

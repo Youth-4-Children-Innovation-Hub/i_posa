@@ -8,11 +8,11 @@
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Courses</li>
                 
-                <li>
+                <!-- <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateNewCenterCourseModal">Add Center course</button>
 
-                </li>
+                </li> -->
               
 
             </ol>
@@ -32,10 +32,10 @@
                         <th scope="col">Course</th>
                         <th scope="col">Teacher</th>
                     
-                        @can('is_hoc')
+                        <!-- @can('is_hoc')
 
                         <th scope="col">Action</th>
-                        @endcan
+                        @endcan -->
                     </tr>
                     </thead>
                     <tbody>
@@ -46,14 +46,14 @@
                         <td>{{ $centercourses1->course1 }}</td>
                         <td>{{ $centercourses1->teacher1 }}</td>
                     
-                        @can('is_hoc')
+                        <!-- @can('is_hoc')
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
                                 value="{{ $centercourses1->id }}" data-bs-toggle="modal"
                                 data-bs-target="#EditNewCenterCourseModal">Update</button>
                             <button type="button" value="{{ $centercourses1->id }}"
                                 class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                         </td>
-                        @endcan
+                        @endcan -->
                     </tr>
                     @endforeach
                    

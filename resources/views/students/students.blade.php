@@ -11,15 +11,13 @@
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Students</li>
                 @can('is_hoc')
-                @cannot('is_admin')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Student</button>
                 </li>
-                <li>
+                <!-- <li>
                 <a href="{{ url('excel_import') }}" type="submit" class="btn btn-outline-success mx-3 py-0 my-1">Import from Excel</a>
-                </li>
-                @endcannot
+                </li> -->
                 @endcan
             </ol>
         </nav>
@@ -48,6 +46,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Course</th>
                         <th scope="col">Phone number</th>
                         <th scope="col">Gender</th>
                         <th scope="col">Disability</th>
@@ -64,6 +63,7 @@
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $student->name }}</td>
+                        <td>{{ $student->course }}</td>
                         <td>{{ $student->phone_number }}</td>
                         <td>{{ $student->gender }}</td>
                         <td>{{ $student->disability }}</td>
@@ -448,16 +448,36 @@
                                             <option value="Stage two">Stage two</option>
                                          </select>
                                     </div>
-                                </div>                              
+                                </div>  
+                                @if($userRole->role == 'admin')
+                                <div class="row mb-3">
+                                    <label for="inputNumber" class="col-sm-2 col-form-label">Center</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control selectpicker" data-live-search="true"
+                                            data-mdb-container="#exampleModal" data-mdb-filter="true"
+                                            name="centerId">
+                                            @foreach ($centers as $center)
+                                            <option value="{{ $center->id }}">{{ $center->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>  
+                                @endif                    
                                 <div class="row mb-3">
                                     <label for="inputNumber" class="col-sm-2 col-form-label">Courses</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control selectpicker" multiple data-live-search="true"
+                                        <select class="form-control selectpicker" data-live-search="true"
                                             data-mdb-container="#exampleModal" data-mdb-filter="true"
                                             name="course_id[]">
+                                            @if($userRole->role == 'admin')
+                                            @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                            @endforeach
+                                            @else
                                             @foreach ($centerCourses as $course)
                                             <option value="{{ $course->id }}">{{ $course->name }}</option>
                                             @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -708,16 +728,36 @@
                                             <option value="Stage two">Stage two</option>
                                          </select>
                                     </div>
-                                </div>                              
+                                </div>        
+                                @if($userRole->role == 'admin')
+                                <div class="row mb-3">
+                                    <label for="inputNumber" class="col-sm-2 col-form-label">Center</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control selectpicker" data-live-search="true"
+                                            data-mdb-container="#exampleModal" data-mdb-filter="true"
+                                            name="centerId" id="center">
+                                            @foreach ($centers as $center)
+                                            <option value="{{ $center->id }}">{{ $center->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>  
+                                @endif                        
                                 <div class="row mb-3">
                                     <label for="inputNumber" class="col-sm-2 col-form-label">Courses</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control selectpicker" id="course-edit" multiple data-live-search="true"
+                                        <select class="form-control selectpicker" data-live-search="true"
                                             data-mdb-container="#exampleModal" data-mdb-filter="true"
-                                            name="course_id[]" required>
+                                            name="course_id[]" id="course_id" required>
+                                            @if($userRole->role == 'admin')
+                                            @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                            @endforeach
+                                            @else
                                             @foreach ($centerCourses as $course)
                                             <option value="{{ $course->id }}">{{ $course->name }}</option>
                                             @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -1215,7 +1255,6 @@ $(document).on('click', '.editBtn', function() {
             $('#dob').val(response.student.date_of_birth);
             $('#nida-edit').val(response.student.nida);
             $('#stage-edit').val(response.student.stage);
-            $('#course-edit').val(response.student.course_id);
             $('#edit-status').val(response.student.status);
             $('#gid').val(response.student.gid);
             $('#ward-edit').val(response.student.ward);
@@ -1239,6 +1278,7 @@ $(document).on('click', '.editBtn', function() {
             $('#center').selectpicker('refresh');
             $('#course_id').val(response.student.course_id);
             $('#course_id').selectpicker('refresh');
+            
         },
 
     });

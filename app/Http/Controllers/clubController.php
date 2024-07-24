@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Club;
+use App\Models\Role;
 use App\Models\Center;
 use App\Models\Student;
 use App\Models\Member;
@@ -91,15 +92,21 @@ class clubController extends Controller
     }
 
     public function getMembers($id){
+        $user_role = Role::select('role')
+        ->join('users', 'roles.id', '=', 'users.role_id')
+        ->where('users.id', '=', Auth::user()->id)
+        ->first();
+
         $club = Club::find($id);
 
         $students = Student::select('students.*')
+        ->distinct()
         ->Join('centers', 'students.center_id', '=', 'centers.id')
         ->Join('members', 'members.student_id', '=', 'students.id')
-        ->where('centers.hod_id', '=', Auth()->user()->id)
+        ->join('clubs', 'clubs.center_id', '=', 'centers.id')
         ->where('members.club_id', '=', $club->id)
         ->get();
-
+        
         $members = Student::select('students.*')
         ->Join('centers', 'students.center_id', '=', 'centers.id')
         ->where('centers.hod_id', '=', Auth()->user()->id)
@@ -107,7 +114,9 @@ class clubController extends Controller
             $query->select('student_id')->from('members');
         })
         ->get();
-        return view('clubs.members', ['club' => $club, 'members' => $members, 'students' => $students]);
+
+        return view('clubs.members', ['club' => $club, 'members' => $members, 'students' => $students, 
+        'user_role' => $user_role]);
     }
 
     public function addMembers(Request $request){
@@ -128,7 +137,11 @@ class clubController extends Controller
     }
 
     public function clubDetails(Request $request, $id){
-        
+        $user_role = Role::select('role')
+        ->join('users', 'roles.id', '=', 'users.role_id')
+        ->where('users.id', '=', Auth::user()->id)
+        ->first();
+
         $club_details = DB::table('clubs')
         ->where('id', '=', $id)
         ->select('*')
@@ -141,11 +154,12 @@ class clubController extends Controller
         ->where('members.club_id', '=', $club_details->id)
         ->get();
 
-        return view('clubs.clubDetails', ['club_details' => $club_details, 'students' => $students]);
+        return view('clubs.clubDetails', ['club_details' => $club_details, 'students' => $students,
+         'user_role' => $user_role]);
     }
 
     public function nationalClubs($id){
-        $clubs = Club::select('clubs.Name as name', 'clubs.id as cid')
+        $clubs = Club::select('clubs.*')
         ->join('centers', 'centers.id', '=', 'clubs.Center_id')
         ->where('centers.id', '=', $id)->get();
         return view('clubs.nationalClub', ['clubs' => $clubs]);

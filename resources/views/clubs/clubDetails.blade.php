@@ -72,10 +72,9 @@
                   </tr>
                 </tbody>
               </table>
-              @cannot('is_reg_cordinator')
-              @cannot('is_dist_cordinator')
-              <!-- End Tables without borders -->
+              @if( $user_role->role == 'head of center' )
               <button type="submit" class="btn btn-outline-primary py-0 my-1" data-bs-toggle="modal" value="{{ $club_details->id }}" data-bs-target="#EditModal">Edit Club</button>
+              @endif
               
               <form action="{{ route('club_members', ['id' => $club_details->id]) }}" method="GET">
                     @csrf
@@ -87,8 +86,7 @@
                     <button type="submit" class="btn btn-outline-danger py-0 my-1" onclick="return confirm('Are you sure you want to delete this club?')">Delete Club</button>
              
                 </form> -->
-                @endcannot
-               @endcannot            
+                           
             </div>
           </div>
 

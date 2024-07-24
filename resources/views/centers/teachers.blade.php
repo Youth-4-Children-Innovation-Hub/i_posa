@@ -49,7 +49,7 @@
                         @can('is_hoc')
 
                         <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teacher->id }}"
-                                class="btn btn-outline-primary btn-sm editBtn">Update</button>
+                                class="btn btn-outline-primary btn-sm editBtn">Edit</button>
                             <button type="button" value="{{ $teacher->id }}"
                                 class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                         </td>
@@ -133,7 +133,7 @@
                         <td scope="col">{{ $districtTeachers->name }}</td>
                         <td scope="col">{{ $districtTeachers->centerName }}</td>
                       </tr>
-                      @endforeach
+                    @endforeach
                    
                     </tbody>
                   </table>
@@ -173,9 +173,9 @@
                         @can('is_hoc')
 
                         <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers1->id }}"
-                                class="btn btn-outline-primary btn-sm editBtn">Update</button>
-                            <button type="button" value="{{ $teachers1->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                                class="btn btn-outline-primary btn-sm editBtn">Edit</button>
+                            <!-- <button type="button" value="{{ $teachers1->id }}"
+                                class="btn btn-outline-danger btn-sm delBtn">Delete</button> -->
                         </td>
 
                         @endcan
@@ -230,12 +230,6 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Qualification</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="qualification" required>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Attended ANFE training</label>
                                     <div class="col-sm-10">
                                         <select class="form-select" aria-label="Default select example" name="anfe"
@@ -249,7 +243,7 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="email" id="email1" class="form-control" name="email" required>
+                                        <input type="email" id="email1" placeholder="optional" class="form-control" name="email">
                                     </div>
                                     <div id="email-error" style="color: red;"></div>
                                 </div>
@@ -312,12 +306,7 @@
                                         <input type="text" id="employer" class="form-control" name="employer" required>
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Qualification</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" id="qualification" class="form-control" name="qualification" required>
-                                    </div>
-                                </div>
+                               
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Attended ANFE training</label>
                                     <div class="col-sm-10">
@@ -332,7 +321,7 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="email" class="form-control" name="email" id="email" required>
+                                        <input type="email" class="form-control" placeholder="optional" name="email" id="email">
                                     </div>
                                     <div id="email-edit-error" style="color: red;"></div>
                                 </div>
@@ -349,7 +338,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save </button>
+                        <button type="submit" class="btn btn-primary">Update </button>
                     </div>
                 </form><!-- End General Form Elements -->
             </div>
@@ -374,7 +363,7 @@
             errorMessage.remove();
         }
 
-        if (!validateEmail(emailInput.value)) {
+        if (emailInput.value && !validateEmail(emailInput.value)) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'email-error';
             errorMessage.innerText = 'Invalid email address';
@@ -401,7 +390,7 @@
             errorMessage.remove();
         }
 
-        if (!validateEmail(emailInput.value)) {
+        if (emailInput.value && !validateEmail(emailInput.value)) {
             errorMessage = document.createElement('div');
             errorMessage.id = 'email-edit-error';
             errorMessage.innerText = 'Invalid email address';
@@ -487,7 +476,6 @@ $(document).on('click', '.editBtn', function() {
             $('#employer').val(response.teacher.employer);
             $('#email').val(response.teacher.email);
             $('#anfe').val(response.teacher.ANFE_training);
-            $('#qualification').val(response.teacher.qualification);
             $('#gender').val(response.teacher.gender);
 
         },

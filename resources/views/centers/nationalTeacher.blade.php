@@ -7,12 +7,11 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Teachers</li>
-                <li>
+                <!-- <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Teacher</button>
-                </li>
+                </li> -->
                 
-
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -32,7 +31,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
                         <th scope="col">Phone number</th>
-                        <th scope="col">Action</th>
+                        <!-- <th scope="col">Action</th> -->
                     </tr>
                     </thead>
                     <tbody>
@@ -42,7 +41,7 @@
                         <td>{{ $teachers1->name1 }}</td>
                         <td>{{ $teachers1->email1 }}</td>
                         <td>{{ $teachers1->phone_number1 }}</td>
-                        @can('is_hoc')
+                        <!-- @can('is_hoc')
 
                         <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers1->id }}"
                                 class="btn btn-outline-primary btn-sm editBtn">Update</button>
@@ -50,7 +49,7 @@
                                 class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                         </td>
 
-                        @endcan
+                        @endcan -->
                     </tr>
                     @endforeach
                    

@@ -80,7 +80,7 @@ class TeachersController extends Controller
             $teacher = new Teacher();
             $teacher->name = $request->name;
             $teacher->gender = $request->gender;
-            $teacher->qualification = $request->qualification;
+            $teacher->qualification = 'qualified';
             $teacher->ANFE_training = $request->anfe;
             $teacher->email = $request->email;
             $teacher->phone_number = $request->phone_number;
@@ -111,7 +111,7 @@ class TeachersController extends Controller
         $teacher->name = $request->name;
         $teacher->email = $request->email;
         $teacher->gender = $request->gender;
-        $teacher->qualification = $request->qualification;
+        $teacher->qualification = 'qualified';
         $teacher->ANFE_training = $request->anfe;
         $teacher->phone_number = $request->phone_number;
         $teacher->employer = $request->employer;

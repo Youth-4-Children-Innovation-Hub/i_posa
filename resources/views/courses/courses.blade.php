@@ -6,30 +6,25 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Courses</li>
-                @cannot('is_admin')
-                @cannot('is_reg_cordinator')
-                @cannot('is_dist_cordinator')
+                <li class="breadcrumb-item active">Courses</li>\
+                @if($user_role->role == 'admin')
+                <li>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
+                        data-bs-target="#CreateNewCourseModal">Add New course</button>
+                </li>
+                @endif
+                
+
+                @if($user_role->role == 'head of center')
                 <li>
                    
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateNewCenterCourseModal">Add Center course</button>
 
                 </li>
-                @endcannot
-                @endcannot
-                @endcannot
-
-                @cannot('is_reg_cordinator')
-                @cannot('is_dist_cordinator')
-                @cannot('is_hoc')
-                <li>
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
-                        data-bs-target="#CreateNewCourseModal">Add New course</button>
-                </li>
-                @endcannot
-                @endcannot
-                @endcannot
+                @endif
+               
+               
 
             </ol>
         </nav>
@@ -64,7 +59,7 @@
                         @can('is_hoc')
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
                                 value="{{ $course->id }}" data-bs-toggle="modal"
-                                data-bs-target="#editCourse" onclick="populateEditModal('{{ $course->id }}', '{{ $course->name }}')">Update</button>
+                                data-bs-target="#editCourse" onclick="populateEditModal('{{ $course->id }}', '{{ $course->name }}')">Edit</button>
                             <button type="button" value="{{ $course->id }}"
                                 class="btn btn-outline-danger btn-sm delBtnAdmin">Delete</button>
                         </td>
@@ -181,7 +176,7 @@
                         @can('is_hoc')
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
                                 value="{{ $centercourses1->id }}" data-bs-toggle="modal"
-                                data-bs-target="#EditNewCenterCourseModal">Update</button>
+                                data-bs-target="#EditNewCenterCourseModal">Edit</button>
                             <button type="button" value="{{ $centercourses1->id }}"
                                 class="btn btn-outline-danger btn-sm delBtn">Delete</button>
                         </td>
@@ -228,7 +223,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save </button>
+                        <button type="submit" class="btn btn-primary">Update</button>
 
                     </div>
                 </form><!-- End General Form Elements -->
@@ -240,7 +235,7 @@
     <!-- Add new course model -->
 
 
-
+ @cannot('is_admin')
     <!-- add center course -->
     <div class="modal fade" id="CreateNewCenterCourseModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -306,7 +301,7 @@
             </div>
         </div>
     </div><!-- End of model add new  course-->
-
+@endcannot
  <!--admin edit course -->
  <div class="modal fade" id="editCourse" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -341,7 +336,7 @@
             </div>
         </div>
     </div><!-- End admin edit course-->
-
+@cannot('is_admin')
     <!-- edit center course -->
     <div class="modal fade" id="EditNewCenterCourseModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -416,7 +411,7 @@
         </div>
     </div><!-- End of model add new  course-->
 
-
+@endcannot
 </div>
 @endsection
 
