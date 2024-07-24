@@ -11,10 +11,6 @@
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Students</li>
                
-                <li>
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
-                        data-bs-target="#CreateModal">Add Student</button>
-                </li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -48,7 +44,6 @@
                         <th scope="col">Disability</th>
                         <th scope="col">Center</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Action</th>
                         
                     </tr>
                     </thead>
@@ -74,13 +69,6 @@
                         class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $student->status }}</span>
                         </td>
                         @endif
-
-                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $student->id }}"
-                                data-bs-toggle="modal" data-bs-target="#EditStudent">Update</button>
-                            <button type="button" value="{{ $student->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                        </td>
-                    
                     </tr>
                     @endforeach
 

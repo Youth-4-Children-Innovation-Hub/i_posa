@@ -9,10 +9,12 @@
                 <li class="breadcrumb-item active">Clubs</li>
                 <li class="breadcrumb-item active">{{ $club->Name }}</li>
                 <li class="breadcrumb-item active">Members</li>
+                @if($user_role->role == 'head of center')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Members</button>
-                </li>
+                </li>]
+                @endif
             </ol>
         </nav>
 </div>

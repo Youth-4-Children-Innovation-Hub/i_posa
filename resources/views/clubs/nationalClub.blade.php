@@ -7,79 +7,50 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Clubs</li>
-
-                <li class="mx-3 py-0">
-                    <div class="search mx-auto">
-                        <form action="{{ url('/search_club') }}" method="GET">
-                            <input id="search_text" type="text" placeholder="Search" name="search_querry">
-                            <button type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-search" viewBox="0 0 16 16">
-                                    <path
-                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-                </li>
-                <li>
-                    <div class="my-1 d-flex" id="paginate">
-                        <form method="GET" action="{{ url('/teachers') }}">
-                            <select class="" name="number" id="exampleFormControlSelect1">
-                                @if (isset($paginate))
-                                <option value="{{ $paginate }}">{{ $paginate }}</option>
-                                @endif
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="8">8</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                                <option value="13">13</option>
-                                <option value="14">14</option>
-                                <option value="15">15</option>
-                            </select>
-                            <button type="submit">Show</button>
-
-                        </form>
-                    </div>
-                </li>
-
-              
-                <li>
+    <!-- <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Club</button>
-                </li>
+                </li> -->
                 
 
             </ol>
         </nav>
     </div><!-- End Page Title -->
+    <div class="">
+              <div class="card recent-sales overflow-auto">
 
-       <!-- Default Card -->
-       <div class="row align-items-top">
-            @foreach($clubs as $clubs)
-            
-                <div class="col-lg-3">
-                  
-                        <a href="{{ url('club_details', ['id' => $clubs->cid]) }}" style="text-decoration: none;">
-                        <div class="card">
-                        <div class="card-body">
-                        <h5 class="card-title" style="text-align: center;">{{ $clubs->name }}</h5>
-                        </div>
-                        </div>
-                        </a>
+                <div class="card-body">
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                    <tr>
+                       
+                        <th scope="col">Name</th>
+                        <th scope="col">Chairperson</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody> 
+                    @foreach($clubs as $key => $clubs)    
+                    <tr>
+                        <td>{{ $clubs->Name }}</td>
+                        <td>{{ $clubs->Chairperson }}</td>
+                        <td>{{ $clubs->Contact }}</td>
+                        <td>
+                            <a href="{{ url('club_details', ['id' => $clubs->id]) }}" type="button" class="btn btn-outline-success btn-sm editBtn" value="">View</a>
+                            
+                        </td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                  </table>
+
                 </div>
-           @endforeach
-            
-       </div>
-       <!-- End Default Card -->
+
+              </div>
+            </div>
+ 
 
     <!-- add new club-->
     <div class="modal fade" id="CreateModal" tabindex="-1">

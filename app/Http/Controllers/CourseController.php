@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Center;
 use App\Models\Course;
+use App\Models\Role;
 use App\Models\CourseCenter;
 use App\Models\Teacher;
 use Exception;
@@ -18,10 +19,18 @@ class CourseController extends Controller
 {
     public function GetCenterCourses()
     {
-        $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
+        $user_role = Role::select('role')
+        ->join('users', 'roles.id', '=', 'users.role_id')
+        ->where('users.id', '=', Auth::user()->id)
+        ->first();
+        if ($user_role->role == 'head of center') {
+            $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
+            $teachers = Teacher::all()->where('created_by', '=', $centerId->id);
+
+        } 
+        
 
         $courses = Course::all();
-        $teachers = Teacher::all()->where('created_by', '=', $centerId->id);
         $centers = Center::all();
         $userData = Auth::user();
 
@@ -55,20 +64,40 @@ class CourseController extends Controller
             ->leftJoin('users', 'users.id', '=', 'centers.hod_id')
             ->where('users.id', '=', $userData->id)
             ->get();
+
+        if ($user_role->role == 'head of center') {
+            return view(
+                'courses.courses',
+                [
+                    'teachers' => $teachers,
+                    'courses' => $courses,
+                    'centers' => $centers,
+                    'centercourses1' => $centercourses1,
+                    'userData' =>   $userData,
+                    'districtCourses' => $districtCourses,
+                    'regionCourses' =>  $regionCourses,
+                    'centerCourses' => $centerCourses,
+                    'user_role' => $user_role 
+                ]
+            );
+
+        } else{
+            return view(
+                'courses.courses',
+                [
+                    'courses' => $courses,
+                    'centers' => $centers,
+                    'centercourses1' => $centercourses1,
+                    'userData' =>   $userData,
+                    'districtCourses' => $districtCourses,
+                    'regionCourses' =>  $regionCourses,
+                    'centerCourses' => $centerCourses,
+                    'user_role' => $user_role  
+                ]
+            );
+        }    
             
-        return view(
-            'courses.courses',
-            [
-                'teachers' => $teachers,
-                'courses' => $courses,
-                'centers' => $centers,
-                'centercourses1' => $centercourses1,
-                'userData' =>   $userData,
-                'districtCourses' => $districtCourses,
-                'regionCourses' =>  $regionCourses,
-                'centerCourses' => $centerCourses 
-            ]
-        );
+        
     }
     public function Create(Request $request)
     {

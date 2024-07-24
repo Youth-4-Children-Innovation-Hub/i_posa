@@ -21,8 +21,10 @@
                 <li class="breadcrumb-item active">Inventory List</li>
                 <li>
                 @can('is_hoc')
+                @cannot('is_admin')
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#addInventory">Add Inventory</button>
+                @endcannot        
                 @endcan       
              </li>
             </ol>
@@ -93,7 +95,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Course</th>
+                        <th scope="col">Total</th>
                         <th scope="col">Location</th>
                     </tr>
                     </thead>
@@ -106,7 +108,7 @@
                     <tr>
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $admin_inventory->name }}</td>
-                        <td>{{ $admin_inventory->course_name }}</td>
+                        <td>{{ $admin_inventory->total }}</td>
                         <td>{{ $admin_inventory->cName }}, {{ $admin_inventory->distName }}, {{ $admin_inventory->rName }}</td>
                       
                     </tr>

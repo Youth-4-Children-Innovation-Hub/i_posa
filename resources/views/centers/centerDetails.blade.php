@@ -27,7 +27,7 @@
                             <a href="{{ url('national_center_clubs/' . $id) }}" >Clubs</a>
                         </div>
                         <div class="col-6 col-md-4 mb-3">
-                            <a href="#" >Inventory</a>
+                            <a href="{{ url('national_inventory/' . $id) }}" >Inventory</a>
                         </div>
                        
                     </div>          

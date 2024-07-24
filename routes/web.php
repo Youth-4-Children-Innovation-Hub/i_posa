@@ -97,6 +97,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('select_district/{id}', [CenterController::class, 'districtCenters']);
     Route::get('center_details/{id}', [CenterController::class, 'centerDetails']);
 
+
     
     Route::get('courses',[CourseController::class,'GetCenterCourses']);
     Route::post('/addcourse',[CourseController::class,'Create'])->name('create_course');
@@ -142,6 +143,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('add_inventory_type', [InventoryController::class, 'addType'])->name('add_inv_type');
     Route::post('edit_inventory_type', [InventoryController::class, 'updateType'])->name('update_inv_type');
     Route::post('delete_inventory_type', [InventoryController::class, 'deleteType'])->name('delete_inventory_type');
+    Route::get('national_inventory/{id}',[InventoryController::class,'nationalInventory']);
 
     
     Route::get('requestInventory', [InventoryController::class, 'getInventoryRequest']);
