@@ -78,6 +78,7 @@ Route::middleware(['auth'])->group(function(){
     
     
     Route::get('districts',[DistrictController::class,'GetDistricts']);
+    Route::get('districts/{region_id}',[DistrictController::class,'getRegionDistricts'])->name('regionDistricts.get');
     Route::post('create_district',[DistrictController::class,'Create'])->name('create_district');
     Route::get('search_district',[DistrictController::class,'Search']);
     Route::get('edit_district/{id}', [DistrictController::class, 'editDistrict']);

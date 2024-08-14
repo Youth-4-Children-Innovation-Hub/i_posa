@@ -106,7 +106,7 @@
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="phone" required>
+                                    <input type="text" placeholder="Start with 07 or 06" class="form-control" name="phone" required>
                                    
                                 </div>
                             </div>
@@ -141,7 +141,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
 
                 </div>
             </form><!-- End General Form Elements -->

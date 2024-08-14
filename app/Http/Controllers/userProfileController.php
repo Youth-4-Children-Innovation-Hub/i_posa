@@ -27,10 +27,11 @@ class userProfileController extends Controller
      
       $name = $request->fullName;
       $email = $request->email;
+      $phone = $request->phone;
       $userData=auth()->user();
       $user_id=$userData->id;
-      DB::update('update users set name = ?, email = ? where id = ?'
-        ,[$name, $email, $user_id]);
+      DB::update('update users set name = ?, email = ?, phone_number = ? where id = ?'
+        ,[$name, $email, $phone, $user_id]);
       return redirect()->back();
 
 

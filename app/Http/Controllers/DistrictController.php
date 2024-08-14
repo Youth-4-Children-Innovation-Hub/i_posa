@@ -6,6 +6,8 @@ use App\Models\District;
 use App\Models\Region;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Wilaya;
+use App\Models\Mikoa;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -43,7 +45,10 @@ class DistrictController extends Controller
         ->get();    
 
 
-        $regions = Region::all();
+        $regions = Region::select('regions.name as name', 'mikoa.id as id')
+        ->join('mikoa', 'mikoa.name', '=', 'regions.name')
+        ->get();
+
         $district_cordinator_id = Role::select('id')
             ->where('role', 'district cordinator')
             ->first();
@@ -61,16 +66,24 @@ class DistrictController extends Controller
 
     public function Create(Request $request)
     {
+        $mkoa = Mikoa::select('name')->where('id', '=', $request->region)->first();  
+        $region_id = Region::select('regions.id as id')->where('name', '=', $mkoa->name)->first();
         try {
             $district = new District();
             $district->name = $request->name;
             $district->cordinator_id = $request->cordinator_id;
-            $district->region_id = $request->region_id;
+            $district->region_id = $region_id->id;
             $district->save();
             return redirect('districts')->with('success', 'User added successfully.');
         } catch (Exception $e) {
             dd($e);
         }
+    }
+
+    public function getRegionDistricts($region_id)
+    {
+        $wilaya = Wilaya::where('region_id', $region_id)->get();
+        return response()->json($wilaya);
     }
 
     public function Search()

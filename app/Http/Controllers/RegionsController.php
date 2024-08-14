@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Region;
+use App\Models\Mikoa;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -35,11 +36,12 @@ class RegionsController extends Controller
             ->first();
         $cordinators = User::where('role_id', 2)
             ->get();
+        $mikoa = Mikoa::select('*')->get();
 
         $regions = Region::select('regions.id AS id', 'regions.name AS region', 'users.name', 'regions.created_at AS start_date')
             ->leftJoin('users', 'users.id', '=', 'regions.cordinator_id')
             ->paginate($request->session()->get('pagination_number'));
-        return view('regions.regions', ['cordinators' => $cordinators, 'regions' => $regions, 'userData' => $userData, 'userRole' => $userRole, 'paginate' => $request->session()->get('pagination_number')]);
+        return view('regions.regions', ['mikoa' => $mikoa, 'cordinators' => $cordinators, 'regions' => $regions, 'userData' => $userData, 'userRole' => $userRole, 'paginate' => $request->session()->get('pagination_number')]);
     }
 
     public function Create(Request $request)
