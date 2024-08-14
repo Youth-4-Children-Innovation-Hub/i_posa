@@ -31,7 +31,7 @@
                       <tr>
                       <th scope="col">#</th>
                         <th scope="col">Region</th>
-                        <th scope="col">Cordinator</th>
+                        <th scope="col">Coordinator</th>
                         @can('is_admin')
 
                         <th scope="col">Action</th>
@@ -88,12 +88,20 @@
                                 <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                     <div class="col-sm-10">
-                                        <input name="name" type="text" class="form-control">
+                                    <select class="selectpicker" aria-label="Default select example"
+                                            name="name" data-width=100% data-live-search="true">
+                                            <option selected>Open this select menu</option>
+                                            @foreach ($mikoa as $mkoa)
+                                            <option value="{{ $mkoa->name }}">{{ $mkoa->name }}</option>
+                                            @endforeach
+
+                                        </select>
+                                        <!-- <input name="name" type="text" class="form-control"> -->
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Cordinator</label>
+                                    <label class="col-sm-2 col-form-label">Coordinator</label>
                                     <div class="col-sm-10">
                                         <select class="selectpicker" aria-label="Default select example"
                                             name="cordinator" data-width=100% data-live-search="true">
@@ -145,7 +153,7 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Cordinator</label>
+                                    <label class="col-sm-2 col-form-label">Coordinator</label>
                                     <div class="col-sm-10">
                                         <select class="selectpicker" id="reg_select" aria-label="Default select example"
                                             name="cordinator" data-width=100% data-live-search="true">

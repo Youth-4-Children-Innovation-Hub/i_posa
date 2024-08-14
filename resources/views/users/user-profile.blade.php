@@ -70,6 +70,10 @@
                     <div class="col-lg-3 col-md-4 label ">Full Name</div>
                     <div class="col-lg-9 col-md-8">{{$userData['name']}}</div>
                   </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Phone</div>
+                    <div class="col-lg-9 col-md-8">{{$userData['phone_number']}}</div>
+                  </div>
 
 
                   <div class="row">
@@ -82,7 +86,7 @@
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                   <!-- Profile Edit Form -->
-                  <form method="POST" action="{{url('/edit_profile')}}">
+                  <form method="POST" action="{{url('/edit_profile')}}" id="editForm">
                   @csrf
                     
                     <div class="row mb-3">
@@ -92,7 +96,13 @@
                       </div>
                     </div>
 
-          
+                    <div class="row mb-3">
+                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Phone number</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="phone" type="text" class="form-control" id="phone" value="{{$userData['phone_number']}}">
+                      </div>
+                      <div id="phone-error" style="color: red;"></div>
+                    </div>
 
                     <div class="row mb-3">
                       <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
@@ -186,4 +196,34 @@
     </section>
 
 
+@endsection
+
+@section('scripts')
+<script>
+    document.getElementById('editForm').addEventListener('submit', function(event) {
+        var phoneNumberInput = document.getElementById('phone');
+        var errorMessage = document.getElementById('phone-error');
+
+        // Remove any existing error message
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+
+        if (phoneNumberInput.value && !validatePhoneNumber(phoneNumberInput.value)) {
+            errorMessage = document.createElement('div');
+            errorMessage.id = 'phone-error';
+            errorMessage.innerText = 'Invalid phone number. Must start with 07 or 06 and be 10 digits long';
+            errorMessage.style.color = 'red';
+            phoneNumberInput.parentNode.insertBefore(errorMessage, phoneNumberInput.nextSibling);
+            phoneNumberInput.focus(); // Focus back on the phone number input field
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    function validatePhoneNumber(phoneNumber) {
+        // Regular expression for validating phone numbers
+        var re = /^(07|06)\d{8}$/;
+        return re.test(phoneNumber);
+    }
+</script>
 @endsection

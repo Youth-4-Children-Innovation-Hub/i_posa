@@ -32,7 +32,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">District</th>
-                        <th scope="col">Cordinator</th>
+                        <th scope="col">Coordinator</th>
                         <th scope="col">Region</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -77,7 +77,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">District</th>
-                        <th scope="col">Cordinator</th> 
+                        <th scope="col">Coordinator</th> 
                     </tr>
                     </thead>
                     <tbody>
@@ -116,9 +116,32 @@
 
                             <div class="" id="add_region">
                                 <div class="card-body">
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">Region</label>
+                                    <div class="col-sm-10">
+                                        <select class="selectpicker" aria-label="Default select example" name="region" id="region_select" required data-width="100%" data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Select a Region</option>
+                                            @foreach ($regions as $region)
+                                                <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">District</label>
+                                    <div class="col-sm-10">
+                                    <!-- <select id="district_select" name="district_id" class="form-control">
+                                        <option selected="selected" hidden="hidden" value="">Select a District</option>
+                                    </select> -->
+                                        <select aria-label="Default select example" name="name" id="district_select" required data-width="100%" data-live-search="true">
+                                            <option selected="selected" hidden="hidden" value="">Select a District</option>
+                                        </select>
+                                    </div>
+                                </div>
 
                                     <!-- General Form Elements -->
-                                    <div class="row mb-3">
+                                    <!-- <div class="row mb-3">
                                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" name="name" required>
@@ -140,10 +163,10 @@
 
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="row mb-3">
-                                        <label class="col-sm-2 col-form-label">Cordinator</label>
+                                        <label class="col-sm-2 col-form-label">Coordinator</label>
                                         <div class="col-sm-10">
                                             <select class="selectpicker" aria-label="Default select example"
                                                 name="cordinator_id" required data-width=100% data-live-search="true">
@@ -192,7 +215,7 @@
                             <div class="" id="add_region">
                                 <div class="card-body">
                                     <input type="hidden" name="district_id" id="district_id">
-                                    <!-- General Form Elements -->
+                                  
                                     <div class="row mb-3">
                                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                         <div class="col-sm-10">
@@ -218,7 +241,7 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <label class="col-sm-2 col-form-label">Cordinator</label>
+                                        <label class="col-sm-2 col-form-label">Coordinator</label>
                                         <div class="col-sm-10">
                                             <select class="selectpicker" aria-label="Default select example"
                                                 name="cordinator_id" id="cordinator_id" required data-width=100%
@@ -254,6 +277,33 @@
 
 
 @section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#region_select').change(function() {
+            var regionId = $(this).val();
+            if (regionId) {
+                $.ajax({
+                    url: '/districts/' + regionId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#district_select').empty();
+                        $('#district_select').append('<option selected="selected" hidden="hidden" value="">Select a District</option>');
+                        $.each(data, function(key, district) {
+                            $('#district_select').append('<option value="' + district.name + '">' + district.name + '</option>');
+                        });
+                        $('#district_select').selectpicker('refresh');
+                    }
+                });
+            } else {
+                $('#district_select').empty();
+                $('#district_select').append('<option selected="selected" hidden="hidden" value="">Select a District</option>');
+                $('#district_select').selectpicker('refresh');
+            }
+        });
+    });
+</script>
     <script>
         $(document).on('click', '.editBtn', function() {
             var id = $(this).val();
@@ -305,4 +355,5 @@
             }
         });
     </script>
+
 @endsection
