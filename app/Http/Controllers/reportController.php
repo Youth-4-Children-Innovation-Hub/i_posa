@@ -53,8 +53,8 @@ class reportController extends Controller
         $details = [
             'greeting'=>'hi ' .auth()->user()->name,
             'body'=>'This is the email body',
-            'actiontext'=>'subscribe',
-            'actionurl'=>'http://127.0.0.1:8000/reports_page',
+            'actiontext'=>'click',
+            'actionurl'=> url('reports_page'),
             'lastline'=>'This is the last line',
         ];
 
@@ -194,7 +194,7 @@ class reportController extends Controller
                 'greeting'=>'hi ' . $reg_cord_details->name,
                 'body'=>'You just received a report from ' . Auth::user()->name . ', district coordinator of ' .  $districtToEmail->name . ' . Click the button below to see it.',
                 'actiontext'=>'See a report',
-                'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                'actionurl'=> url('reports_page'),
                 'lastline'=>'This is the last line',
             ];
 
@@ -222,7 +222,7 @@ class reportController extends Controller
                 'greeting'=>'hi ' . $nat_cord_details->name,
                 'body'=>'You just received a report from ' . Auth::user()->name . ', regional coordinator of ' .  $regionToEmail->name . ' . Click the button below to see it.',
                 'actiontext'=>'See a report',
-                'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                'actionurl'=> url('reports_page'),
                 'lastline'=>'This is the last line',
             ];
 
@@ -525,7 +525,7 @@ class reportController extends Controller
             'greeting'=>'hi ' . $dist_cord_details->name,
             'body'=>'You just received a report from ' . Auth::user()->name . ', head of ' .  $centerToEmail->name . ' center. Click the button below to see it.',
             'actiontext'=>'See a report',
-            'actionurl'=>'http://127.0.0.1:8000/reports_page',
+            'actionurl'=> url('reports_page'),
             'lastline'=>'This is the last line',
         ];
 
@@ -571,7 +571,7 @@ class reportController extends Controller
                     'greeting'=>'hi ' . $hoc_details->name,
                     'body'=>'You received a feedback from ' . Auth::user()->name . ', district coordinator of ' .  $name_of_dist . ', saying: $request->remarks.',
                     'actiontext'=>'See a report',
-                    'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                    'actionurl'=> url('reports_page'),
                     'lastline'=>'This is the last line',
                 ];
 
@@ -599,7 +599,7 @@ class reportController extends Controller
                     'greeting'=>'hi ' . $hoc_details->name,
                     'body'=>'You received a feedback from ' . Auth::user()->name . ', regional coordinator of ' .  $dist_cordinator_id->reg_name . ', saying: $request->remarks.',
                     'actiontext'=>'See a report',
-                    'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                    'actionurl'=>url('reports_page'),
                     'lastline'=>'This is the last line',
                 ];
 
@@ -611,7 +611,7 @@ class reportController extends Controller
                     'greeting'=>'hi ' . $dist_email_details->name,
                     'body'=>'You received a feedback from ' . Auth::user()->name . ', regional coordinator of ' .  $dist_cordinator_id->reg_name . ', saying: $request->remarks.',
                     'actiontext'=>'See a report',
-                    'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                    'actionurl'=> url('reports_page'),
                     'lastline'=>'This is the last line',
                 ];
 

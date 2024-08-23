@@ -132,7 +132,7 @@ class UserController extends Controller
                         'body'=>'You have been registered in the IPOSA system. Click the button below to set password
                         for access.',
                         'actiontext'=>'Set password',
-                        'actionurl'=>'http://127.0.0.1:8000/reports_page',
+                        'actionurl'=> url('reports_page'),
                         'lastline'=>'This is the last line',
                     ];
         
