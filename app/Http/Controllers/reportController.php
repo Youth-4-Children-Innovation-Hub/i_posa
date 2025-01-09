@@ -419,22 +419,6 @@ class reportController extends Controller
                                         ->WHERE('centers.hod_id', '=', Auth::user()->id) 
                                         ->WHERE('students.gender', '=', 'M')
                                         ->count();                           
-        $dropoutCount = Student::select('students.id',
-                                        'students.name AS name',
-                                        'students.phone_number AS phone',
-                                        'students.disability AS disability',
-                                        'students.gender',
-                                        'students.status')
-                                        ->join('centers', 'students.center_id', '=' , 'centers.id')
-                                        ->WHERE('centers.hod_id', '=', Auth::user()->id) 
-                                        ->WHERE('students.status', '=', 'dropout')
-                                        ->count();                           
-               
-                $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students]);
-                return  $pdf->download('center_students.pdf');                    
-         
-        
-        
         $femaleCount = Student::select('students.id',
                                         'students.name AS name',
                                         'students.phone_number AS phone',
@@ -444,6 +428,17 @@ class reportController extends Controller
                                         ->join('centers', 'students.center_id', '=' , 'centers.id')
                                         ->WHERE('centers.hod_id', '=', Auth::user()->id) 
                                         ->WHERE('students.gender', '=', 'F')
+                                        ->count();                                              
+         
+        $dropoutCount = Student::select('students.id',
+                                        'students.name AS name',
+                                        'students.phone_number AS phone',
+                                        'students.disability AS disability',
+                                        'students.gender',
+                                        'students.status')
+                                        ->join('centers', 'students.center_id', '=' , 'centers.id')
+                                        ->WHERE('centers.hod_id', '=', Auth::user()->id) 
+                                        ->WHERE('students.status', '=', 'dropout')
                                         ->count();                           
                
                 $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students]);

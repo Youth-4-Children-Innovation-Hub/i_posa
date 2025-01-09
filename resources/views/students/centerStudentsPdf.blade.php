@@ -28,12 +28,12 @@
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
-        <p><b>Center Name:</b> {{ $centerName }}</p>
-        <p><b>Head of Center:</b> {{ $headOfCenter }}</p>
+        <p><b>Center Name:</b> {{ $center->name}}</p>
+        <p><b>Head of Center:</b> {{ Auth::user()->name }}</p>
         <p><b>Total Students:</b> {{ $totalStudents }}</p>
         <p><b>Male Students:</b> {{ $maleCount }}</p>
         <p><b>Female Students:</b> {{ $femaleCount }}</p>
-        <p><b>Disabled Students:</b> {{ $disabledCount }}</p>
+        <!-- <p><b>Disabled Students:</b> {{ $disabledCount }}</p> -->
         <p><b>Dropouts:</b> {{ $dropoutCount }}</p>
     </div>
     
