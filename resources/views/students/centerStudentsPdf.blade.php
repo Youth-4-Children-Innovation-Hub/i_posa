@@ -22,18 +22,18 @@
     </div>
     <br>
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
-    <p><b>Introduction</b></p>
+    
     <br>
-    <p style="text-align: center;"><b>Students Summary, at {{ $centerName }}</b></p>
+    <p style="text-align: center;"><b>Students Summary, at {{ $center->name }}</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
         <p><b>Center Name:</b> {{ $center->name}}</p>
         <p><b>Head of Center:</b> {{ Auth::user()->name }}</p>
-        <p><b>Total Students:</b> {{ $totalStudents }}</p>
+        <p><b>Total Students:</b> {{ $studentsCount }}</p>
         <p><b>Male Students:</b> {{ $maleCount }}</p>
         <p><b>Female Students:</b> {{ $femaleCount }}</p>
-        <!-- <p><b>Disabled Students:</b> {{ $disabledCount }}</p> -->
+        
         <p><b>Dropouts:</b> {{ $dropoutCount }}</p>
     </div>
     

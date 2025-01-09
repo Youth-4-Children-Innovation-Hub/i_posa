@@ -387,7 +387,7 @@ class reportController extends Controller
 
     public function centerStudents(){
 
-        $center   = Center::select('centers.name AS name');
+        $center   = Center::select('centers.name AS name')->first();
 
         $students = Student::select('students.id',
                                     'students.name AS name',
@@ -441,7 +441,9 @@ class reportController extends Controller
                                         ->WHERE('students.status', '=', 'dropout')
                                         ->count();                           
                
-                $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students]);
+                $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students, 'center' => $center,
+                                     'studentsCount' => $studentsCount,'maleCount' => $maleCount,'femaleCount' => $femaleCount,
+                                     'dropoutCount' => $dropoutCount]);
                 return  $pdf->download('center_students.pdf');                    
          
         
