@@ -54,7 +54,7 @@ Route::get('log-in', function () {
 
 Auth::routes();
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth','status'])->group(function(){
    
     Route::get('/home', [App\Http\Controllers\DashboardController::class,'GetDashboard'])->name('home');
     //Route::view('regions','regions.regions');
@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('search_user',[UserController::class,'Search']);
     Route::get('edit_user/{id}', [UserController::class, 'edit']);
     Route::post('delete_user', [UserController::class, 'delete'])->name('delete_user');
+    Route::post('user-status/{id}',[UserController::class,'setStatus'])->name('userStatus');
     
     
     
@@ -164,6 +165,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/notifications', [reportController::class, 'getNotifications']);
     Route::post('/upload_center_report', [reportController::class, 'uploadCenterReport']);
     Route::post('/post_challenges', [reportController::class, 'createChallenge']);
+    Route::get('/students/centerStudents',[reportController::class, 'centerStudents'])->name('center_students');
 
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);

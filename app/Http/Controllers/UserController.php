@@ -51,10 +51,10 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        $users = User::select('users.id', 'users.name', 'users.phone_number', 'users.email', 'roles.role')
+        $users = User::select('users.id', 'users.name', 'users.phone_number', 'users.email', 'roles.role', 'users.status')
             ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
             ->orderBy('users.created_at', 'DESC')->get();
-
+            
         return view('users.users', ['roles' => $roles, 'users' => $users, 'userData' => $userData, 'userRole' => $userRole, 'paginate' => $request->session()->get('pagination_number')]);
     }
 
@@ -129,7 +129,7 @@ class UserController extends Controller
                   
                     $details = [
                         'greeting'=>'hi ' . $userToEmail->name,
-                        'body'=>'You have been registered in the IPOSA system. Click the button below to set password
+                        'body'=>'You have been registered on the IPOSA system. Click the button below to set password
                         for access.',
                         'actiontext'=>'Set password',
                         'actionurl'=> url('reports_page'),
@@ -145,6 +145,23 @@ class UserController extends Controller
             }
 
             
+    }
+
+    public function setStatus($id){
+
+        $user = DB::table('users')->find($id);
+
+        if(!$user) {
+
+          return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $newStatus = $user->status == 1 ? 0 : 1;
+        DB::table('users')->where('id', $id)->update(['status' => $newStatus]);
+
+        $message = $newStatus ? 'user activated' : 'user suspended';
+        return response()->json(['message' => $message]);
+
     }
 
     public function Search()

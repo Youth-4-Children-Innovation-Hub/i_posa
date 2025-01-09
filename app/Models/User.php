@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'region_id',
         'hod_id',
+        'status',
     ];
 
     /**

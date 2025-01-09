@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\stroage;
 use App\Models\Report;
 use App\Models\Newrepport;
@@ -384,6 +385,73 @@ class reportController extends Controller
 
     }
 
+    public function centerStudents(){
+
+        $center   = Center::select('centers.name AS name');
+
+        $students = Student::select('students.id',
+                                    'students.name AS name',
+                                    'students.phone_number AS phone',
+                                    'students.disability AS disability',
+                                    'students.gender',
+                                    'students.status')
+                                    ->join('centers', 'students.center_id', '=' , 'centers.id')
+                                    ->WHERE('centers.hod_id', '=', Auth::user()->id)
+                                    ->get();
+        
+        
+        $studentsCount = Student::select('students.id',
+                                    'students.name AS name',
+                                    'students.phone_number AS phone',
+                                    'students.disability AS disability',
+                                    'students.gender',
+                                    'students.status')
+                                    ->join('centers', 'students.center_id', '=' , 'centers.id')
+                                    ->WHERE('centers.hod_id', '=', Auth::user()->id)
+                                    ->count();
+        $maleCount = Student::select('students.id',
+                                        'students.name AS name',
+                                        'students.phone_number AS phone',
+                                        'students.disability AS disability',
+                                        'students.gender',
+                                        'students.status')
+                                        ->join('centers', 'students.center_id', '=' , 'centers.id')
+                                        ->WHERE('centers.hod_id', '=', Auth::user()->id) 
+                                        ->WHERE('students.gender', '=', 'M')
+                                        ->count();                           
+        $dropoutCount = Student::select('students.id',
+                                        'students.name AS name',
+                                        'students.phone_number AS phone',
+                                        'students.disability AS disability',
+                                        'students.gender',
+                                        'students.status')
+                                        ->join('centers', 'students.center_id', '=' , 'centers.id')
+                                        ->WHERE('centers.hod_id', '=', Auth::user()->id) 
+                                        ->WHERE('students.status', '=', 'dropout')
+                                        ->count();                           
+               
+                $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students]);
+                return  $pdf->download('center_students.pdf');                    
+         
+        
+        
+        $femaleCount = Student::select('students.id',
+                                        'students.name AS name',
+                                        'students.phone_number AS phone',
+                                        'students.disability AS disability',
+                                        'students.gender',
+                                        'students.status')
+                                        ->join('centers', 'students.center_id', '=' , 'centers.id')
+                                        ->WHERE('centers.hod_id', '=', Auth::user()->id) 
+                                        ->WHERE('students.gender', '=', 'F')
+                                        ->count();                           
+               
+                $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students]);
+                return  $pdf->download('center_students.pdf');                    
+         
+        
+        }
+
     public function uploadCenterReport(){
         $owner_funder = Center::select('name', 'Ownership', 'Funders')
         ->where('hod_id', '=', auth()->user()->id)
@@ -493,7 +561,12 @@ class reportController extends Controller
           'clubInfo' => $clubInfo, 'facilitators' => $facilitators, 'challenge' => $challenge, 'inventories' => $inventories] );
 
         $filename = 'Quarter_report_' . time() . '.pdf';
-        $pdf->save(storage_path('app/public/reports/' . $filename));
+        $directory = storage_path('app/public/reports');
+          if(!File::exists($directory)){
+            File::makeDirectory($directory, 0755,true);
+          }
+        //   dd($directory);
+        $pdf->save($directory .'/' . $filename);
         $uploader = User::select('name')->where('id', '=', Auth()->user()->id)->first();
 
         $createdReport = new CenterReport();

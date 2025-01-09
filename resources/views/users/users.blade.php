@@ -58,12 +58,19 @@
                         <td>{{$user->phone_number}}</td>
                         <td>{{$user->email}}</td>
                         <td>{{$user->role}}</td>
+                        
 
                         <!-- updateform/{{$user->id}} -->
                         <td>
                             <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
                                 data-bs-target="#UpdateModal">Edit</button>
-                                <button type="button" class="btn btn-outline-danger btn-sm py-0 delBtn" value="{{ $user->id }}">Delete</button>
+                                
+                            <form action="{{route('userStatus',['id' => $user->id ])}}" method="post">
+                                @csrf
+                                <button class="btn btn-outline btn-sm py-0 {{$user->status == 1 ? 'btn-danger' : 'btn-success'}}">
+                                    {{ (int)$user->status === 1 ? 'Deactivate' : 'Activate'}}
+                                </button>
+                            </form>
                         </td>
                       </tr>  
                     @endforeach  

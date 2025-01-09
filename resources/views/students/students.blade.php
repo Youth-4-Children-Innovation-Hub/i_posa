@@ -15,6 +15,12 @@
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
                         data-bs-target="#CreateModal">Add Student</button>
                 </li>
+                <li>
+                <form action="{{ route('center_students') }}" method="get" target="_blank">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Students Report</button>
+                    </form> 
+                </li>
                 <!-- <li>
                 <a href="{{ url('excel_import') }}" type="submit" class="btn btn-outline-success mx-3 py-0 my-1">Import from Excel</a>
                 </li> -->
