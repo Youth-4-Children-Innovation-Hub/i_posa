@@ -452,9 +452,13 @@ class reportController extends Controller
         public function centerCourses(){
 
             $center   = Center::select('centers.name AS name')->first();
-            $course   = CourseCenter::select('centers.name AS name')->first();
+            $course   = CourseCenter::select('course.name AS course', 'teachers.name AS teacher','course_center.id AS id')
+                                  ->leftjoin('teachers', 'teachers.id', '=', 'course_center.id')
+                                  ->leftjoin('courses', 'courses.id', '=', 'course_center.id')
+                                  ->get();
 
-
+               $pdf = Pdf::loadView('report.centerCoursePdf',['center' => $center, 'course' => $course]);
+               return $pdf->stream('center_course.pdf');
         }
 
 
