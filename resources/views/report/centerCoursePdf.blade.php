@@ -41,12 +41,12 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{ $center->name }}</td>
+                <td></td>
                 <td>{{ Auth::user()->name }}</td>
-                <td>{{ $studentsCount }}</td>
-                <td>{{ $maleCount }}</td>
-                <td>{{ $femaleCount }}</td>
-                <td>{{ $dropoutCount }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
         </tbody>
     </table>
@@ -58,24 +58,18 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Name</th>
                 <th>Course</th>
-                <th>Phone </th> 
-                <th>Gender</th>
-                <th>Disability</th> 
-                <th>Status</th>
+                <th>Teacher</th>
+                
             </tr>
         </thead>
         <tbody>
-            @foreach($students as $index => $student)
+            @foreach($courses as $index => $course)
             <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $student->name }}</td>
-                <td>{{ $student->course }}</td>
-                <td>{{ $student->phone }}</td>
-                <td>{{ ucfirst($student->gender) }}</td>
-                <td>{{ $student->disability }}</td>
-                <td>{{ ucfirst($student->status) }}</td>
+                <td>{{ $course + 1 }}</td>
+                <td>{{ $course->name }}</td>
+                <td>{{ $course->course }}</td>
+                
             </tr>
             @endforeach   
         </tbody>
