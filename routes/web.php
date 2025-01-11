@@ -166,6 +166,7 @@ Route::middleware(['auth','status'])->group(function(){
     Route::post('/upload_center_report', [reportController::class, 'uploadCenterReport']);
     Route::post('/post_challenges', [reportController::class, 'createChallenge']);
     Route::get('/students/centerStudents',[reportController::class, 'centerStudents'])->name('center_students');
+    Route::get('/students/centerCourses',[reportController::class, 'centerCourses'])->name('center_courses');
 
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);

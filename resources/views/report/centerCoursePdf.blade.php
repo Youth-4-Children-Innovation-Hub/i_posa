@@ -81,7 +81,7 @@
         </tbody>
     </table>
     <div style="position: absolute; bottom: 10px; right: 10px; font-size: 12px;">
-    Generated on: {{ now()->format('Y-m-d H:i:s') }} by {{ Auth::user()->name }}
+   <b> Generated on: {{ now()->format('Y-m-d H:i:s') }} by {{ Auth::user()->name }}</b>
 </div>
 
     </center>

@@ -441,15 +441,23 @@ class reportController extends Controller
                                         ->WHERE('students.status', '=', 'dropout')
                                         ->count();                           
                
-                $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students, 'center' => $center,
+                $pdf = Pdf::loadView('report.centerStudentsPdf',['students' => $students, 'center' => $center,
                                      'studentsCount' => $studentsCount,'maleCount' => $maleCount,'femaleCount' => $femaleCount,
                                      'dropoutCount' => $dropoutCount]);
                 // return  $pdf->download('center_students.pdf');                    
                 return $pdf->stream('center_students.pdf');
-
-         
         
         }
+
+        public function centerCourses(){
+
+            $center   = Center::select('centers.name AS name')->first();
+            $course   = CourseCenter::select('centers.name AS name')->first();
+
+
+        }
+
+
 
     public function uploadCenterReport(){
         $owner_funder = Center::select('name', 'Ownership', 'Funders')
