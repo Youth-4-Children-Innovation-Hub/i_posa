@@ -444,7 +444,9 @@ class reportController extends Controller
                 $pdf = Pdf::loadView('students.centerStudentsPdf',['students' => $students, 'center' => $center,
                                      'studentsCount' => $studentsCount,'maleCount' => $maleCount,'femaleCount' => $femaleCount,
                                      'dropoutCount' => $dropoutCount]);
-                return  $pdf->download('center_students.pdf');                    
+                // return  $pdf->download('center_students.pdf');                    
+                return $pdf->stream('center_students.pdf');
+
          
         
         }

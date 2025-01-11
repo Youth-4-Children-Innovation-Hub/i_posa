@@ -24,18 +24,34 @@
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
     
     <br>
-    <p style="text-align: center;"><b>Students Summary, at {{ $center->name }}</b></p>
+    <p style="text-align: center;"><b>Students Summary at {{ strtoupper($center->name) }} CENTER</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
-        <p><b>Center Name:</b> {{ $center->name}}</p>
-        <p><b>Head of Center:</b> {{ Auth::user()->name }}</p>
-        <p><b>Total Students:</b> {{ $studentsCount }}</p>
-        <p><b>Male Students:</b> {{ $maleCount }}</p>
-        <p><b>Female Students:</b> {{ $femaleCount }}</p>
-        
-        <p><b>Dropouts:</b> {{ $dropoutCount }}</p>
-    </div>
+    <table border="1" cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr>
+                <th>Center Name</th>
+                <th>Head of Center</th>
+                <th>Total Students</th>
+                <th>Male Students</th>
+                <th>Female Students</th>
+                <th>Dropouts</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ $center->name }}</td>
+                <td>{{ Auth::user()->name }}</td>
+                <td>{{ $studentsCount }}</td>
+                <td>{{ $maleCount }}</td>
+                <td>{{ $femaleCount }}</td>
+                <td>{{ $dropoutCount }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
     
     <center>
     <table class="table table-bordered">
@@ -64,6 +80,10 @@
             @endforeach   
         </tbody>
     </table>
+    <div style="position: absolute; bottom: 10px; right: 10px; font-size: 12px;">
+    Generated on: {{ now()->format('Y-m-d H:i:s') }} by {{ Auth::user()->name }}
+</div>
+
     </center>
    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
