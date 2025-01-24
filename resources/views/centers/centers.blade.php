@@ -8,7 +8,22 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                     <li class="breadcrumb-item active">Centers</li>
-
+                    @can('is_dist_cordinator')
+                    <li>
+                <form action="{{ route('district_centers_report') }}" method="get" target="_blank">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Students Report</button>
+                    </form> 
+                </li>
+                   @endcan
+                    @can('is_reg_cordinator')
+                    <li>
+                <form action="{{ route('regional_centers_report') }}" method="get" target="_blank">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Centers Report</button>
+                    </form> 
+                </li>
+                   @endcan
                    
                     @can('is_reg_cordinator')
                         <li>

@@ -24,7 +24,7 @@
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
     
     <br>
-    <p style="text-align: center;"><b>Students Summary at {{ strtoupper($center->name) }} CENTER</b></p>
+    <p style="text-align: center;"><b>Teachers Summary at {{ strtoupper($center->name) }} CENTER</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
@@ -33,7 +33,7 @@
             <tr>
                 <th>Center Name</th>
                 <th>Head of Center</th>
-                <th>Total Courses</th>
+                <th>Total Teachers</th>
                 
             </tr>
         </thead>
@@ -41,7 +41,7 @@
             <tr>
                 <td>{{ strtoupper($center->name) }}</td>
                 <td>{{ Auth::user()->name }}</td>
-                <td>{{ $courseCount}}</td>
+                <td>{{ $teacherCount}}</td>
                 
             </tr>
         </tbody>
@@ -54,17 +54,19 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Course</th>
                 <th>Teacher</th>
+                <th>Phone</th>
+                <th>Email</th>
                 
             </tr>
         </thead>
         <tbody>
-            @foreach($courses as $index => $course)
+            @foreach($teachers as $index => $teacher)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $course->course }}</td>
-                <td>{{ $course->teacher }}</td>
+                <td>{{ $teacher->name }}</td>
+                <td>{{ $teacher->phone }}</td>
+                <td>{{ $teacher->email }}</td>
                 
             </tr>
             @endforeach   

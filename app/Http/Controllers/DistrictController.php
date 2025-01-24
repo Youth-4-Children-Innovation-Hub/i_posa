@@ -155,3 +155,4 @@ class DistrictController extends Controller
         return view('district.districtSelect', ['districts' => $districts]);     
     }
 }
+

@@ -15,6 +15,22 @@
                 </li>
                 @endcannot
                 @endcannot
+                <li>
+                    @can('is_hoc')
+                <form action="{{ route('center_teachers') }}" method="get" target="_blank">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    </form> 
+                </li>
+                  @endcan
+                @can('is_dist_cordinator')
+                <li>
+                <form action="{{ route('district_teachers_report') }}" method="get" target="_blank">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    </form> 
+                </li>
+                @endcan
 
             </ol>
         </nav>

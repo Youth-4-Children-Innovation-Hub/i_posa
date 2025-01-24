@@ -23,7 +23,7 @@
 
                 </li>
                 <li>
-                <form action="{{ route('center_courses') }}" method="post">
+                <form action="{{ route('center_courses') }}" method="get" target="_blank">
                         @csrf
                         <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
                     </form> 
@@ -284,11 +284,11 @@
                                             <option selected="selected" hidden="hidden" value="">Open this
                                                 select menu
                                             </option>
+                                            @can('is_hoc')
                                             @foreach ($teachers as $teacher)
                                             <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                             @endforeach
-
-
+                                            @endcan
                                         </select>
                                     </div>
                                 </div>
@@ -383,9 +383,11 @@
                                             <option selected="selected" hidden="hidden" value="">Open this
                                                 select menu
                                             </option>
+                                             @can('is_hoc')
                                             @foreach ($teachers as $teacher)
                                             <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                             @endforeach
+                                             @endcan
                                         </select>
                                     </div>
                                 </div>

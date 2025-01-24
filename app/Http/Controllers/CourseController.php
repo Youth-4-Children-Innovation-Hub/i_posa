@@ -23,6 +23,7 @@ class CourseController extends Controller
         ->join('users', 'roles.id', '=', 'users.role_id')
         ->where('users.id', '=', Auth::user()->id)
         ->first();
+        
         if ($user_role->role == 'head of center') {
             $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
             $teachers = Teacher::all()->where('created_by', '=', $centerId->id);

@@ -24,25 +24,31 @@
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
     
     <br>
-    <p style="text-align: center;"><b>Students Summary at {{ strtoupper($center->name) }} CENTER</b></p>
+    <p style="text-align: center;"><b>Students Summary in {{ strtoupper($region->name) }} Region</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
     <table border="1" cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse; text-align: left;">
         <thead>
             <tr>
-                <th>Center Name</th>
-                <th>Head of Center</th>
-                <th>Total Courses</th>
-                
+                <th>District</th>
+                <th>Head of Region</th>
+                <th>Total Students</th>
+                <th>Male Students</th>
+                <th>Female Students</th>
+                <th>Disabled Students</th>
+                <th>Dropouts</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>{{ strtoupper($center->name) }}</td>
+                <td>{{$region->name}}</td>
                 <td>{{ Auth::user()->name }}</td>
-                <td>{{ $courseCount}}</td>
-                
+                <td>{{ $studentsCount }}</td>
+                <td>{{ $maleCount }}</td>
+                <td>{{ $femaleCount }}</td>
+                <td>{{ $disabledCount }}</td>
+                <td>{{ $dropoutCount }}</td>
             </tr>
         </tbody>
     </table>
@@ -54,18 +60,26 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Name</th>
                 <th>Course</th>
-                <th>Teacher</th>
-                
+                <th>Center </th> 
+                <th>Gender</th>
+                <th>Disability</th> 
+                <th>District</th> 
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($courses as $index => $course)
+            @foreach($students as $index => $student)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $course->course }}</td>
-                <td>{{ $course->teacher }}</td>
-                
+                <td>{{ $student->name }}</td>
+                <td>{{ $student->course }}</td>
+                <td>{{ $student->center}}</td>
+                <td>{{ ucfirst($student->gender) }}</td>
+                <td>{{ $student->disability }}</td>
+                <td>{{ $student->district }}</td>
+                <td>{{ ucfirst($student->status) }}</td>
             </tr>
             @endforeach   
         </tbody>

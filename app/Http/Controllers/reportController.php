@@ -14,6 +14,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Region;
 use Illuminate\Support\Facades\DB;
 use App\Models\Center;
+use App\Models\CourseCenter;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Club;
@@ -451,17 +452,272 @@ class reportController extends Controller
 
         public function centerCourses(){
 
-            $center   = Center::select('centers.name AS name')->first();
-            $courses   = CourseCenter::select('course.name AS course', 'teachers.name AS teacher','course_center.id AS id')
-                                  ->leftjoin('teachers', 'teachers.id', '=', 'course_center.id')
-                                  ->leftjoin('courses', 'courses.id', '=', 'course_center.id')
+            $center   = Center::select('centers.name AS name')
+                               ->where('centers.hod_id', '=', Auth::user()->id)
+                               ->first();
+            $courses   = CourseCenter::select('courses.name AS course', 'teachers.name AS teacher','course_centers.id AS id')
+                                  ->leftjoin('teachers', 'teachers.id', '=', 'course_centers.teacher_id')
+                                  ->leftjoin('courses', 'courses.id', '=', 'course_centers.course_id')
+                                  ->leftjoin('centers', 'centers.id', '=', 'course_centers.center_id')
+                                  ->where('centers.hod_id', '=', Auth::user()->id)
                                   ->get();
 
-               $pdf = Pdf::loadView('report.centerCoursePdf',['center' => $center, 'course' => $courses]);
+            $courseCount  = CourseCenter::select('courses_center.id AS id') 
+                                          ->join('centers', 'centers.id', '=', 'course_centers.center_id')
+                                          ->where('centers.hod_id',  '=', Auth::user()->id)
+                                          ->count();
+
+               $pdf = Pdf::loadView('report.centerCoursePdf',['center' => $center, 'courses' => $courses,'courseCount' => $courseCount]);
                return $pdf->stream('center_course.pdf');
         }
 
+        public function centerTeachers(){
 
+            $center   = Center::select('centers.name AS name')
+                               ->where('centers.hod_id', '=', Auth::user()->id)
+                               ->first();
+            $teachers   = Teacher::select('teachers.name AS name', 'teachers.phone_number AS phone', 'teachers.email AS email')
+                                  ->leftjoin('centers', 'centers.id', '=', 'teachers.center_id')
+                                  ->where('centers.hod_id', '=', Auth::user()->id)
+                                  ->get();
+
+            $teacherCount  = Teacher::select('teachers.id AS id') 
+                                          ->join('centers', 'centers.id', '=', 'teachers.center_id')
+                                          ->where('centers.hod_id',  '=', Auth::user()->id)
+                                          ->count();
+
+               $pdf = Pdf::loadView('report.centerTeacherPdf',['center' => $center, 'teachers' => $teachers,'teacherCount' => $teacherCount]);
+               return $pdf->stream('center_teacher.pdf');
+
+        }
+
+        public function centerClubs(){
+
+            $center   = Center::select('centers.name AS name')
+                       ->where('centers.hod_id', '=', Auth::user()->id)
+                       ->first();
+            $clubs   = Club::select('clubs.Name AS name', 'clubs.Funding_sources AS funding', 'clubs.Registration_status AS status', 'clubs.Chairperson AS chairperson', 'clubs.Contact AS contact')
+                      ->leftjoin('centers', 'centers.id', '=', 'clubs.center_id')
+                      ->where('centers.hod_id', '=', Auth::user()->id)
+                      ->get();
+
+            $clubCount  = Club::select('clubs.id AS id') 
+                          ->join('centers', 'centers.id', '=', 'clubs.center_id')
+                          ->where('centers.hod_id',  '=', Auth::user()->id)
+                          ->count();
+
+               $pdf = Pdf::loadView('report.centerClubsPdf',['center' => $center, 'clubs' => $clubs,'clubCount' => $clubCount]);
+               return $pdf->stream('center_club.pdf');
+
+        }
+
+        public function centerInventories(){
+
+            $center   = Center::select('centers.name AS name')
+                       ->where('centers.hod_id', '=', Auth::user()->id)
+                       ->first();
+            $inventories   = Inventory::select('inventories.name AS name', 'inventories.use_status AS use', 'courses.name AS course')
+                      ->leftjoin('centers', 'centers.id', '=', 'inventories.center_id')
+                      ->leftjoin('courses', 'courses.id', '=', 'inventories.course_id')
+                      ->where('centers.hod_id', '=', Auth::user()->id)
+                      ->get();
+
+            $inventoryCount  = Inventory::select('inventories.id AS id') 
+                          ->join('centers', 'centers.id', '=', 'inventories.center_id')
+                          ->where('centers.hod_id',  '=', Auth::user()->id)
+                          ->count();
+
+               $pdf = Pdf::loadView('report.centerInventoryPdf',['center' => $center, 'inventories' => $inventories,'inventoryCount' => $inventoryCount]);
+               return $pdf->stream('center_inventory.pdf');
+
+        }
+
+        public function districtStudentsReport()
+        {
+            $userData = Auth::user();
+            $district = District::select('districts.*', 'districts.name AS name')
+                          ->where('districts.cordinator_id', '=', $userData->id)
+                          ->first();
+            $districtStudents = Student::select('students.*', 'students.name AS name', 'students.gender AS gender','students.disability','students.status','courses.name AS course2', 'centers.name AS centerName2')
+                ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id')
+                ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id')
+                ->where('districts.cordinator_id', '=', $userData->id)
+                ->orderby('name')
+                ->get();
+
+            $studentsCount = $districtStudents->count();
+            $maleCount = $districtStudents->where('gender', 'M')->count();
+            $femaleCount = $districtStudents->where('gender', 'F')->count();
+            $disabledCount = $districtStudents->where('disability', '!=', null)->count();
+            $dropoutCount = $districtStudents->where('status', 'dropout')->count();
+
+            $pdf = Pdf::loadView('report.districtStudentsPdf', [
+                'district' => $district,
+                'students' => $districtStudents,
+                'studentsCount' => $studentsCount,
+                'maleCount' => $maleCount,
+                'femaleCount' => $femaleCount,
+                'disabledCount' => $disabledCount,
+                'dropoutCount' => $dropoutCount
+            ]);
+
+            return $pdf->stream('district_students.pdf');
+        }
+
+        public function districtCentersReport()
+        {
+            $userData = Auth::user();
+            $district = District::select('districts.*', 'districts.name AS name')
+                          ->where('districts.cordinator_id', '=', $userData->id)
+                          ->first();
+            $districtCenters = Center::select('centers.*', 'centers.name AS centerName', 'districts.name AS districtName', 'users.name AS hoc')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
+                ->where('districts.cordinator_id', '=', $userData->id)
+                ->get();
+
+            $centersCount = $districtCenters->count();
+            $pdf = Pdf::loadView('report.districtCentersPdf', [
+                'centers' => $districtCenters,
+                'district' => $district,
+                'centersCount' => $centersCount
+                
+            ]);
+
+            return $pdf->stream('district_students.pdf');
+            
+        }
+
+        public function districtTeachersReport()
+        {
+            $userData = Auth::user();
+            $district = District::select('districts.*', 'districts.name AS name')
+                          ->where('districts.cordinator_id', '=', $userData->id)
+                          ->first();
+
+            $districtTeachers = Teacher::select('teachers.*', 'teachers.name AS name', 'teachers.phone_number AS phone', 'teachers.email AS email', 'centers.name AS centerName')
+                ->leftJoin('centers', 'teachers.center_id', '=', 'centers.id')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->where('districts.cordinator_id', '=', $userData->id)
+                ->get();
+
+            $teachersCount = $districtTeachers->count();
+            $pdf = Pdf::loadView('report.districtTeachersPdf', [
+                'teachers' => $districtTeachers,
+                'district' => $district,
+                'teachersCount' => $teachersCount
+            ]);
+
+            return $pdf->stream('district_teachers.pdf');
+        }
+
+        public function districtClubsReport()
+        {
+            $userData = Auth::user();
+            $district = District::select('districts.*', 'districts.name AS name')
+                          ->where('districts.cordinator_id', '=', $userData->id)
+                          ->first();
+
+            $districtClubs = Club::select('clubs.*', 'clubs.Name AS name','clubs.Chairperson AS chairperson','clubs.contact AS contact','clubs.funding_sources AS sponsor', 'centers.name AS center')
+                ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->where('districts.cordinator_id', '=', $userData->id)
+                ->get();
+
+            $clubsCount = $districtClubs->count();
+            $pdf = Pdf::loadView('report.districtClubsPdf', [
+                'clubs' => $districtClubs,
+                'district' => $district,
+                'clubsCount' => $clubsCount
+            ]);
+
+            return $pdf->stream('district_clubs.pdf');
+        }
+
+        public function districtInventoryReport()
+        {
+            $userData = Auth::user();
+            $district = District::select('districts.*', 'districts.name AS name')
+                          ->where('districts.cordinator_id', '=', $userData->id)
+                          ->first();
+
+            $districtInventories = Inventory::select('inventories.*', 'inventories.name AS name', 'courses.name AS course', 'centers.name AS centerName')
+                ->leftJoin('courses', 'inventories.course_id', '=', 'courses.id')
+                ->leftJoin('centers', 'inventories.center_id', '=', 'centers.id')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->where('districts.cordinator_id', '=', $userData->id)
+                ->get();
+
+            $inventoriesCount = $districtInventories->count();
+            $pdf = Pdf::loadView('report.districtInventoriesPdf', [
+                'inventories' => $districtInventories,
+                'district' => $district,
+                'inventoriesCount' => $inventoriesCount
+            ]);
+
+            return $pdf->stream('district_inventories.pdf');
+        }
+
+        public function regionalCentersReport()
+        {
+            $userData = Auth::user();
+            $region = Region::select('regions.*', 'regions.name AS name')
+                          ->where('regions.cordinator_id', '=', $userData->id)
+                          ->first();
+
+            $regionCenters = Center::select('centers.*', 'centers.name AS center', 'districts.name AS district', 'users.name AS hoc')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
+                ->where('districts.region_id', '=', $region->id)
+                ->get();
+
+            $centersCount = $regionCenters->count();
+            $pdf = Pdf::loadView('report.regionalCentersPdf', [
+                'centers' => $regionCenters,
+                'region' => $region,
+                'centersCount' => $centersCount
+            ]);
+
+            return $pdf->stream('regional_centers.pdf');
+        }
+
+        public function regionalStudentsReport()
+        {
+            $userData = Auth::user();
+            $region = Region::select('regions.*', 'regions.name AS name')
+                          ->where('regions.cordinator_id', '=', $userData->id)
+                          ->first();
+
+            $regionStudents = Student::select('students.*', 'students.name AS name', 'courses.name AS course', 'students.phone_number AS phone','students.gender AS gender', 'students.status AS status','students.center_id AS center','students.district AS district')
+                ->leftJoin('student_courses', 'student_courses.student_id', "=", 'students.id')
+                ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id')
+                ->leftJoin('centers', 'students.center_id', '=', 'centers.id')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                ->where('regions.cordinator_id', '=', $userData->id)
+                ->orderby('name')
+                ->get();
+
+            $studentsCount = $regionStudents->count();
+            $maleCount = $regionStudents->where('gender','M')->count();
+            $femaleCount = $regionStudents->where('gender','F')->count();
+            $disabledCount = $regionStudents->where('disability','!=', 'None')->count();
+            $dropoutCount = $regionStudents->where('status','Dropout')->count();
+
+            $pdf = Pdf::loadView('report.regionalStudentsPdf', [
+                'region' => $region,
+                'students' => $regionStudents,
+                'studentsCount' => $studentsCount,
+                'maleCount' => $maleCount,
+                'femaleCount' => $femaleCount,
+                'disabledCount' => $disabledCount,
+                'dropoutCount' => $dropoutCount
+            ]);
+
+            return $pdf->stream('regional_students.pdf');
+            }
 
     public function uploadCenterReport(){
         $owner_funder = Center::select('name', 'Ownership', 'Funders')

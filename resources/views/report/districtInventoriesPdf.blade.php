@@ -24,24 +24,25 @@
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
     
     <br>
-    <p style="text-align: center;"><b>Students Summary at {{ strtoupper($center->name) }} CENTER</b></p>
+    <p style="text-align: center;"><b>Students Summary in {{strtoupper($district->name)}} District</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
     <table border="1" cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse; text-align: left;">
         <thead>
             <tr>
-                <th>Center Name</th>
-                <th>Head of Center</th>
-                <th>Total Courses</th>
+                <th>District</th>
+                <th>Head of District</th>
+                <th>Total Inventories</th>
                 
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>{{ strtoupper($center->name) }}</td>
+                <td>{{$district->name}}</td>
                 <td>{{ Auth::user()->name }}</td>
-                <td>{{ $courseCount}}</td>
+                <td>{{ $inventoriesCount }}</td>
+                
                 
             </tr>
         </tbody>
@@ -54,17 +55,21 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Name</th>
                 <th>Course</th>
-                <th>Teacher</th>
+                <th>Center</th>
+                
                 
             </tr>
         </thead>
         <tbody>
-            @foreach($courses as $index => $course)
+            @foreach($inventories as $index => $inventory)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $course->course }}</td>
-                <td>{{ $course->teacher }}</td>
+                <td>{{ $inventory->name }}</td>
+                <td>{{ $inventory->course }}</td>
+                <td>{{ $inventory->center }}</td>
+                
                 
             </tr>
             @endforeach   

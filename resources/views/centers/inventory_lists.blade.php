@@ -22,12 +22,29 @@
                 <li>
                 @can('is_hoc')
                 @cannot('is_admin')
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
-                        data-bs-target="#addInventory">Add Inventory</button>
+                <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
+                data-bs-target="#addInventory">Add Inventory</button>
                 @endcannot        
                 @endcan       
-             </li>
+            </li>
+            @can('is_hoc')
+            <li>
+                <form action="{{ route('center_inventory') }}" method="get" target="_blank">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                </form> 
+            </li>
+            @endcan       
+            @can('is_dist_cordinator')
+            <li>
+                <form action="{{ route('district_inventory_report') }}" method="get" target="_blank">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                </form> 
+            </li>
+            @endcan       
             </ol>
+            
            
         </nav>
     </div><!-- End Page Title -->

@@ -167,6 +167,25 @@ Route::middleware(['auth','status'])->group(function(){
     Route::post('/post_challenges', [reportController::class, 'createChallenge']);
     Route::get('/students/centerStudents',[reportController::class, 'centerStudents'])->name('center_students');
     Route::get('/students/centerCourses',[reportController::class, 'centerCourses'])->name('center_courses');
+    Route::get('/students/centerTeachers',[reportController::class, 'centerTeachers'])->name('center_teachers');    
+    Route::get('/students/centerClubs',[reportController::class, 'centerClubs'])->name('center_clubs');    
+    Route::get('/students/centerInventory',[reportController::class, 'centerInventories'])->name('center_inventory');
+
+         //district reports
+    Route::get('/district_centers', [reportController::class, 'districtCentersReport'])->name('district_centers_report');
+    Route::get('/district_reports', [reportController::class, 'districtStudentsReport'])->name('district_students_report');
+    Route::get('/district_courses', [reportController::class, 'districtCoursesReport'])->name('district_courses_report');
+    Route::get('/district_teachers', [reportController::class, 'districtTeachersReport'])->name('district_teachers_report');
+    Route::get('/district_inventory', [reportController::class, 'districtInventoryReport'])->name('district_inventory_report');
+    Route::get('/district_clubs', [reportController::class, 'districtClubsReport'])->name('district_clubs_report');
+
+       //regional reports
+    Route::get('/regional_centers', [reportController::class, 'regionalCentersReport'])->name('regional_centers_report');
+    Route::get('/regional_students', [reportController::class, 'regionalStudentsReport'])->name('regional_students_report');
+    Route::get('/regional_teachers', [reportController::class, 'regionalTeachersReport'])->name('regional_teachers_report');
+    Route::get('/regional_courses', [reportController::class, 'regionalCoursesReport'])->name('regional_teachers_report');
+    Route::get('/regional_clubs', [reportController::class, 'regionalClubsReport'])->name('regional_clubs_report');
+    Route::get('regional_inventory',[reportController::class, 'regionalInventoryReport'])->name('regional_inventory_report');
 
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);
