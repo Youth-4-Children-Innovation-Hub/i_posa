@@ -183,7 +183,7 @@ Route::middleware(['auth','status'])->group(function(){
     Route::get('/regional_centers', [reportController::class, 'regionalCentersReport'])->name('regional_centers_report');
     Route::get('/regional_students', [reportController::class, 'regionalStudentsReport'])->name('regional_students_report');
     Route::get('/regional_teachers', [reportController::class, 'regionalTeachersReport'])->name('regional_teachers_report');
-    Route::get('/regional_courses', [reportController::class, 'regionalCoursesReport'])->name('regional_teachers_report');
+    Route::get('/regional_courses', [reportController::class, 'regionalCoursesReport'])->name('regional_courses_report');
     Route::get('/regional_clubs', [reportController::class, 'regionalClubsReport'])->name('regional_clubs_report');
     Route::get('regional_inventory',[reportController::class, 'regionalInventoryReport'])->name('regional_inventory_report');
 

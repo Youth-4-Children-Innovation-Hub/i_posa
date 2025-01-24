@@ -719,6 +719,106 @@ class reportController extends Controller
             return $pdf->stream('regional_students.pdf');
             }
 
+            public function regionalCoursesReport()
+            {
+                $userData = Auth::user();
+                $region = Region::select('regions.*', 'regions.name AS name')
+                              ->where('regions.cordinator_id', '=', $userData->id)
+                              ->first();
+    
+                $regionCourses = CourseCenter::select('courses.name AS course', 'teachers.name AS teacher', 'centers.name AS center','districts.name AS district')
+                    ->leftJoin('courses', 'course_centers.course_id', '=', 'courses.id')
+                    ->leftJoin('teachers', 'course_centers.teacher_id', '=', 'teachers.id')
+                    ->leftJoin('centers', 'course_centers.center_id', '=', 'centers.id')
+                    ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                    ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                    ->where('regions.cordinator_id', '=', $userData->id)
+                    ->get();
+    
+                $coursesCount = $regionCourses->count();
+                $pdf = Pdf::loadView('report.regionalCoursesPdf', [
+                    'courses' => $regionCourses,
+                    'region' => $region,
+                    'coursesCount' => $coursesCount
+                ]);
+    
+                return $pdf->stream('regional_courses.pdf');
+            }
+
+            public function regionalTeachersReport()
+            {
+                $userData = Auth::user();
+                $region = Region::select('regions.*', 'regions.name AS name')
+                              ->where('regions.cordinator_id', '=', $userData->id)
+                              ->first();
+    
+                $regionTeachers = Teacher::select('teachers.*', 'teachers.name AS name', 'teachers.phone_number AS phone', 'teachers.email AS email', 'centers.name AS center','districts.name AS district')
+                    ->leftJoin('centers', 'teachers.center_id', '=', 'centers.id')
+                    ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                    ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                    ->where('regions.cordinator_id', '=', $userData->id)
+                    ->get();
+    
+                $teachersCount = $regionTeachers->count();
+                $pdf = Pdf::loadView('report.regionalTeachersPdf', [
+                    'teachers' => $regionTeachers,
+                    'region' => $region,
+                    'teachersCount' => $teachersCount
+                ]);
+    
+                return $pdf->stream('regional_teachers.pdf');
+
+            }
+
+            public function regionalClubsReport()
+            {
+                $userData = Auth::user();
+                $region = Region::select('regions.*', 'regions.name AS name')
+                              ->where('regions.cordinator_id', '=', $userData->id)
+                              ->first();
+    
+                $regionClubs = Club::select('clubs.*', 'clubs.Name AS name','clubs.Chairperson AS chairperson','clubs.contact AS contact','clubs.funding_sources AS sponsor', 'centers.name AS center','districts.name AS district')
+                    ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
+                    ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                    ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                    ->where('regions.cordinator_id', '=', $userData->id)
+                    ->get();
+    
+                $clubsCount = $regionClubs->count();
+                $pdf = Pdf::loadView('report.regionalClubsPdf', [
+                    'clubs' => $regionClubs,
+                    'region' => $region,
+                    'clubsCount' => $clubsCount
+                ]);
+    
+                return $pdf->stream('regional_clubs.pdf');
+            }
+
+            public function regionalInventoryReport(){
+                $userData = Auth::user();
+                $region = Region::select('regions.*', 'regions.name AS name')
+                              ->where('regions.cordinator_id', '=', $userData->id)
+                              ->first();
+    
+                $regionInventories = Inventory::select('inventories.*', 'inventories.name AS name', 'courses.name AS course', 'centers.name AS centerName','districts.name AS district')
+                    ->leftJoin('courses', 'inventories.course_id', '=', 'courses.id')
+                    ->leftJoin('centers', 'inventories.center_id', '=', 'centers.id')
+                    ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                    ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                    ->where('regions.cordinator_id', '=', $userData->id)
+                    ->get();
+    
+                $inventoryCount = $regionInventories->count();
+                $pdf = Pdf::loadView('report.regionalInventoryPdf', [
+                    'inventories' => $regionInventories,
+                    'region' => $region,
+                    'inventoryCount' => $inventoryCount
+                ]);
+    
+                return $pdf->stream('regional_inventories.pdf');
+            }
+           
+
     public function uploadCenterReport(){
         $owner_funder = Center::select('name', 'Ownership', 'Funders')
         ->where('hod_id', '=', auth()->user()->id)

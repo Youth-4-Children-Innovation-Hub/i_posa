@@ -34,7 +34,7 @@ class TeachersController extends Controller
         $regionTeachers = Teacher::select('teachers.*', 'centers.name as centerName', 'districts.name as distName')
         ->Join('centers', 'centers.hod_id', '=', 'teachers.created_by')
         ->Join('districts', 'centers.district_id', '=', 'districts.id')
-        ->Join('regions', 'regions.id', '=', 'districts.region_id')
+        ->Join('regions', 'districts.region_id','=', 'regions.id')
         ->where('regions.cordinator_id', '=', Auth::user()->id)
         ->get();
 
