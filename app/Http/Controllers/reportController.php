@@ -845,7 +845,45 @@ class reportController extends Controller
                 ]);
     
                 return $pdf->stream('national_students.pdf');
+            }
 
+            
+            public function nationalCoursesReport(){
+
+                $nationalCourses = CourseCenter::select('courses.name AS course', 'teachers.name AS teacher', 'centers.name AS center','districts.name AS district','regions.name AS region')
+                ->leftJoin('courses', 'course_centers.course_id', '=', 'courses.id')
+                ->leftJoin('teachers', 'course_centers.teacher_id', '=', 'teachers.id')
+                ->leftJoin('centers', 'course_centers.center_id', '=', 'centers.id')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                ->get();
+
+                $courseCount = $nationalCourses->count();
+                $pdf = Pdf::loadView('report.nationalCoursesPdf',[
+                    'courses'      => $nationalCourses,
+                    'courseCount' => $courseCount
+                ]);
+
+                return $pdf->stream('national_courses.pdf');
+
+
+            }
+
+            public function nationalTeachersReport(){
+                
+                $nationalTeachers = Teacher::select('teachers.*', 'teachers.name AS name', 'teachers.phone_number AS phone', 'teachers.email AS email', 'centers.name AS center','districts.name AS district','regions.name AS region')
+                    ->leftJoin('centers', 'teachers.center_id', '=', 'centers.id')
+                    ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                    ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                    ->get();
+    
+                $teachersCount = $nationalTeachers->count();
+                $pdf = Pdf::loadView('report.nationalTeachersPdf', [
+                    'teachers' => $nationalTeachers,
+                    'teachersCount' => $teachersCount
+                ]);
+    
+                return $pdf->stream('national_teachers.pdf');
             }
            
 
