@@ -187,6 +187,14 @@ Route::middleware(['auth','status'])->group(function(){
     Route::get('/regional_clubs', [reportController::class, 'regionalClubsReport'])->name('regional_clubs_report');
     Route::get('regional_inventory',[reportController::class, 'regionalInventoryReport'])->name('regional_inventory_report');
 
+      //national reports
+    Route::get('/national_centers',[reportController::class, 'nationalCentersReport'])->name('national_centers_report');
+    Route::get('/national_students',[reportController::class, 'nationalStudentsReport'])->name('national_students_report');
+    Route::get('/national_teachers',[reportController::class, 'nationalTeachersReport'])->name('national_teachers_report');
+    Route::get('/national_courses',[reportController::class, 'nationalCoursesReport'])->name('national_courses_report');
+    Route::get('/national_clubs',[reportController::class, 'nationalClubsReport'])->name('national_clubs_report');
+    Route::get('/national_inventory',[reportController::class, 'nationalInventoryReport'])->name('national_inventory_report');
+
     Route::post('/send_report', [reportController::class, 'send']);
     Route::post('/approve_report', [reportController::class, 'approve']);
     Route::get('/pdf', [reportController::class, 'getPdf']);

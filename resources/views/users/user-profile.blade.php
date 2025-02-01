@@ -169,7 +169,7 @@
                           <div class="row mb-3">
                  
                           <div class="col-sm-7">
-                            <input class="form-control" type="file" name="picture" id="formFile">
+                            <input class="form-control" type="file" name="profile_photo" id="formFile">
                           </div>
                           </div>
                           <div class="row mb-3">

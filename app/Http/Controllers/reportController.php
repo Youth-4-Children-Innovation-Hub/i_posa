@@ -800,7 +800,7 @@ class reportController extends Controller
                               ->where('regions.cordinator_id', '=', $userData->id)
                               ->first();
     
-                $regionInventories = Inventory::select('inventories.*', 'inventories.name AS name', 'courses.name AS course', 'centers.name AS centerName','districts.name AS district')
+                $regionInventories = Inventory::select('inventories.*', 'inventories.name AS name', 'courses.name AS course', 'centers.name AS center','districts.name AS district')
                     ->leftJoin('courses', 'inventories.course_id', '=', 'courses.id')
                     ->leftJoin('centers', 'inventories.center_id', '=', 'centers.id')
                     ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
@@ -816,6 +816,36 @@ class reportController extends Controller
                 ]);
     
                 return $pdf->stream('regional_inventories.pdf');
+            }
+
+            public function nationalStudentsReport(){
+                
+                $nationalStudents =  Student::select('students.*', 'courses.name AS course','gender','disability','status' ,'centers.name AS center', 'districts.name as district','regions.name AS region')
+                ->join('student_courses', 'student_courses.student_id', '=', 'students.id') 
+                ->join('centers', 'students.center_id', '=', 'centers.id')
+                ->join('districts', 'centers.district_id', '=', 'districts.id')
+                ->join('regions', 'regions.id', '=', 'districts.region_id')
+                ->join('courses', 'courses.id', '=', 'student_courses.course_id') 
+                ->get();  
+
+                $studentsCount = $nationalStudents->count();
+                $maleCount     = $nationalStudents->where('gender','M')->count();
+                $femaleCount   = $nationalStudents->where('gender','F')->count();
+                $disabledCount = $nationalStudents->where('disability','!=', 'None')->count();
+                $dropoutCount  = $nationalStudents->where('status','Dropout')->count();
+
+                $pdf = Pdf::loadView('report.nationalStudentsPdf', [
+                    
+                    'students' => $nationalStudents,
+                    'studentsCount' => $studentsCount,
+                    'maleCount' => $maleCount,
+                    'femaleCount' => $femaleCount,
+                    'disabledCount' => $disabledCount,
+                    'dropoutCount' => $dropoutCount
+                ]);
+    
+                return $pdf->stream('national_students.pdf');
+
             }
            
 
