@@ -885,6 +885,24 @@ class reportController extends Controller
     
                 return $pdf->stream('national_teachers.pdf');
             }
+
+            public function nationalClubsReport()
+            {
+    
+                $nationalClubs = Club::select('clubs.*', 'clubs.Name AS name','clubs.Chairperson AS chairperson','clubs.contact AS contact','clubs.funding_sources AS sponsor', 'centers.name AS center','districts.name AS district', 'regions.name AS region')
+                    ->leftJoin('centers', 'clubs.center_id', '=', 'centers.id')
+                    ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                    ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                    ->get();
+    
+                $clubsCount = $nationalClubs->count();
+                $pdf = Pdf::loadView('report.nationalClubsPdf', [
+                    'clubs' => $nationalClubs,
+                    'clubsCount' => $clubsCount
+                ]);
+    
+                return $pdf->stream('national_clubs.pdf');
+            }
            
 
     public function uploadCenterReport(){
