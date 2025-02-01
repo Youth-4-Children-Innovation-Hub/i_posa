@@ -51,6 +51,14 @@
                 </form> 
             </li>
             @endcan       
+            @can('is_admin')
+            <li>
+                <form action="{{ route('national_inventory_report') }}" method="get" target="_blank">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate National Report</button>
+                </form> 
+            </li>
+            @endcan       
             </ol>
             
            

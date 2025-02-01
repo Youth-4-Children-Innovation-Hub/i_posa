@@ -903,6 +903,28 @@ class reportController extends Controller
     
                 return $pdf->stream('national_clubs.pdf');
             }
+
+            public function nationalInventoryReport(){
+                $userData = Auth::user();
+                $region = Region::select('regions.*', 'regions.name AS name')
+                              ->where('regions.cordinator_id', '=', $userData->id)
+                              ->first();
+    
+                $nationalInventories = Inventory::select('inventories.*', 'inventories.name AS name', 'courses.name AS course', 'centers.name AS center','districts.name AS district','regions.name AS region')
+                    ->leftJoin('courses', 'inventories.course_id', '=', 'courses.id')
+                    ->leftJoin('centers', 'inventories.center_id', '=', 'centers.id')
+                    ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                    ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                    ->get();
+    
+                $inventoryCount = $nationalInventories->count();
+                $pdf = Pdf::loadView('report.nationalInventoryPdf', [
+                    'inventories' => $nationalInventories,
+                    'inventoryCount' => $inventoryCount
+                ]);
+    
+                return $pdf->stream('national_inventories.pdf');
+            }
            
 
     public function uploadCenterReport(){

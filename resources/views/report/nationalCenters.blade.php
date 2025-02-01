@@ -24,14 +24,14 @@
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
     
     <br>
-    <p style="text-align: center;"><b>Centers Summary in {{ strtoupper($region->name) }} Region</b></p>
+    <p style="text-align: center;"><b>National Centers Summary</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
     <table border="1" cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse; text-align: left;">
         <thead>
             <tr>
-                <th>Region</th>
+                
                 <th>Head of Region</th>
                 <th>Total Centers</th>
                 
@@ -39,7 +39,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{$region->name}}</td>
+                
                 <td>{{ Auth::user()->name }}</td>
                 <td>{{ $centersCount }}</td>
                 
@@ -58,6 +58,7 @@
                 <th>Center</th>
                 <th>HoC</th>
                 <th>District</th>
+                <th>Region</th>
                 
             </tr>
         </thead>
@@ -68,6 +69,7 @@
                 <td>{{ $center->name }}</td>
                 <td>{{ $center->hoc}}</td>
                 <td>{{ $center->district}}</td>
+                <td>{{ $center->region}}</td>
                 
             </tr>
             @endforeach   

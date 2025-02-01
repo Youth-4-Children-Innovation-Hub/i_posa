@@ -24,22 +24,22 @@
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
     
     <br>
-    <p style="text-align: center;"><b>Inventory Summary in {{strtoupper($region->name)}} Region</b></p>
+    <p style="text-align: center;"><b>National Inventory Summary</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
     <table border="1" cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse; text-align: left;">
         <thead>
             <tr>
-                <th>Region</th>
-                <th>Head of District</th>
+                
+                <th>National Coordinator</th>
                 <th>Total Inventories</th>
                 
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>{{$region->name}}</td>
+                
                 <td>{{ Auth::user()->name }}</td>
                 <td>{{ $inventoryCount }}</td>
                 
@@ -59,6 +59,7 @@
                 <th>Course</th>
                 <th>Center</th>
                 <th>District</th>
+                <th>Region</th>
                 
                 
             </tr>
@@ -71,6 +72,7 @@
                 <td>{{ $inventory->course }}</td>
                 <td>{{ $inventory->center }}</td>
                 <td>{{ $inventory->district }}</td>
+                <td>{{ $inventory->region }}</td>
                 
                 
             </tr>
