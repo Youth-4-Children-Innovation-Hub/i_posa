@@ -57,6 +57,8 @@
                 <th>No</th>
                 <th>Center</th>
                 <th>HoC</th>
+                <th>Ownership</th>
+                <th>Funder</th>
                 <th>District</th>
                 <th>Region</th>
                 
@@ -68,6 +70,8 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $center->name }}</td>
                 <td>{{ $center->hoc}}</td>
+                <td>{{ $center->Ownership}}</td>
+                <td>{{ $center->Funders}}</td>
                 <td>{{ $center->district}}</td>
                 <td>{{ $center->region}}</td>
                 

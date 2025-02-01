@@ -925,6 +925,26 @@ class reportController extends Controller
     
                 return $pdf->stream('national_inventories.pdf');
             }
+
+
+            public function nationalCentersReport()
+        {
+            $userData = Auth::user();
+
+            $nationalCenters = Center::select('centers.*', 'centers.name AS center', 'districts.name AS district', 'users.name AS hoc','regions.name AS region')
+                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
+                ->get();
+
+            $centersCount = $nationalCenters->count();
+            $pdf = Pdf::loadView('report.nationalCentersPdf', [
+                'centers' => $nationalCenters,
+                'centersCount' => $centersCount
+            ]);
+
+            return $pdf->stream('national_centers.pdf');
+        }
            
 
     public function uploadCenterReport(){
