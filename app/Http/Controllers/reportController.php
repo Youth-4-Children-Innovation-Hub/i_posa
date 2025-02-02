@@ -935,7 +935,7 @@ class reportController extends Controller
                 ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
                 ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
                 ->leftJoin('users', 'centers.hod_id', '=', 'users.id')
-                ->get();
+                ->get(); 
 
             $centersCount = $nationalCenters->count();
             $pdf = Pdf::loadView('report.nationalCentersPdf', [

@@ -34,6 +34,14 @@
                     </form> 
                 </li>
                 @endcan
+                 @can('is_hoc')
+                <li>
+                <form action="{{ route('center_students') }}" method="get" target="_blank">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Students Report</button>
+                    </form> 
+                </li>
+                @endcan
                 @can('is_hoc')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
