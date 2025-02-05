@@ -22,13 +22,24 @@
                         data-bs-target="#CreateNewCenterCourseModal">Add Center course</button>
 
                 </li>
+                @endif
+                   @cannot('is_admin')
+                 @can('is_hoc')
                 <li>
                 <form action="{{ route('center_courses') }}" method="get" target="_blank">
                         @csrf
                         <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
                     </form> 
                 </li>
-                @endif
+                 @endcan
+                @can('is_dist_cordinator')
+            <li>
+                <form action="{{ route('district_courses_report') }}" method="get" target="_blank">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                </form> 
+            </li>
+            @endcan  
                 @can('is_reg_cordinator')
             <li>
                 <form action="{{ route('regional_courses_report') }}" method="get" target="_blank">
@@ -37,6 +48,7 @@
                 </form> 
             </li>
             @endcan  
+              @endcannot
                 @can('is_admin')
             <li>
                 <form action="{{ route('national_courses_report') }}" method="get" target="_blank">

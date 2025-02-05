@@ -18,6 +18,7 @@
                 @endcannot
                 @endcannot
                 @endcannot
+                @cannot('is_admin')
                   @can('is_hoc')
                 <li>
                 <form action="{{ route('center_clubs') }}" method="get" target="_blank">
@@ -25,6 +26,7 @@
                         <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
                     </form> 
                 </li>
+                     
                  @endcan
                 @can('is_dist_cordinator')
             <li>
@@ -42,6 +44,7 @@
                 </form> 
             </li>
             @endcan  
+              @endcannot
                 @can('is_admin')
             <li>
                 <form action="{{ route('national_clubs_report') }}" method="get" target="_blank">
