@@ -24,7 +24,7 @@
     <div style="text-align: center;"><b><h4>IMPLEMENTATION REPORT FOR IPOSA PROGRAMME</h4></b></div>
     
     <br>
-    <p style="text-align: center;"><b>Students Summary in {{ strtoupper($district->name) }} District</b></p>
+    <p style="text-align: center;"><b>Centers Summary in {{ strtoupper($district->name) }} District</b></p>
 
     <!-- Summary Section -->
     <div style="margin: 20px;">
