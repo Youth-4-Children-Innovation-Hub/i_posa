@@ -15,6 +15,7 @@
                 </li>
                 @endcannot
                 @endcannot
+                   @cannot('is_admin')
                 <li>
                     @can('is_hoc')
                 <form action="{{ route('center_teachers') }}" method="get" target="_blank">
@@ -39,6 +40,7 @@
                     </form> 
                 </li>
                 @endcan
+                  @endcannot
                 @can('is_admin')
                 <li>
                 <form action="{{ route('national_teachers_report') }}" method="get" target="_blank">
