@@ -62,6 +62,7 @@
 
                         <!-- updateform/{{$user->id}} -->
                         <td>
+                            <div class="">
                             <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
                                 data-bs-target="#UpdateModal">Edit</button>
                                 
@@ -71,6 +72,7 @@
                                     {{ (int)$user->status === 1 ? 'Deactivate' : 'Activate'}}
                                 </button>
                             </form>
+                            </div>
                         </td>
                       </tr>  
                     @endforeach  
