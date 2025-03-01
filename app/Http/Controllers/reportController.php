@@ -468,7 +468,7 @@ class reportController extends Controller
                                           ->count();
 
                $pdf = Pdf::loadView('report.centerCoursePdf',['center' => $center, 'courses' => $courses,'courseCount' => $courseCount]);
-               return $pdf->stream('center_course.pdf');
+               return $pdf->download('center_course.pdf');
         }
 
         public function centerTeachers(){
@@ -487,7 +487,7 @@ class reportController extends Controller
                                           ->count();
 
                $pdf = Pdf::loadView('report.centerTeacherPdf',['center' => $center, 'teachers' => $teachers,'teacherCount' => $teacherCount]);
-               return $pdf->stream('center_teacher.pdf');
+            //    return $pdf->stream('center_teacher.pdf');
                return $pdf->download('center_teacher.pdf');
 
         }
