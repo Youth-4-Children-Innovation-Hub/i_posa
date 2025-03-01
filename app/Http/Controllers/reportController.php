@@ -445,8 +445,8 @@ class reportController extends Controller
                 $pdf = Pdf::loadView('report.centerStudentsPdf',['students' => $students, 'center' => $center,
                                      'studentsCount' => $studentsCount,'maleCount' => $maleCount,'femaleCount' => $femaleCount,
                                      'dropoutCount' => $dropoutCount]);
-                // return  $pdf->download('center_students.pdf');                    
-                return $pdf->stream('center_students.pdf');
+                return  $pdf->download('center_students.pdf');                    
+                // return $pdf->stream('center_students.pdf');
         
         }
 
@@ -488,6 +488,7 @@ class reportController extends Controller
 
                $pdf = Pdf::loadView('report.centerTeacherPdf',['center' => $center, 'teachers' => $teachers,'teacherCount' => $teacherCount]);
                return $pdf->stream('center_teacher.pdf');
+               return $pdf->download('center_teacher.pdf');
 
         }
 
@@ -507,7 +508,8 @@ class reportController extends Controller
                           ->count();
 
                $pdf = Pdf::loadView('report.centerClubsPdf',['center' => $center, 'clubs' => $clubs,'clubCount' => $clubCount]);
-               return $pdf->stream('center_club.pdf');
+               
+               return $pdf->download('center_club.pdf');
 
         }
 
@@ -528,7 +530,7 @@ class reportController extends Controller
                           ->count();
 
                $pdf = Pdf::loadView('report.centerInventoryPdf',['center' => $center, 'inventories' => $inventories,'inventoryCount' => $inventoryCount]);
-               return $pdf->stream('center_inventory.pdf');
+               return $pdf->download('center_inventory.pdf');
 
         }
 
@@ -563,7 +565,7 @@ class reportController extends Controller
                 'dropoutCount' => $dropoutCount
             ]);
 
-            return $pdf->stream('district_students.pdf');
+            return $pdf->download('district_students.pdf');
         }
 
         public function districtCentersReport()
@@ -586,7 +588,7 @@ class reportController extends Controller
                 
             ]);
 
-            return $pdf->stream('district_students.pdf');
+            return $pdf->download('district_students.pdf');
             
         }
 
@@ -610,7 +612,7 @@ class reportController extends Controller
                 'teachersCount' => $teachersCount
             ]);
 
-            return $pdf->stream('district_teachers.pdf');
+            return $pdf->download('district_teachers.pdf');
         }
 
         public function districtClubsReport()
@@ -633,7 +635,7 @@ class reportController extends Controller
                 'clubsCount' => $clubsCount
             ]);
 
-            return $pdf->stream('district_clubs.pdf');
+            return $pdf->download('district_clubs.pdf');
         }
 
         public function districtInventoryReport()
@@ -657,7 +659,7 @@ class reportController extends Controller
                 'inventoriesCount' => $inventoriesCount
             ]);
 
-            return $pdf->stream('district_inventories.pdf');
+            return $pdf->download('district_inventories.pdf');
         }
 
         public function regionalCentersReport()
@@ -680,7 +682,7 @@ class reportController extends Controller
                 'centersCount' => $centersCount
             ]);
 
-            return $pdf->stream('regional_centers.pdf');
+            return $pdf->download('regional_centers.pdf');
         }
 
         public function regionalStudentsReport()
@@ -716,7 +718,7 @@ class reportController extends Controller
                 'dropoutCount' => $dropoutCount
             ]);
 
-            return $pdf->stream('regional_students.pdf');
+            return $pdf->download('regional_students.pdf');
             }
 
             public function regionalCoursesReport()
@@ -742,7 +744,7 @@ class reportController extends Controller
                     'coursesCount' => $coursesCount
                 ]);
     
-                return $pdf->stream('regional_courses.pdf');
+                return $pdf->download('regional_courses.pdf');
             }
 
             public function regionalTeachersReport()
@@ -766,7 +768,7 @@ class reportController extends Controller
                     'teachersCount' => $teachersCount
                 ]);
     
-                return $pdf->stream('regional_teachers.pdf');
+                return $pdf->download('regional_teachers.pdf');
 
             }
 
@@ -791,7 +793,7 @@ class reportController extends Controller
                     'clubsCount' => $clubsCount
                 ]);
     
-                return $pdf->stream('regional_clubs.pdf');
+                return $pdf->download('regional_clubs.pdf');
             }
 
             public function regionalInventoryReport(){
@@ -815,7 +817,7 @@ class reportController extends Controller
                     'inventoryCount' => $inventoryCount
                 ]);
     
-                return $pdf->stream('regional_inventories.pdf');
+                return $pdf->download('regional_inventories.pdf');
             }
 
             public function nationalStudentsReport(){
@@ -844,7 +846,7 @@ class reportController extends Controller
                     'dropoutCount' => $dropoutCount
                 ]);
     
-                return $pdf->stream('national_students.pdf');
+                return $pdf->download('national_students.pdf');
             }
 
             
@@ -864,7 +866,7 @@ class reportController extends Controller
                     'courseCount' => $courseCount
                 ]);
 
-                return $pdf->stream('national_courses.pdf');
+                return $pdf->download('national_courses.pdf');
 
 
             }
@@ -883,7 +885,7 @@ class reportController extends Controller
                     'teachersCount' => $teachersCount
                 ]);
     
-                return $pdf->stream('national_teachers.pdf');
+                return $pdf->download('national_teachers.pdf');
             }
 
             public function nationalClubsReport()
@@ -901,7 +903,7 @@ class reportController extends Controller
                     'clubsCount' => $clubsCount
                 ]);
     
-                return $pdf->stream('national_clubs.pdf');
+                return $pdf->download('national_clubs.pdf');
             }
 
             public function nationalInventoryReport(){
@@ -923,7 +925,7 @@ class reportController extends Controller
                     'inventoryCount' => $inventoryCount
                 ]);
     
-                return $pdf->stream('national_inventories.pdf');
+                return $pdf->download('national_inventories.pdf');
             }
 
 
@@ -943,7 +945,7 @@ class reportController extends Controller
                 'centersCount' => $centersCount
             ]);
 
-            return $pdf->stream('national_centers.pdf');
+            return $pdf->download('national_centers.pdf');
         }
            
 
