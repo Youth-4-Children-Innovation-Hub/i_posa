@@ -68,7 +68,7 @@ class clubController extends Controller
         $member->club_id = $club->id;
         $member->save();
 
-        return redirect()->back();
+        return redirect()->back()->with('sweet_success', 'Club created successfully');
     }
 
     public function editClubs(Request $request){
@@ -101,7 +101,7 @@ class clubController extends Controller
 
         $students = Student::select('students.*')
         ->distinct()
-        ->Join('centers', 'students.center_id', '=', 'centers.id')
+        ->Join('centers', 'students.center_id', '=', 'centers   .id')
         ->Join('members', 'members.student_id', '=', 'students.id')
         ->join('clubs', 'clubs.center_id', '=', 'centers.id')
         ->where('members.club_id', '=', $club->id)

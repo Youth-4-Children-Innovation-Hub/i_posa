@@ -33,21 +33,36 @@ class DistrictController extends Controller
             }
         }
         $userData = Auth::user();
-        $districts = District::select('districts.Id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
+        
+        // Debug information
+        \Log::info('User ID: ' . auth()->user()->id);
+        
+        $districts = District::select('districts.id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
             ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
             ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
             ->get();
         
-        $regionDistricts = District::select('districts.Id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
-        ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
-        ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
-        ->where('regions.cordinator_id', '=', auth()->user()->id)
-        ->get();    
+        $regionDistricts = District::select('districts.id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
+            ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+            ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
+            // ->where('regions.cordinator_id', '=', auth()->user()->id)
+            ->get();
+            
+        // Debug information
+        \Log::info('Region Districts Count: ' . $regionDistricts->count());
+        \Log::info('Region Districts: ' . $regionDistricts->toJson());
 
-
-        $regions = Region::select('regions.name as name', 'mikoa.id as id')
+         $query = Region::select('regions.name as name', 'mikoa.id as id')
         ->join('mikoa', 'mikoa.name', '=', 'regions.name')
-        ->get();
+        ->leftJoin('users', 'regions.cordinator_id', '=', 'users.id');
+
+          if(auth()->user()->role_id == 1){
+            $regions = $query->get();
+          }
+          else{
+              $regions =$query->where('regions.cordinator_id', '=', auth()->user()->id)
+              ->get();
+            }
 
         $district_cordinator_id = Role::select('id')
             ->where('role', 'district cordinator')
@@ -74,7 +89,7 @@ class DistrictController extends Controller
             $district->cordinator_id = $request->cordinator_id;
             $district->region_id = $region_id->id;
             $district->save();
-            return redirect('districts')->with('success', 'User added successfully.');
+            return redirect('districts')->with('swweet_success', 'User added successfully.');
         } catch (Exception $e) {
             dd($e);
         }
@@ -123,9 +138,15 @@ class DistrictController extends Controller
 
             }
         } catch (\Throwable $th) {
-            dd($th);
-        }
+            // Log the error for debugging
+        \Log::error('Course creation failed: ' . $th->getMessage());
+        
+        return redirect()->back()
+            ->with('sweet_error', 'Failed to update center course. Please try again.')
+            ->withInput();
     }
+        }
+    
 
     public function deleteDistrict(Request $request)
     {

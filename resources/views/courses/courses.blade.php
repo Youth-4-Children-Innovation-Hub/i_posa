@@ -1,12 +1,15 @@
 @extends('home')
 @section('contente')
+
+
+
 <div class="container">
     <div class="pagetitle">
         <h1>Courses</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Courses</li>\
+                <li class="breadcrumb-item active">Courses</li> /
                 @if($user_role->role == 'admin')
                 <li>
                     <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" data-bs-toggle="modal"
@@ -28,7 +31,7 @@
                 <li>
                 <form action="{{ route('center_courses') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                     </form> 
                 </li>
                  @endcan
@@ -36,7 +39,7 @@
             <li>
                 <form action="{{ route('district_courses_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                 </form> 
             </li>
             @endcan  
@@ -44,7 +47,7 @@
             <li>
                 <form action="{{ route('regional_courses_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                 </form> 
             </li>
             @endcan  
@@ -53,7 +56,7 @@
             <li>
                 <form action="{{ route('national_courses_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate National Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate National Report</button>
                 </form> 
             </li>
             @endcan  
@@ -121,16 +124,27 @@
                    
                       <tr>
                         <th>#</th>
-                        <th scope="col">Name of Course</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Centers</th>
+                        <th scope="col">Action</th>
                       </tr>
                     
                     </thead>
                     <tbody>
               
-                    @foreach($regionCourses as $key => $regionCourses)  
+                    @foreach($regionCourses as $key => $course)  
                       <tr>
                       <th scope="row"><a href="#">{{ $key + 1 }}</a></th>
-                        <td scope="col">{{ $regionCourses->name }}</td>
+                        <td scope="col">{{ $course->course }}</td>
+                        <td scope="col">{{ $course->centers }}</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-info btn-sm viewCourseBtn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#viewCourseModal"
+                                data-course="{{ $course->course }}">
+                                View Details
+                            </button>
+                        </td>
                       </tr>
                       @endforeach
                    
@@ -156,18 +170,31 @@
                    
                       <tr>
                         <th>#</th>
-                        <th scope="col">Name of Course</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Teacher</th>
+                        <th scope="col">Center</th>
+                        <th scope="col">Action</th>
                       </tr>
                     
                     </thead>
                     <tbody>
               
-                    @foreach($districtCourses as $key => $districtCourses)  
+                    @foreach($districtCourses as $key => $course)  
                       <tr>
                       <th scope="row"><a href="#">{{ $key + 1 }}</a></th>
-                        <td scope="col">{{ $districtCourses->name }}</td>
+                        <td scope="col">{{ $course->course }}</td>
+                        <td scope="col">{{ $course->teacher }}</td>
+                        <td scope="col">{{ $course->center }}</td>
+                        <td>
+                          <button type="button" class="btn btn-outline-info btn-sm viewDistrictCourseBtn" 
+                              data-bs-toggle="modal" 
+                              data-bs-target="#viewCourseModal"
+                              data-course="{{ $course->course }}">
+                              View Details
+                          </button>
+                        </td>
                       </tr>
-                      @endforeach
+                    @endforeach
                    
                     </tbody>
                   </table>
@@ -257,7 +284,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
 
                     </div>
                 </form><!-- End General Form Elements -->
@@ -449,6 +476,53 @@
 
 @endcannot
 </div>
+
+<!-- View Course Details Modal -->
+<div class="modal fade" id="viewCourseModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalCourseName"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-info"><i class="bi bi-book"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Course Details</span>
+                                        <span class="info-box-number" id="modalCourseName2"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Center</th>
+                                        <th>District</th>
+                                        <th>Region</th>
+                                        <th>Teacher</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="courseDetailsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -460,91 +534,227 @@
     }
 </script>
 <script>
-$(document).on('click', '.editBtn', function() {
-    var id = $(this).val();
-    console.log(id);
-    $.ajax({
-        type: "GET",
-        url: "/edit_course/" + id,
-        success: function(response) {
-            console.log(response);
-            $('#course_id').val(response.course_centers.course_id);
-            $('#course_id').selectpicker('refresh');
-            $('#course_center_id').val(id);
-            $('#teacher_id').val(response.course_centers.teacher_id);
-            $('#teacher_id').selectpicker('refresh');
-            $('#center_id').val(response.course_centers.center_id);
-            $('#center_id').selectpicker('refresh');
-        },
-        error: function(xhr, status, error) {
-            console.log(xhr);
-            console.log(status);
-            console.log(error);
-        }
+// Initialize DataTables and attach event handlers
+document.addEventListener("DOMContentLoaded", function() {
+    const datatables = document.querySelectorAll('.datatable');
+    datatables.forEach(datatable => {
+        const dataTable = new simpleDatatables.DataTable(datatable, {
+            perPage: 10,
+            perPageSelect: [10, 25, 50, 100],
+            columns: [
+                { select: 0, sort: "asc" }
+            ]
+        });
 
+        // Add event listener for page changes
+        datatable.addEventListener('datatable.page', function() {
+            // Reattach event handlers after page change
+            attachEventHandlers();
+        });
     });
+
+    // Initial attachment of event handlers
+    attachEventHandlers();
 });
 
-$('.delBtn').on('click', function() {
-    var confirmation = confirm('Are you sure you want to delete this course?');
-    if (confirmation) {
-        // delete it
+function attachEventHandlers() {
+    // Delete button event handlers using event delegation
+    $(document).on('click', '.delBtn', function() {
         var course = $(this).val();
-        console.log(course);
-
-        $.ajax({
-            type: 'POST',
-            url: '/delete_course_center',
-            data: {
-                id: course
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                console.log(response);
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr);
-                console.log(status);
-                console.log(error);
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/delete_course_center',
+                    data: {
+                        id: course
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if(response.status) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: response.message,
+                                confirmButtonColor: '#28a745'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message,
+                                confirmButtonColor: '#dc3545'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Something went wrong. Please try again.',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                });
             }
         });
-    } else {
-        //canceled
-    }
-});
+    });
 
-$('.delBtnAdmin').on('click', function() {
-    var confirmation = confirm('Are you sure you want to delete this course?');
-    if (confirmation) {
-        // delete it
+    $(document).on('click', '.delBtnAdmin', function() {
         var course = $(this).val();
-        console.log(course);
-
-        $.ajax({
-            type: 'POST',
-            url: '/delete_course_admin',
-            data: {
-                id: course
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                console.log(response);
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr);
-                console.log(status);
-                console.log(error);
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/delete_course_admin',
+                    data: {
+                        id: course
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if(response.status) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: response.message,
+                                confirmButtonColor: '#28a745'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message,
+                                confirmButtonColor: '#dc3545'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Something went wrong. Please try again.',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                });
             }
         });
-    } else {
-        //canceled
-    }
-});
+    });
+
+    // Handle both regional and district course view buttons
+    $(document).on('click', '.viewCourseBtn, .viewDistrictCourseBtn', function() {
+        const courseName = $(this).data('course');
+        
+        // Update modal title and info box
+        $('#modalCourseName').text(courseName);
+        $('#modalCourseName2').text(courseName);
+        
+        // Make AJAX call to get course details
+        $.ajax({
+            url: '/get-course-details',
+            method: 'GET',
+            data: {
+                course_name: courseName
+            },
+            success: function(response) {
+                let html = '';
+                response.details.forEach(function(detail) {
+                    html += `
+                        <tr>
+                            <td>${detail.center}</td>
+                            <td>${detail.district}</td>
+                            <td>${detail.region}</td>
+                            <td>${detail.teacher}</td>
+                        </tr>
+                    `;
+                });
+                $('#courseDetailsBody').html(html);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching course details:', error);
+                $('#courseDetailsBody').html('<tr><td colspan="4" class="text-center text-danger">Error loading course details</td></tr>');
+            }
+        });
+    });
+}
 </script>
+
+<style>
+.info-box {
+    display: flex;
+    min-height: 90px;
+    background: #fff;
+    width: 100%;
+    box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.info-box-icon {
+    border-radius: 0.25rem 0 0 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    color: #fff;
+    font-size: 1.875rem;
+}
+
+.info-box-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.8;
+    flex: 1;
+    padding: 0 15px;
+}
+
+.info-box-text {
+    display: block;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.info-box-number {
+    display: block;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.02);
+}
+</style>
 @endsection

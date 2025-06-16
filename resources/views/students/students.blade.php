@@ -1,6 +1,20 @@
 @extends('home')
 @section('contente')
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 
 <div class="container">
 
@@ -15,7 +29,7 @@
                 <li>
                 <form action="{{ route('regional_students_report') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Students Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Students Report</button>
                     </form> 
                 </li>
                 @endcan
@@ -23,7 +37,7 @@
                 <li>
                 <form action="{{ route('district_students_report') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Students Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Students Report</button>
                     </form> 
                 </li>
                 @endcan
@@ -31,7 +45,7 @@
                 <li>
                 <form action="{{ route('center_students') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Students Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Students Report</button>
                     </form> 
                 </li>
                 @endcan
@@ -49,7 +63,7 @@
                 <li>
                 <form action="{{ route('national_students_report') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate National Students Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate National Students Report</button>
                     </form> 
                 </li>
                 @endcan
@@ -301,6 +315,9 @@
                         class="bg-danger text-light px-2 py-auto border border-danger rounded-5">{{ $students1->status1 }}</span>
                         </td>
                         @endif
+                        <td>
+                            <a href="{{ url('student_details', ['id' => $students1->id]) }}" type="button" class="btn btn-outline-success btn-sm editBtn" value="">View</a>
+                        </td>
                         @can('is_hoc')
 
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"

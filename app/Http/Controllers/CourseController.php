@@ -27,30 +27,37 @@ class CourseController extends Controller
         if ($user_role->role == 'head of center') {
             $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
             $teachers = Teacher::all()->where('created_by', '=', $centerId->id);
-
         } 
         
-
         $courses = Course::all();
+        
         $centers = Center::all();
         $userData = Auth::user();
 
-        $districtCourses = Course::select('courses.*')
-        ->distinct()
-        ->Join('course_centers', 'course_centers.course_id', '=', 'courses.id')
-        ->Join('centers', 'course_centers.center_id', '=', 'centers.id')
-        ->Join('districts', 'districts.id', '=', 'centers.district_id')
-        ->where('districts.cordinator_id', '=', $userData->id)
-        ->get();
+        $districtCourses = CourseCenter::select(
+            'courses.name AS course',
+            DB::raw('GROUP_CONCAT(DISTINCT centers.name SEPARATOR ", ") as centers'),
+            DB::raw('GROUP_CONCAT(DISTINCT teachers.name SEPARATOR ", ") as teachers')
+        )
+            ->leftJoin('courses', 'course_centers.course_id', '=', 'courses.id')
+            ->leftJoin('teachers', 'course_centers.teacher_id', '=', 'teachers.id')
+            ->leftJoin('centers', 'course_centers.center_id', '=', 'centers.id')
+            ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+            ->where('districts.cordinator_id', '=', $userData->id)
+            ->groupBy('courses.name')
+            ->get();
 
-        $regionCourses = Course::select('courses.*')
-        ->distinct()
-        ->Join('course_centers', 'course_centers.course_id', '=', 'courses.id')
-        ->Join('centers', 'course_centers.center_id', '=', 'centers.id')
-        ->Join('districts', 'districts.id', '=', 'centers.district_id')
-        ->Join('regions', 'regions.id', '=', 'districts.region_id')
-        ->where('regions.cordinator_id', '=', $userData->id)
-        ->get();
+        $regionCourses = CourseCenter::select(
+            'courses.name AS course',
+            DB::raw('GROUP_CONCAT(DISTINCT centers.name SEPARATOR ", ") as centers')
+        )
+            ->leftJoin('courses', 'course_centers.course_id', '=', 'courses.id')
+            ->leftJoin('centers', 'course_centers.center_id', '=', 'centers.id')
+            ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+            ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+            ->where('regions.cordinator_id', '=', $userData->id)
+            ->groupBy('courses.name')
+            ->get();
 
         $centerCourses = Course::select('courses.*')
         ->join('course_centers', 'course_centers.course_id', '=', 'courses.id')
@@ -100,29 +107,39 @@ class CourseController extends Controller
             
         
     }
+
     public function Create(Request $request)
-    {
-        try {
-            $centerId = Center::Select('id')->where('hod_id', Auth::user()->id)->value('id');
-            $coursecenter = new CourseCenter();
-            $coursecenter->course_id = $request->course_id;
-            $coursecenter->teacher_id = $request->teacher_id;
-            $coursecenter->center_id = $centerId;
-            $coursecenter->save();
-            return redirect('courses');
-        } catch (Exception $e) {
+{
+    try {
+        $centerId = Center::select('id')->where('hod_id', Auth::user()->id)->value('id');
+        
+        // Create the course center relationship
+        $coursecenter = new CourseCenter();
+        $coursecenter->course_id = $request->course_id;
+        $coursecenter->teacher_id = $request->teacher_id;
+        $coursecenter->center_id = $centerId;
+        $coursecenter->save();
+        
+        // If you also need to update course name, do it here BEFORE the redirect
+        if ($request->has('name')) {
+            $course = Course::find($request->course_id);
+            if ($course) {
+                $course->name = $request->name;
+                $course->save();
+            }
         }
+        
+        return redirect('courses')->with('sweet_success', 'Center course created successfully');
+        
+    } catch (Exception $e) {
+        // Log the error for debugging
+        \Log::error('Course creation failed: ' . $e->getMessage());
+        
+        return redirect()->back()
+            ->with('sweet_error', 'Failed to create center course. Please try again.')
+            ->withInput();
     }
-    public function CreateNew(Request $request)
-    {
-        try {
-            $course = new Course();
-            $course->name = $request->name;
-            $course->save();
-            return redirect('courses');
-        } catch (Exception $e) {
-        }
-    }
+}
 
     public function nationalCourses($id){
         $courses = Course::all();
@@ -227,11 +244,16 @@ class CourseController extends Controller
                 $course->name = $request->course;
                 $course->save();
     
-                return redirect('courses')->with('success', "Course Center Updated Successiful");
-            } catch (\Throwable $th) {
-                //throw $th;
-                return redirect('courses');
-            }
+                return redirect('courses')->with('sweet_success', 'Center course updated successfully');
+        
+    } catch (Exception $e) {
+        // Log the error for debugging
+        \Log::error('Course creation failed: ' . $e->getMessage());
+        
+        return redirect()->back()
+            ->with('sweet_error', 'Failed to update center course. Please try again.')
+            ->withInput();
+    }
         } else{
         $coursecenter = CourseCenter::find($request->course_center_id);
 
@@ -242,11 +264,16 @@ class CourseController extends Controller
 
             $coursecenter->save();
 
-            return redirect('courses')->with('success', "Course Center Updated Successiful");
-        } catch (\Throwable $th) {
-            //throw $th;
-            return redirect('courses');
-        }
+            return redirect('courses')->with('sweet_success', 'Center course updated successfully');
+        
+    } catch (Exception $e) {
+        // Log the error for debugging
+        \Log::error('Course creation failed: ' . $e->getMessage());
+        
+        return redirect()->back()
+            ->with('sweet_error', 'Failed to update center course. Please try again.')
+            ->withInput();
+    }
         }
     }
 
@@ -255,10 +282,17 @@ class CourseController extends Controller
         $course_center = CourseCenter::find($request->id);
 
         if($course_center->delete()){
-            return response()->json(['status' => true]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Course deleted sucessfully'
+        
+                   ]);
         }
 
-        return response()->json(['status' => false]);
+        return response()->json([
+            'status'  => false,
+            'message' => 'Failed to delete course'  
+        ]);
 
     }
 
@@ -328,4 +362,41 @@ class CourseController extends Controller
             return redirect('courses');
         }
     }
+
+    public function getCourseDetails(Request $request)
+    {
+        $courseName = $request->course_name;
+        
+        $details = CourseCenter::select(
+            'centers.name as center',
+            'districts.name as district',
+            'regions.name as region',
+            'teachers.name as teacher'
+        )
+        ->join('courses', 'course_centers.course_id', '=', 'courses.id')
+        ->join('centers', 'course_centers.center_id', '=', 'centers.id')
+        ->join('districts', 'centers.district_id', '=', 'districts.id')
+        ->join('regions', 'districts.region_id', '=', 'regions.id')
+        ->join('teachers', 'course_centers.teacher_id', '=', 'teachers.id')
+        ->where('courses.name', $courseName)
+        ->get();
+
+        return response()->json([
+            'status' => true,
+            'details' => $details
+        ]);
+    }
+
+   
+    public function CreateNew(Request $request)
+    {
+        try {
+            $course = new Course();
+            $course->name = $request->name;
+            $course->save();
+            return redirect('courses')->with('sweet_success', 'Course created successfully');
+        } catch (Exception $e) {
+        }
+    }
+
 }

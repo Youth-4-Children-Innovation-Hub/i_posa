@@ -85,7 +85,7 @@ class UserController extends Controller
             $user->role_id = $request->role;
             $user->save();
             
-            return redirect()->back();
+            return redirect()->back()->with('sweet_success', "User {$user->name} updated successfully.");
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -139,7 +139,7 @@ class UserController extends Controller
                     Notification::send($userToEmail, new mailNotification($details));
                     
                    
-                return redirect('users')->with('success', 'User added successfully.');
+                return redirect('users')->with('sweet_success', "User {$user->name} added successfully.");
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
@@ -208,9 +208,9 @@ class UserController extends Controller
         $user = User::find($request->id);
 
         if($user->delete()){
-            return response()->json(['status' => true]);
+            return response()->json(['status' => true, 'message' => "User {$user->name} deleted successfully."]);
         }
-        return response()->json(['status' => false]);
+        return response()->json(['status' => false, 'message' => "Failed to delete user {$user->name}."]);
     }
 
 }

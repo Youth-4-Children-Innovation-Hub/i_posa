@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPOSA Implementation Report</title>
@@ -212,16 +210,15 @@
     <!-- Introduction Section -->
     <div class="intro-section">
         <div class="intro-title">REPORT INTRODUCTION</div>
-<div class="paras">
-    <p>This report presents the consolidated status of IPOSA (Integrated Post-School Adult Education) Programme implementation at the <strong>{{ strtoupper($region->name) }} Regional</strong> level. The report has been compiled by <strong>{{ strtoupper(Auth::user()->name) }}</strong>, serving as the Regional Coordinator for the IPOSA Programme in the aforementioned region.</p>
-    
-    <p>As of the date of this report generation (<strong>{{ now()->format('F j, Y') }}</strong>), the region oversees a total of <strong>{{ $centersCount }} operational adult education centers</strong>. These centers serve as foundational platforms for delivering community-based learning, empowering adult learners, and advancing regional development through structured educational initiatives.</p>
-    
-    <p>The data presented herein reflects the current operational status of all centers registered under the IPOSA Programme across the region. It includes critical insights into the scale and distribution of educational infrastructure, which support strategic planning and policy implementation at the regional level.</p>
-    
-    <p>The following table provides a summarized overview of adult education centers across the region, offering a snapshot of the programme’s regional reach and capacity for adult learning service delivery.</p>
-</div>
-
+          <div class="paras">
+        <p>This report presents the comprehensive implementation status of the IPOSA (Integrated Post-School Adult Education) Programme within <strong>{{strtoupper($district->name)}} District</strong>. The report has been compiled by <strong>{{ strtoupper(Auth::user()->name) }}</strong>, serving as the District Coordinator for the IPOSA Programme in the aforementioned district.</p>
+        
+        <p>As of the date of this report generation (<strong>{{ now()->format('F j, Y') }}</strong>), the district has successfully established and is currently managing a total of <strong>{{ $coursesCount }} cousrses tought across centers</strong>. These courses serve as vital community learning sources, providing adult education opportunities and fostering community development through various educational initiatives.</p>
+        
+        <p>The data presented herein reflects the current operational status of all registered centera within the district, including detailed information about center leadership, contact details, sponsorship arrangements, and operational centers. This report serves as an official record of the programme's implementation progress and demonstrates our commitment to advancing adult education initiatives in accordance with the Institute of Adult Education's mandate.</p>
+        
+        <p>The following table provides a comprehensive overview of all active IPOSA courses currently taught within the district, presenting essential information for administrative oversight and programme coordination purposes.</p>
+        </div>
     </div>
     
     <!-- centers Details Table -->
@@ -230,18 +227,19 @@
             <thead>
                 <tr>
                     <th>No</th>
+                    <th>Course</th>
+                    <th>Teacher</th>
                     <th>Center</th>
-                    <th>Hoc</th>
                     
                 </tr>
             </thead>
             <tbody>
-                @foreach($centers as $index => $center)
+                @foreach($courses as $index => $course)
                 <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $center->name }}</td>
-                <td>{{ $center->hoc}}</td>
-                <td>{{ $center->district}}</td>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $course->course }}</td>
+                    <td>{{ $course->teacher }}</td>
+                    <td>{{ $course->center }}</td>
                     
                 </tr>
                 @endforeach   
@@ -257,7 +255,7 @@
             <br>
             <div class="signature-line"></div>
             <p><strong>{{ strtoupper(Auth::user()->name) }}</strong><br>
-            Region Coordinator<br>
+            District Coordinator<br>
             IPOSA Programme</p>
         </div>
         

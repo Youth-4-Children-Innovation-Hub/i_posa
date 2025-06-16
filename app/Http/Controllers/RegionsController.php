@@ -40,7 +40,7 @@ class RegionsController extends Controller
 
         $regions = Region::select('regions.id AS id', 'regions.name AS region', 'users.name', 'regions.created_at AS start_date')
             ->leftJoin('users', 'users.id', '=', 'regions.cordinator_id')
-            ->paginate($request->session()->get('pagination_number'));
+            ->get();
         return view('regions.regions', ['mikoa' => $mikoa, 'cordinators' => $cordinators, 'regions' => $regions, 'userData' => $userData, 'userRole' => $userRole, 'paginate' => $request->session()->get('pagination_number')]);
     }
 
@@ -51,7 +51,7 @@ class RegionsController extends Controller
             $regions->name = $request->name;
             $regions->cordinator_id = $request->cordinator;
             $regions->save();
-            return redirect('regions')->with('success', 'User added successfully.');
+            return redirect('regions')->with('sweet_success', 'Region added successfully.');
         } catch (Exception $e) {
         }
     }
