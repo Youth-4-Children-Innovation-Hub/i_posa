@@ -18,9 +18,21 @@ class CenterController extends Controller
     {   
         $roleId = DB::table('roles')->where('role', 'head of center')->value('id');
         $hods = User::where('role_id', $roleId)->get();
-        $districts = District::all();
+        // $districts = District::all();
         $userData = auth()->user();
         $id = $userData->id;
+
+        $query = District::select('districts.id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
+        ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+        ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id');
+          if (auth()->user()->role_id == 1){
+             $districts = $query->get();
+          }
+            else{
+         $districts = $query->where('regions.cordinator_id', '=', auth()->user()->id)
+        ->get();
+            }
+
         $userRole = DB::table('users')
             ->join('roles', 'users.role_id', '=', 'roles.id')
             ->where('users.id', $id)
@@ -53,29 +65,51 @@ class CenterController extends Controller
     }
 
     public function Create(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'district' => 'required',
-            'hod' => 'required',
-            'ownership' => 'required'
-        ]);
+{
+        // dd($request->all());
 
-        try{
-            $center = new Center();
-            $center->name = $request->name;
-            $center->district_id = $request->district;
-            $center->hod_id = $request->hod;
-            $center->Ownership = $request->ownership;
-            $center->Funders = $request->funders;
-            $center->save();
-            return redirect('centers')->with('success', 'User added successfully.');
-        } catch (\Exception $e) {
-            return $e->getMessage();
+    // Add more detailed validation
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'district' => 'required|integer|exists:districts,id', 
+        'hod' => 'required|integer|exists:users,id', 
+        'ownership' => 'required|string|max:255'
+    ]);
+
+    try {
+        // Add debugging - log the request data
+        // \Log::info('Center creation attempt:', $request->all());
+        
+        $center = new Center();
+        $center->name = $request->name;
+        $center->district_id = $request->district;
+        $center->hod_id = $request->hod;
+        $center->Ownership = $request->ownership;
+        $center->Funders = $request->funders; // This can be null
+        
+        // Add debugging - check if save returns true
+        $saved = $center->save();
+        \Log::info('Save result:', ['saved' => $saved, 'center_id' => $center->id]);
+        
+        if ($saved) {
+            return redirect('centers')->with('sweet_success', 'Center added successfully.');
+        } else {
+            return redirect()->back()->with('sweet_error', 'Failed to save center.');
         }
         
+    } catch (\Exception $e) {
+        // Log the full error for debugging
+        \Log::error('Center creation failed:', [
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        // Return user-friendly error
+        return redirect()->back()->with('sweet_error', 'An error occurred while creating the center: ' . $e->getMessage());
     }
-
+}
     public function edit($id)
     {
         $center = Center::find($id);
@@ -107,10 +141,10 @@ class CenterController extends Controller
             $center->Funders = $request->funders;
 
             if ($center->save()) {
-                return redirect('centers')->with('success', 'Center added successfully.');
+                return redirect('centers')->with('sweet_success', "{$center->name} Center updated successfully.");
             }
             else {
-                return redirect()->back()->with('error', 'Failed');
+                return redirect()->back()->with('sweet_error', 'Failed');
 
             } 
         } catch (\Exception $e) {
@@ -125,9 +159,9 @@ class CenterController extends Controller
         $center = Center::find($request->id);
 
         if($center->delete()){
-            return response()->json(['status' => true]);
+            return response()->json(['status' => true, 'message' => "Center {$center->name} deleted successfully."]);
         }
-        return response()->json(['status' => false]);
+        return response()->json(['status' => false, 'message' => "Failed to delete center {$center->name}."]);
     }
 
     public function Search()

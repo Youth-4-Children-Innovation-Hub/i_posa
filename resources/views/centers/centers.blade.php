@@ -13,7 +13,8 @@
                     <li>
                 <form action="{{ route('district_centers_report') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Students Report</button>
+                       
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate National Report</button>
                     </form> 
                 </li>
                        @endcannot
@@ -23,7 +24,8 @@
                     <li>
                 <form action="{{ route('regional_centers_report') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Centers Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Centers Report</button>
+
                     </form> 
                 </li>
                    @endcannot
@@ -32,7 +34,7 @@
                     <li>
                 <form action="{{ route('national_centers_report') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate National Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate National Report</button>
                     </form> 
                 </li>
                    @endcan

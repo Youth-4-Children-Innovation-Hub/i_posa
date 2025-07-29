@@ -74,6 +74,7 @@ class TeachersController extends Controller
 
     public function Create(Request $request)
     {
+        
         try {
             
             $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
@@ -84,9 +85,11 @@ class TeachersController extends Controller
             $teacher->ANFE_training = $request->anfe;
             $teacher->email = $request->email;
             $teacher->phone_number = $request->phone_number;
-            $teacher->created_by = $centerId->id;
+            $teacher->created_by = auth()->user()->id;
+            $teacher->center_id = $centerId->id;
             $teacher->save();
-            return redirect('teachers');
+            
+            return redirect('teachers')->with('sweet_success', 'Teacher created successfully');
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -117,9 +120,9 @@ class TeachersController extends Controller
         $teacher->employer = $request->employer;
 
         if($teacher->save()) {
-            return redirect('teachers')->with('success', 'Teacher Updated Successufil');
+            return redirect('teachers')->with('sweet_success', 'Teacher Updated Successufil');
         }else {
-            return redirect()->back()->with('error', 'Failed to Update Teacher');
+            return redirect()->back()->with('sweet_error', 'Failed to Update Teacher');
         }
     }
 

@@ -60,17 +60,28 @@ class userProfileController extends Controller
     }
 
     public function changeProfilePicture(Request $request){
-      $request->validate([
-        'picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    $request->validate([
+        'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
-      $user_id = auth()->user()->id;
-      $photo_name =$request->file('picture')->getClientOriginalName();
-      $path = $request->file('picture')->storeAs('images', $photo_name, 'public');
-      $total_path = '/storage/'.$path;
-      DB::update('update users set profile_photo = ? where id = ?' ,[$total_path, $user_id]);
-      return redirect()->back();
-
-    }
+    
+    $user_id = auth()->user()->id;
+    
+    // Generate unique filename to avoid conflicts
+    $extension = $request->file('profile_photo')->getClientOriginalExtension();
+    $photo_name = 'profile_' . $user_id . '_' . time() . '.' . $extension;
+    
+    // Store in public/assets/img directory
+    $destinationPath = public_path('assets/img');
+    $request->file('profile_photo')->move($destinationPath, $photo_name);
+    
+    // Store the path
+    $path = 'assets/img/' . $photo_name;
+    
+    // Update the database
+    DB::update('update users set profile_photo = ? where id = ?', [$path, $user_id]);
+    
+    return redirect()->back()->with('success', 'Profile picture updated successfully!');
+}
 
 
 }

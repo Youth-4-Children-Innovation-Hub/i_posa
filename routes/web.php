@@ -166,6 +166,7 @@ Route::middleware(['auth','status'])->group(function(){
     Route::post('/upload_center_report', [reportController::class, 'uploadCenterReport']);
     Route::post('/post_challenges', [reportController::class, 'createChallenge']);
     Route::get('/students/centerStudents',[reportController::class, 'centerStudents'])->name('center_students');
+    Route::get('/student_details/{id}', [StudentController::class, 'studentDetails'])->name('student_details');
     Route::get('/students/centerCourses',[reportController::class, 'centerCourses'])->name('center_courses');
     Route::get('/students/centerTeachers',[reportController::class, 'centerTeachers'])->name('center_teachers');    
     Route::get('/students/centerClubs',[reportController::class, 'centerClubs'])->name('center_clubs');    
@@ -217,5 +218,7 @@ Route::middleware(['auth','status'])->group(function(){
     Route::get('/ripoti', function () {
         return view('report.centerReport');
     });
+
+    Route::get('/get-course-details', [CourseController::class, 'getCourseDetails'])->name('get_course_details');
 
 });

@@ -119,7 +119,7 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Region</label>
                                     <div class="col-sm-10">
-                                        <select class="selectpicker" aria-label="Default select example" name="region" id="region_select" required data-width="100%" data-live-search="true">
+                                        <select class="form-control selectpicker" aria-label="Default select example" name="region" id="region_select" required data-width="100%" data-live-search="true">
                                             <option selected="selected" hidden="hidden" value="">Select a Region</option>
                                             @foreach ($regions as $region)
                                                 <option value="{{ $region->id }}">{{ $region->name }}</option>
@@ -131,11 +131,12 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">District</label>
                                     <div class="col-sm-10">
-                                    <!-- <select id="district_select" name="district_id" class="form-control">
-                                        <option selected="selected" hidden="hidden" value="">Select a District</option>
-                                    </select> -->
-                                        <select aria-label="Default select example" name="name" id="district_select" required data-width="100%" data-live-search="true">
+                                    
+                                        <select class="form-control selectpicker" aria-label="Default select example" name="name" id="district_select" required data-width="100%" data-live-search="true">
                                             <option selected="selected" hidden="hidden" value="">Select a District</option>
+                                            @foreach($regionDistricts as $district)
+                                                <option value="{{ $district->id}}"> {{ $district->name }} </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -168,7 +169,7 @@
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">Coordinator</label>
                                         <div class="col-sm-10">
-                                            <select class="selectpicker" aria-label="Default select example"
+                                            <select class="form-control selectpicker" aria-label="Default select example"
                                                 name="cordinator_id" required data-width=100% data-live-search="true">
                                                 <option selected="selected" hidden="hidden" value="">Open this
                                                     select menu
@@ -219,8 +220,7 @@
                                     <div class="row mb-3">
                                         <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="name" name="name"
-                                                required>
+                                            <input name="name" id="name" type="text" class="form-control">
                                         </div>
                                     </div>
 
@@ -230,9 +230,6 @@
                                             <select class="selectpicker" aria-label="Default select example"
                                                 name="region_id" id="region_id" required data-width=100%
                                                 data-live-search="true">
-                                                <option selected="selected" hidden="hidden" value="">Open this
-                                                    select menu
-                                                </option>
                                                 @foreach ($regions as $region)
                                                     <option value="{{ $region->id }}">{{ $region->name }}</option>
                                                 @endforeach
@@ -245,10 +242,7 @@
                                         <div class="col-sm-10">
                                             <select class="selectpicker" aria-label="Default select example"
                                                 name="cordinator_id" id="cordinator_id" required data-width=100%
-                                                data-live-search="true">
-                                                <option selected="selected" hidden="hidden" value="">Open this
-                                                    select menu
-                                                </option>
+                                                data-live-search="true">                                            
                                                 @foreach ($cordinators as $cordinator)
                                                     <option value="{{ $cordinator->id }}">{{ $cordinator->name }}
                                                     </option>

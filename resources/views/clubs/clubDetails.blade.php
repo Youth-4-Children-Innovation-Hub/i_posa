@@ -13,82 +13,72 @@
         </nav>
     </div><!-- End Page Title -->
     <div class="card">
-            <div class="card-body">
-              <h5 class="card-title" style="text-align: center;">{{ $club_details->Name }} CLUB</h5>
-             
-              <!-- Active Table -->
-              <table class="table table-borderless">
-                <thead>
-                  <tr>
-                
-                    <th scope="col">Chairperson Name</th>
-                    <td scope="col">{{ $club_details->Chairperson }}</td>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-             
-                    <td> <b>Contact</b></td>
-                    <td>{{ $club_details->Contact }}</td>
-                  
-                  </tr>
-                  <tr>
-                  
-                  <td> <b>Email</b></td>
-                    <td>{{ $club_details->Email }}</td>
-                  
-                  </tr>
-                  <tr>
-                  <tr>
-             
-                    <td> <b>Funding Sources</b></td>
-                    <td>{{ $club_details->Funding_sources }}</td>
-                  
-                  </tr>  
+    <div class="card-body">
+        <h5 class="card-title text-center text-primary mb-4">{{ $club_details->Name }} CLUB</h5>
 
-                  <tr>
-             
-                    <td> <b>Registration status</b></td>
+        <!-- Club Info Table -->
+        <h6 class="text-primary mb-3 text-center"><i class="bi bi-info-circle me-2"></i>Club Details</h6>
+        <table class="table table-striped table-sm">
+            <tbody>
+                <tr>
+                    <td class="fw-bold text-primary" style="width: 45%;">Chairperson Name</td>
+                    <td>{{ $club_details->Chairperson }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-primary">Contact</td>
+                    <td>{{ $club_details->Contact }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-primary">Email</td>
+                    <td>{{ $club_details->Email }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-primary">Funding Sources</td>
+                    <td>{{ $club_details->Funding_sources }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-primary">Registration Status</td>
                     <td>{{ $club_details->Registration_status }}</td>
-                  
-                  </tr> 
-            
-                  <td> <b>Assets</b></td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-primary">Assets</td>
                     <td>{{ $club_details->Asset }}</td>
-                
-                  </tr>
-                  <tr>
-                 
-                  <td> <b>Capital</b></td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-primary">Capital</td>
                     <td>{{ $club_details->Capital }}</td>
-                   
-                  </tr>
-                  <tr>
-                  
-                  <td> <b>Quality Assurance Contact</b></td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-primary">Quality Assurance Contact</td>
                     <td>{{ $club_details->QA_Contact }}</td>
-                  
-                  </tr>
-                </tbody>
-              </table>
-              @if( $user_role->role == 'head of center' )
-              <button type="submit" class="btn btn-outline-primary py-0 my-1" data-bs-toggle="modal" value="{{ $club_details->id }}" data-bs-target="#EditModal">Edit Club</button>
-              @endif
-              
-              <form action="{{ route('club_members', ['id' => $club_details->id]) }}" method="GET">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-primary py-0 my-1">Members</button>
-                </form>
-              <!-- <form action="{{ route('delete_club', ['id' => $club_details->id]) }}" method="POST">
-                    @csrf
-                    @method('DELETE') 
-                    <button type="submit" class="btn btn-outline-danger py-0 my-1" onclick="return confirm('Are you sure you want to delete this club?')">Delete Club</button>
-             
-                </form> -->
-                           
-            </div>
-          </div>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+            @if($user_role->role == 'head of center')
+                <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal"
+                        data-bs-target="#EditModal" value="{{ $club_details->id }}">
+                    <i class="bi bi-pencil me-1"></i>Edit Club
+                </button>
+            @endif
+
+            <form action="{{ route('club_members', ['id' => $club_details->id]) }}" method="GET" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-outline-info">
+                    <i class="bi bi-people me-1"></i>Members
+                </button>
+            </form>
+
+            <form action="{{ route('delete_club', $club_details->id) }}" method="POST">
+                @csrf
+                @method('DELETE') 
+                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="confirmAction(event, 'Are you sure you want to delete this club?')">Delete</button>
+            </form>
+        </div>
+    </div>
+
 
     <!-- update teacher -->
     <div class="modal fade" id="EditModal" tabindex="-1">

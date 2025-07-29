@@ -85,9 +85,11 @@
 </head>
 
 <body>
+
     <div id="app">
       <br> <br>
         <main class="py-4">
+            
             @yield('login')
         </main>
     </div>
@@ -98,6 +100,30 @@
     <script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
     <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.12/sweetalert2.all.min.js"></script>
+
+@if(session('sweet_success'))
+<script>
+   Swal.fire({
+       icon: 'success',
+       title: 'Success!',
+       text: '{{ session('sweet_success') }}',
+       confirmButtonColor: '#28a745'
+   });
+   </script>
+   @endif
+   
+   @if(session('sweet_error'))
+   <script>
+   Swal.fire({
+       icon: 'error',
+       title: 'Error!',
+       text: '{{ session('sweet_error') }}',
+       confirmButtonColor: '#dc3545'
+   });
+</script>
+@endif
 
     <!-- Template Main JS File -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
@@ -126,6 +152,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
     @yield('scripts')
+
+    <script>
+        function confirmAction(event, message = 'Are you sure you want to proceed?') {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Confirmation',
+                text: message,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.closest('form').submit();
+                }
+            });
+        }
+    </script>
 
 </body>
 

@@ -134,6 +134,24 @@ class StudentController extends Controller
 
     }
 
+    public function studentDetails(Request $request, $id){
+
+        $students = DB::table('students')
+    ->join('centers', 'students.center_id', '=', 'centers.id')
+    ->where('students.id', $id)
+    ->select('students.*', 'centers.name as center_name')
+    ->first();
+
+
+        $guardians = Guardian::where('student_id', $id)->first();
+
+        return view('students.details', [
+            'student'  => $students,
+            'guardian' => $guardians
+        ]);
+
+    }
+
     public function import(Request $request)
     {
       
@@ -319,136 +337,135 @@ class StudentController extends Controller
 
 
     public function update(Request $request)
-    {
-        $rules = [
-            'name' => 'required',
-            'reg_no' => 'required',
-            'gender' => 'required',
-            'dissability' => 'required',
-            'dob' => 'required',
-            'ward' => 'required',
-            'street' => 'required',
-            'education_level' => 'required',
-            'education_type' => 'required',
-            'marital_status' => 'required',
-            'employment_status' => 'required',
-            'parent' => 'required',
-            'parent_phone' => 'required',
-            'pdissability' => 'required',
-            'stage' => 'required'
-        ];
+{
+    $rules = [
+        'name' => 'required',
+        'reg_no' => 'required',
+        'gender' => 'required',
+        'dissability' => 'required',
+        'dob' => 'required',
+        'ward' => 'required',
+        'street' => 'required',
+        'education_level' => 'required',
+        'education_type' => 'required',
+        'marital_status' => 'required',
+        'employment_status' => 'required',
+        'parent' => 'required',
+        'parent_phone' => 'required',
+        'pdissability' => 'required',
+        'stage' => 'required'
+    ];
 
-        $messages = [
-            'letter.pdf' => 'The selected letter must be a pdf',
-            'birth_certificate.pdf' => 'The selected certificate must be a pdf',
-            'name.required' => 'Student name field is required',
-            'reg_no.required' => 'Registration number field is required',
-            'gender.required' => 'Gender field is required',
-            'disability.required' => 'Student dissability field is required',
-            'dob.required' => 'Date of birth field is required',
-            'ward.required' => 'Ward field is required',
-            'street.required' => 'Street field is required',
-            'education_level.required' => 'Education level field is required',
-            'education_type.required' => 'Education type field is required',
-            'marital_status.required' => 'Marital staus field is required',
-            'employment_status.required' => 'Employment status field is required',
-            'parent.required' => 'Parent name field is required',
-            'parent_phone.required' => 'Parent phone field is required',
-            'pdissability.required' => 'Parent dissability field is required',
-            'stage.required' => 'Stage field is required'
-        ];
+    $messages = [
+        'letter.pdf' => 'The selected letter must be a pdf',
+        'birth_certificate.pdf' => 'The selected certificate must be a pdf',
+        'name.required' => 'Student name field is required',
+        'reg_no.required' => 'Registration number field is required',
+        'gender.required' => 'Gender field is required',
+        'disability.required' => 'Student dissability field is required',
+        'dob.required' => 'Date of birth field is required',
+        'ward.required' => 'Ward field is required',
+        'street.required' => 'Street field is required',
+        'education_level.required' => 'Education level field is required',
+        'education_type.required' => 'Education type field is required',
+        'marital_status.required' => 'Marital staus field is required',
+        'employment_status.required' => 'Employment status field is required',
+        'parent.required' => 'Parent name field is required',
+        'parent_phone.required' => 'Parent phone field is required',
+        'pdissability.required' => 'Parent dissability field is required',
+        'stage.required' => 'Stage field is required'
+    ];
 
+    $validator = Validator::make($request->all(), $rules, $messages);
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator);
+    }   
+    
+    $user_role = Role::select('role')
+    ->join('users', 'roles.id', '=', 'users.role_id')
+    ->where('users.id', '=', Auth::user()->id)
+    ->first();
 
-        $validator = Validator::make($request->all(), $rules, $messages);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
-        }   
-        
-        $user_role = Role::select('role')
-        ->join('users', 'roles.id', '=', 'users.role_id')
-        ->where('users.id', '=', Auth::user()->id)
-        ->first();
-
-        if ($user_role->role == 'head of center') {
-            $centerId = Center::where('hod_id', Auth::user()->id)->value('id');
-        } else {
-            $centerId = $request->centerId;
-        }
-
-        $centerLocation1 = Region::select('regions.name as rname', 'districts.name as dname')
-        ->join('districts', 'districts.region_id', '=', 'regions.id')
-        ->join('centers', 'districts.id', '=', 'centers.district_id')
-        ->where('centers.id', '=', $request->centerId)
-        ->first();
-        
-
-        try {
-            $this->setCenterLocation();
-            $location = $this->center_location;
-
-            $student = Student::find($request->student_id);
-            $student->name = $request->name;
-            $student->registration_number = $request->reg_no;
-            $student->status = $request->status;
-            $student->date_of_birth = $request->dob;
-            $student->gender = $request->gender;
-            $student->nida = $request->nida;
-            if ($user_role->role == 'head of center'){
-                $student->region = $location->rname;
-                $student->district = $location->dname;
-            } else{
-                $student->region = $centerLocation1->rname;
-                $student->district = $centerLocation1->dname;
-            } 
-            $student->ward = $request->ward;
-            $student->stage = $request->stage;
-            $student->street = $request->street;
-            $student->education_level = $request->education_level;
-            $student->education_type = $request->education_type;
-            $student->marital_status = $request->marital_status;
-            $student->employment_status = $request->employment_status;
-            $student->disability = $request->dissability;
-            $student->phone_number = $request->phone_number;
-            $student->email = $request->student_email;  
-           
-            $student->save();
-
-            $parent = Guardian::find($request->parent_id);
-            $parent->name = $request->parent;
-            $parent->phone = $request->parent_phone;
-            $parent->email = $request->parent_email;
-            $parent->address = $request->parent_address;
-            $parent->occupation = $request->parent_occupation;
-            $parent->disability = $request->pdissability;
-            if ($user_role->role == 'head of center'){
-                $parent->region = $location->rname;
-                $parent->district = $location->dname;
-            } else{
-                $parent->region = $centerLocation1->rname;
-                $parent->district = $centerLocation1->dname;
-            } 
-            $parent->ward = $request->pward;
-            $parent->save();
-
-            $student_id = $request->student_id;
-            if($request->course_id) {
-                    StudentCourses::where('student_id', $student_id)->delete();
-                    for ($i = 0; $i < sizeof($request->course_id); $i++) {
-                        $student_courses = new StudentCourses();
-                        $student_courses->student_id = $student_id;
-                        $student_courses->course_id = $request->course_id[$i];
-                        $student_courses->state = "not complete";
-                        // DB::update('update student_courses set course_id = ? where student_id = ?' ,[$request->course_id[$i], $student_id]);
-                        $student_courses->save();
-                    }
-                
-            }
-            return redirect('students')->with('success', 'User added successfully.');
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-
+    if ($user_role->role == 'head of center') {
+        $centerId = Center::where('hod_id', Auth::user()->id)->value('id');
+    } else {
+        $centerId = $request->centerId;
     }
+
+    $centerLocation1 = Region::select('regions.name as rname', 'districts.name as dname')
+    ->join('districts', 'districts.region_id', '=', 'regions.id')
+    ->join('centers', 'districts.id', '=', 'centers.district_id')
+    ->where('centers.id', '=', $request->centerId)
+    ->first();
+    
+    try {
+        $this->setCenterLocation();
+        $location = $this->center_location;
+
+        $student = Student::find($request->student_id);
+        $student->name = $request->name;
+        $student->registration_number = $request->reg_no;
+        $student->status = $request->status;
+        $student->date_of_birth = $request->dob;
+        $student->gender = $request->gender;
+        $student->nida = $request->nida;
+        if ($user_role->role == 'head of center'){
+            $student->region = $location->rname;
+            $student->district = $location->dname;
+        } else{
+            $student->region = $centerLocation1->rname;
+            $student->district = $centerLocation1->dname;
+        } 
+        $student->ward = $request->ward;
+        $student->stage = $request->stage;
+        $student->street = $request->street;
+        $student->education_level = $request->education_level;
+        $student->education_type = $request->education_type;
+        $student->marital_status = $request->marital_status;
+        $student->employment_status = $request->employment_status;
+        $student->disability = $request->dissability;
+        $student->phone_number = $request->phone_number;
+        $student->email = $request->student_email;  
+       
+        $student->save();
+
+        $parent = Guardian::find($request->parent_id);
+        $parent->name = $request->parent;
+        $parent->phone = $request->parent_phone;
+        $parent->email = $request->parent_email;
+        $parent->address = $request->parent_address;
+        $parent->occupation = $request->parent_occupation;
+        $parent->disability = $request->pdissability;
+        if ($user_role->role == 'head of center'){
+            $parent->region = $location->rname;
+            $parent->district = $location->dname;
+        } else{
+            $parent->region = $centerLocation1->rname;
+            $parent->district = $centerLocation1->dname;
+        } 
+        $parent->ward = $request->pward;
+        $parent->save();
+
+        $student_id = $request->student_id;
+        if($request->course_id) {
+                StudentCourses::where('student_id', $student_id)->delete();
+                for ($i = 0; $i < sizeof($request->course_id); $i++) {
+                    $student_courses = new StudentCourses();
+                    $student_courses->student_id = $student_id;
+                    $student_courses->course_id = $request->course_id[$i];
+                    $student_courses->state = "not complete";
+                    $student_courses->save();
+                }
+        }
+        
+        // Fix: Changed success message to be more appropriate for update
+        return redirect('students')->with('success', 'Student updated successfully.');
+        
+    } catch (\Exception $e) {
+        // Fix: Better error handling - redirect back with error message instead of showing raw error
+        return redirect()->back()->with('error', 'Failed to update student: ' . $e->getMessage());
+    }
+}
 
     public function edit($id)
     {

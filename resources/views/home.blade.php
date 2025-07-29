@@ -151,7 +151,7 @@
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
 
                         <img src="{{ asset(Auth::user()->profile_photo) }}" alt="Profile" class="rounded-circle"
-                            style="width: 40px; height: 40px;">
+     style="width: 40px; height: 40px;">
                         <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
                     </a><!-- End Profile Iamge Icon -->
 
@@ -223,7 +223,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link " href="{{ url('/dashboard') }}">
+                <a class="nav-link {{ request()->is('dashboard') || request()->is('home') ? 'active' : '' }}" href="{{ url('/dashboard') }}">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -231,39 +231,39 @@
             @can('is_dist_cordinator')
             @cannot('is_admin')
             <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/centers') }}">
+                    <a class="nav-link {{ request()->is('centers') ? 'active' : '' }}" href="{{ url('/centers') }}">
                     <i class="bi bi-file-ruled-fill"></i>
                         <span>Centers</span>
                     </a>
                 </li>
             
             <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/students') }}">
+                    <a class="nav-link {{ request()->is('students') ? 'active' : '' }}" href="{{ url('/students') }}">
                     <i class="bi bi-person-lines-fill"></i>
                         <span>Students</span>
                     </a>
                 </li>
            
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/courses') }}">
+                    <a class="nav-link {{ request()->is('courses') ? 'active' : '' }}" href="{{ url('/courses') }}">
                     <i class="ri-pencil-fill"></i>
                         <span>Courses</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/teachers') }}">
+                    <a class="nav-link {{ request()->is('teachers') ? 'active' : '' }}" href="{{ url('/teachers') }}">
                     <i class="bi bi-file-person-fill"></i>
                         <span>Teachers</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/clubs') }}">
+                    <a class="nav-link {{ request()->is('club*') ? 'active' : '' }}" href="{{ url('/clubs') }}">
                     <i class="bi bi-people-fill"></i>
                         <span>Clubs</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/inventory') }}">
+                    <a class="nav-link {{ request()->is('inventory') ? 'active' : '' }}" href="{{ url('/inventory') }}">
                     <i class="bi bi-file-ruled-fill"></i>
                         <span>Inventory list</span>
                     </a>
@@ -273,103 +273,107 @@
 
             @canany(['is_admin','is_user'])
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="users-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/users') }}">
-                            <i class="bi bi-circle"></i><span>users</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
+    <a class="nav-link {{ request()->is('users*') ? '' : 'collapsed' }}" 
+       data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="users-nav" class="nav-content collapse {{ request()->is('users*') ? 'show' : '' }}" 
+        data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="{{ url('/users') }}" class="{{ request()->is('users*') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Users</span>
+            </a>
+        </li>
+    </ul>
+</li>
+<!-- End Forms Nav -->
             @endcanany
 
             @canany('is_user')
 
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Administration Levels</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/regions') }}">
-                            <i class="bi bi-circle"></i><span>Regions</span>
-                        </a>
-                    </li>
+    <a class="nav-link {{ request()->is('regions*') || request()->is('districts*') || request()->is('centers*') ? '' : 'collapsed' }}" 
+       data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Administration Levels</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="regions-nav" class="nav-content collapse {{ request()->is('regions*') || request()->is('districts*') || request()->is('centers*') ? 'show' : '' }}" 
+        data-bs-parent="#sidebar-nav">
 
-                </ul>
-                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/districts') }}">
-                            <i class="bi bi-circle"></i><span>Districts</span>
-                        </a>
-                    </li>
+        <li>
+            <a href="{{ url('/regions') }}" class="{{ request()->is('regions*') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Regions</span>
+            </a>
+        </li>
 
-                </ul>
-                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/centers') }}">
-                            <i class="bi bi-circle"></i><span>Centers</span>
-                        </a>
-                    </li>
+        <li>
+            <a href="{{ url('/districts') }}" class="{{ request()->is('districts*') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Districts</span>
+            </a>
+        </li>
 
-                </ul>
-            </li><!-- End Forms Nav -->
+        <li>
+            <a href="{{ url('/centers') }}" class="{{ request()->is('centers*') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Centers</span>
+            </a>
+        </li>
+    </ul>
+</li>
+<!-- End Forms Nav -->
             @endcanany
             @canany(['is_reg_cordinator','is_user'])
             @cannot('is_admin')
             <!-- districti level -->
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Administration Levels</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/districts') }}">
-                            <i class="bi bi-circle"></i><span>Districts</span>
-                        </a>
-                    </li>
+                <a class="nav-link {{ request()->is('regions*') || request()->is('districts*') || request()->is('centers*') ? '' : 'collapsed' }}" 
+       data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Administration Levels</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="regions-nav" class="nav-content collapse {{ request()->is('regions*') || request()->is('districts*') || request()->is('centers*') ? 'show' : '' }}" 
+        data-bs-parent="#sidebar-nav">
 
-                </ul>
-                <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('/centers') }}">
-                            <i class="bi bi-circle"></i><span>Centers</span>
-                        </a>
-                    </li>
+       
 
-                </ul>
+        <li>
+            <a href="{{ url('/districts') }}" class="{{ request()->is('districts*') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Districts</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url('/centers') }}" class="{{ request()->is('centers*') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Centers</span>
+            </a>
+        </li>
+    </ul>
             </li>
             @endcannot
             <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/students') }}">
+                    <a class="nav-link {{ request()->is('students') ? 'active' : '' }}" href="{{ url('/students') }}">
                     <i class="bi bi-person-lines-fill"></i>
                         <span>Students</span>
                     </a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/courses') }}">
+                    <a class="nav-link {{ request()->is('courses') ? 'active' : '' }}" href="{{ url('/courses') }}">
                     <i class="ri-pencil-fill"></i>
                         <span>Courses</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/teachers') }}">
+                    <a class="nav-link {{ request()->is('teachers') ? 'active' : '' }}" href="{{ url('/teachers') }}">
                     <i class="bi bi-file-person-fill"></i>
                         <span>Teachers</span>
                     </a>
                 </li>    
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/clubs') }}">
+                    <a class="nav-link {{ request()->is('club*') ? 'active' : '' }}" href="{{ url('/clubs') }}">
                     <i class="bi bi-people-fill"></i>
                         <span>Clubs</span>
                     </a>
                 </li>  
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/inventory') }}">
+                    <a class="nav-link {{ request()->is('inventory') ? 'active' : '' }}" href="{{ url('/inventory') }}">
                     <i class="bi bi-file-ruled-fill"></i>
                         <span>Inventory list</span>
                     </a>
@@ -379,11 +383,12 @@
             @endcanany
             @can('is_admin')
             <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/select_region') }}">
-                        <i class="bi bi-journal-text"></i>
-                        <span>Visit Center</span>
-                    </a>
-                </li>
+             <a class="nav-link {{ request()->is('select_region') ? 'active' : '' }}" href="{{ url('/select_region') }}">
+                 <i class="bi bi-journal-text"></i>
+                 <span>Visit Center</span>
+             </a>
+            </li>
+
             @endcan
 
             @canany(['is_admin'])
@@ -392,7 +397,7 @@
                 @cannot('is_admin')
                 <ul id="center-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="{{ url('/reports_page') }}">
+                        <a class="nav-link {{ request()->is('reports_page') ? 'active' : '' }}" href="{{ url('/reports_page') }}">
                             <i class="bi bi-circle"></i><span>Reports</span>
                         </a>
                     </li>
@@ -405,51 +410,48 @@
             @can('is_hoc')
             @cannot('is_admin')
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/students') }}">
+                    <a class="nav-link {{ request()->is('student*') ? 'active' : '' }}" href="{{ url('/students') }}">
                     <i class="bi bi-person-lines-fill"></i>
                         <span>Students</span>
                     </a>
                 </li>
            
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/courses') }}">
+                    <a class="nav-link {{ request()->is('courses') ? 'active' : '' }}" href="{{ url('/courses') }}">
                     <i class="ri-pencil-fill"></i>
                         <span>Courses</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/teachers') }}">
+                    <a class="nav-link {{ request()->is('teachers') ? 'active' : '' }}" href="{{ url('/teachers') }}">
                     <i class="bi bi-file-person-fill"></i>
                         <span>Teachers</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ url('/clubs') }}">
+                    <a class="nav-link {{ request()->is('club*') ? 'active' : '' }}" href="{{ url('/clubs') }}">
                     <i class="bi bi-people-fill"></i>
                         <span>Clubs</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#regions-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi bi-file-ruled-fill"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="{{ url('/inventory_type') }}">
-                                <i class="bi bi-circle"></i><span>Inventory Type</span>
-                            </a>
-                        </li>
+    <a class="nav-link {{ request()->is('inventory*') ? '' : 'collapsed' }}" data-bs-target="#inventory-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-file-ruled-fill"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="inventory-nav" class="nav-content collapse {{ request()->is('inventory*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="{{ url('/inventory_type') }}" class="{{ request()->is('inventory_type') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Inventory Type</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/inventory') }}" class="{{ request()->is('inventory') ? 'active' : '' }}">
+                <i class="bi bi-circle"></i><span>Inventory List</span>
+            </a>
+        </li>
+    </ul>
+</li>
 
-                    </ul>
-                    <ul id="regions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="{{ url('/inventory') }}">
-                                <i class="bi bi-circle"></i><span>Inventory list</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
                 
             @endcannot
             @endcan      
@@ -460,7 +462,7 @@
             @canany(['is_dist_cordinator', 'is_reg_cordinator', 'is_hoc'])
            
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('/reports_page') }}">
+                <a class="nav-link {{ request()->is('reports_page') ? 'active' : '' }}" href="{{ url('/reports_page') }}">
                 <!-- <i class="bi bi-layout-text-window-reverse"></i> -->
                 <i class="ri-mail-open-fill"></i>
                     <span>Reports</span>
@@ -473,7 +475,7 @@
             <li class="nav-heading"><hr></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('/user_profile') }}">
+                <a class="nav-link {{ request()->is('user_profile') ? 'active' : '' }}" href="{{ url('/user_profile') }}">
                     <i class="bi bi-person"></i>
                     <span>Profile</span>
                 </a>

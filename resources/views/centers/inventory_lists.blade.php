@@ -32,7 +32,7 @@
             <li>
                 <form action="{{ route('center_inventory') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                 </form> 
             </li>
             @endcan       
@@ -40,7 +40,7 @@
             <li>
                 <form action="{{ route('district_inventory_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                 </form> 
             </li>
             @endcan       
@@ -48,7 +48,7 @@
             <li>
                 <form action="{{ route('regional_inventory_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                 </form> 
             </li>
             @endcan     
@@ -57,7 +57,7 @@
             <li>
                 <form action="{{ route('national_inventory_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate National Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate National Report</button>
                 </form> 
             </li>
             @endcan       
@@ -348,7 +348,7 @@
                                     <select class="form-control selectpicker" data-mdb-container="#exampleModal"
                                             data-mdb-filter="true" name="name">
                                             @foreach ($inv_type as $inv)
-                                            <option value="{{ $inv->id }}">{{ $inv->name }}</option>
+                                            <option value="{{ $inv->name }}">{{ $inv->name }}</option>
                                             @endforeach
 
                                     </select> 
@@ -357,7 +357,7 @@
                                 <div class=" row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Code</label>
                                     <div class="col-sm-10">
-                                        <input name="code" id="name" type="text" class="form-control">
+                                        <input name="code" id="code" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class=" row mb-3">
@@ -409,6 +409,7 @@ $(document).on('click', '.editBtn', function() {
             $('#course').selectpicker('refresh');
             $('#inv_id').val(id);
             $('#name').val(response.inventory.name);
+            $('#code').val(response.inventory.code);
             $('#number').val(response.inventory.number);
             $('#existing').val(response.inventory.number);
             $('#inuse').val(response.inventory.inuse);

@@ -62,7 +62,7 @@
 
               </div>
             </div>
-    {{ $regions->onEachSide(1)->links() }}
+    
 
 
 

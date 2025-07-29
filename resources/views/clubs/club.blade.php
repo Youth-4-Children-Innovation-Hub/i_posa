@@ -23,7 +23,7 @@
                 <li>
                 <form action="{{ route('center_clubs') }}" method="get" target="_blank">
                         @csrf
-                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                        <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                     </form> 
                 </li>
                      
@@ -32,7 +32,7 @@
             <li>
                 <form action="{{ route('district_clubs_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                 </form> 
             </li>
             @endcan  
@@ -40,7 +40,7 @@
             <li>
                 <form action="{{ route('regional_clubs_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate Report</button>
                 </form> 
             </li>
             @endcan  
@@ -49,7 +49,7 @@
             <li>
                 <form action="{{ route('national_clubs_report') }}" method="get" target="_blank">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="return confirm('Are you sure you want to generate this report?')">Generate National Report</button>
+                    <button type="submit" class="btn btn-outline-primary mx-3 py-0 my-1" onclick="confirmAction(event, 'Are you sure you want to generate this report?')">Generate National Report</button>
                 </form> 
             </li>
             @endcan  
