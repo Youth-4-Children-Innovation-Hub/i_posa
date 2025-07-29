@@ -6,7 +6,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Students</li>
+                <li class="breadcrumb-item active"><a href="/students">Students</a></li>
                
                 <li class="breadcrumb-item active">{{ $student->registration_number }}</li>
             </ol>
@@ -20,7 +20,7 @@
         <!-- Student Photo -->
         @if($student->profile_picture)
         <div class="text-center mb-4">
-            <img src="{{ asset( $student->profile_picture) }}" alt="Student Photo" 
+            <img src="{{ asset('storage/' . $student->profile_picture) }}" alt="Student Photo" 
                  class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
         </div>
         @endif
@@ -192,8 +192,9 @@
                 <div class="row">
                     @if($student->birth_certificate)
                     <div class="col-md-6 mb-2">
-                        <a href="{{ Storage::url(str_replace(storage_path('app/public/'), '', $student->birth_certificate)) }}" 
-                           class="btn btn-outline-info btn-sm" download>
+                        <a href="{{ Storage::url($student->birth_certificate) }}" 
+                           class="btn btn-outline-info btn-sm" 
+                           download="{{ $student->name }}_{{ $student->registration_number }}_birth_certificate.pdf">
                             <i class="bi bi-download me-1"></i>Download Birth Certificate
                         </a>
                     </div>
@@ -201,8 +202,9 @@
                     
                     @if($student->letter)
                     <div class="col-md-6 mb-2">
-                        <a href="{{ Storage::url(str_replace(storage_path('app/public/'), '', $student->letter)) }}" 
-                           class="btn btn-outline-info btn-sm" download>
+                        <a href="{{ Storage::url($student->letter) }}" 
+                           class="btn btn-outline-info btn-sm" 
+                           download="{{ $student->name }}_{{ $student->registration_number }}_letter.pdf">
                             <i class="bi bi-download me-1"></i>Download Letter
                         </a>
                     </div>

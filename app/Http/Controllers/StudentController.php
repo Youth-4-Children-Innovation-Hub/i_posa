@@ -177,7 +177,6 @@ class StudentController extends Controller
     public function Create(Request $request)
     {
         //validating
-
         $rules = [
             'passport' => 'required|image',
             'letter' => 'required|mimes:pdf',
@@ -197,7 +196,6 @@ class StudentController extends Controller
             'parent_phone' => 'required',
             'pdissability' => 'required'
         ];
-
         $messages = [
             'letter.pdf' => 'The selected letter must be a pdf',
             'birth_certificate.pdf' => 'The selected certificate must be a pdf',
@@ -216,60 +214,31 @@ class StudentController extends Controller
             'parent_phone.required' => 'Parent phone field is required',
             'pdissability.required' => 'Parent dissability field is required',
         ];
-
-
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-        $destination_letters = 'public/students/letters/' . $request->name . '_' . $request->phone_number;
-        $destination_certificates = 'public/students/certificates/' . $request->name . '_' . $request->phone_number;
-        $destination_passports = 'public/students/passports/' . $request->name . '_' . $request->phone_number;
-
-        $file_letter = Storage::allFiles($destination_letters);
-        $file_certificate = Storage::allFiles($destination_certificates);
-        $file_passports = Storage::allFiles($destination_passports);
-
-        if (sizeof($file_letter) > 0) {
-            echo (Storage::path($file_letter[0]));
-            Storage::delete($file_letter[0]);
-        }
-        if (sizeof($file_certificate) > 0) {
-            echo var_dump($file_certificate);
-            Storage::delete($file_certificate[0]);
-        }
-        if (sizeof($file_passports) > 0) {
-            echo sizeof($file_passports);
-            Storage::delete($file_passports[0]);
-        }
-
-        $path_passport = $request->file('passport')->storeAs($destination_passports, $request->file('passport')->getClientOriginalName());
-
-        $path_letter = $request->file('letter')->storeAs($destination_letters, $request->file('letter')->getClientOriginalName());
-
-        $path_certificate = $request->file('birth_certificate')->storeAs($destination_certificates, $request->file('birth_certificate')->getClientOriginalName());
-
+        // Store files using the public disk and save only the relative path
+        $path_passport = $request->file('passport')->store('students/passports', 'public');
+        $path_letter = $request->file('letter')->store('students/letters', 'public');
+        $path_certificate = $request->file('birth_certificate')->store('students/certificates', 'public');
         $user_role = Role::select('role')
-        ->join('users', 'roles.id', '=', 'users.role_id')
-        ->where('users.id', '=', Auth::user()->id)
-        ->first();
-
+            ->join('users', 'roles.id', '=', 'users.role_id')
+            ->where('users.id', '=', Auth::user()->id)
+            ->first();
         $this->setCenterLocation();
         $location = $this->center_location;
-
         $centerLocation1 = Region::select('regions.name as rname', 'districts.name as dname')
-        ->join('districts', 'districts.region_id', '=', 'regions.id')
-        ->join('centers', 'districts.id', '=', 'centers.district_id')
-        ->where('centers.id', '=', $request->centerId)
-        ->first();
-     
+            ->join('districts', 'districts.region_id', '=', 'regions.id')
+            ->join('centers', 'districts.id', '=', 'centers.district_id')
+            ->where('centers.id', '=', $request->centerId)
+            ->first();
         try {
             if ($user_role->role == 'head of center') {
                 $centerId = Center::where('hod_id', Auth::user()->id)->value('id');
             } else {
                 $centerId = $request->centerId;
             }
-           
             $student = new Student();
             $student->name = $request->name;
             $student->registration_number = $request->reg_no;
@@ -282,7 +251,7 @@ class StudentController extends Controller
             } else{
                 $student->region = $centerLocation1->rname;
                 $student->district = $centerLocation1->dname;
-            } 
+            }
             $student->ward = $request->ward;
             $student->street = $request->street;
             $student->education_level = $request->education_level;
@@ -291,15 +260,14 @@ class StudentController extends Controller
             $student->employment_status = $request->employment_status;
             $student->disability = $request->disability;
             $student->phone_number = $request->phone_number;
-            $student->email = $request->student_email;   
+            $student->email = $request->student_email;
             $student->center_id = $centerId;
-            $student->profile_picture = Storage::path($path_passport);
-            $student->birth_certificate = Storage::path($path_certificate);
-            $student->letter = Storage::path($path_letter);
+            $student->profile_picture = $path_passport;
+            $student->birth_certificate = $path_certificate;
+            $student->letter = $path_letter;
             $student->status = "continous";
             $student->stage = $request->stage;
             $student->save();
-
             $parent = new Guardian();
             $parent->name = $request->parent;
             $parent->phone = $request->parent_phone;
@@ -313,11 +281,10 @@ class StudentController extends Controller
             } else{
                 $parent->region = $centerLocation1->rname;
                 $parent->district = $centerLocation1->dname;
-            } 
+            }
             $parent->ward = $request->pward;
             $parent->student_id = $student->id;
             $parent->save();
-
             $student_id = Student::select('id')
                 ->where('name', $request->name)
                 ->where('phone_number', $request->phone_number)
@@ -355,7 +322,6 @@ class StudentController extends Controller
         'pdissability' => 'required',
         'stage' => 'required'
     ];
-
     $messages = [
         'letter.pdf' => 'The selected letter must be a pdf',
         'birth_certificate.pdf' => 'The selected certificate must be a pdf',
@@ -375,33 +341,27 @@ class StudentController extends Controller
         'pdissability.required' => 'Parent dissability field is required',
         'stage.required' => 'Stage field is required'
     ];
-
     $validator = Validator::make($request->all(), $rules, $messages);
     if ($validator->fails()) {
         return redirect()->back()->withErrors($validator);
-    }   
-    
+    }
     $user_role = Role::select('role')
-    ->join('users', 'roles.id', '=', 'users.role_id')
-    ->where('users.id', '=', Auth::user()->id)
-    ->first();
-
+        ->join('users', 'roles.id', '=', 'users.role_id')
+        ->where('users.id', '=', Auth::user()->id)
+        ->first();
     if ($user_role->role == 'head of center') {
         $centerId = Center::where('hod_id', Auth::user()->id)->value('id');
     } else {
         $centerId = $request->centerId;
     }
-
     $centerLocation1 = Region::select('regions.name as rname', 'districts.name as dname')
-    ->join('districts', 'districts.region_id', '=', 'regions.id')
-    ->join('centers', 'districts.id', '=', 'centers.district_id')
-    ->where('centers.id', '=', $request->centerId)
-    ->first();
-    
+        ->join('districts', 'districts.region_id', '=', 'regions.id')
+        ->join('centers', 'districts.id', '=', 'centers.district_id')
+        ->where('centers.id', '=', $request->centerId)
+        ->first();
     try {
         $this->setCenterLocation();
         $location = $this->center_location;
-
         $student = Student::find($request->student_id);
         $student->name = $request->name;
         $student->registration_number = $request->reg_no;
@@ -415,7 +375,7 @@ class StudentController extends Controller
         } else{
             $student->region = $centerLocation1->rname;
             $student->district = $centerLocation1->dname;
-        } 
+        }
         $student->ward = $request->ward;
         $student->stage = $request->stage;
         $student->street = $request->street;
@@ -425,10 +385,18 @@ class StudentController extends Controller
         $student->employment_status = $request->employment_status;
         $student->disability = $request->dissability;
         $student->phone_number = $request->phone_number;
-        $student->email = $request->student_email;  
-       
+        $student->email = $request->student_email;
+        // Handle file updates if new files are uploaded
+        if ($request->hasFile('passport')) {
+            $student->profile_picture = $request->file('passport')->store('students/passports', 'public');
+        }
+        if ($request->hasFile('birth_certificate')) {
+            $student->birth_certificate = $request->file('birth_certificate')->store('students/certificates', 'public');
+        }
+        if ($request->hasFile('letter')) {
+            $student->letter = $request->file('letter')->store('students/letters', 'public');
+        }
         $student->save();
-
         $parent = Guardian::find($request->parent_id);
         $parent->name = $request->parent;
         $parent->phone = $request->parent_phone;
@@ -442,25 +410,22 @@ class StudentController extends Controller
         } else{
             $parent->region = $centerLocation1->rname;
             $parent->district = $centerLocation1->dname;
-        } 
+        }
         $parent->ward = $request->pward;
         $parent->save();
-
         $student_id = $request->student_id;
         if($request->course_id) {
-                StudentCourses::where('student_id', $student_id)->delete();
-                for ($i = 0; $i < sizeof($request->course_id); $i++) {
-                    $student_courses = new StudentCourses();
-                    $student_courses->student_id = $student_id;
-                    $student_courses->course_id = $request->course_id[$i];
-                    $student_courses->state = "not complete";
-                    $student_courses->save();
-                }
+            StudentCourses::where('student_id', $student_id)->delete();
+            for ($i = 0; $i < sizeof($request->course_id); $i++) {
+                $student_courses = new StudentCourses();
+                $student_courses->student_id = $student_id;
+                $student_courses->course_id = $request->course_id[$i];
+                $student_courses->state = "not complete";
+                $student_courses->save();
+            }
         }
-        
         // Fix: Changed success message to be more appropriate for update
         return redirect('students')->with('success', 'Student updated successfully.');
-        
     } catch (\Exception $e) {
         // Fix: Better error handling - redirect back with error message instead of showing raw error
         return redirect()->back()->with('error', 'Failed to update student: ' . $e->getMessage());
