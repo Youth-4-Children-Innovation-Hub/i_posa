@@ -158,8 +158,8 @@ Route::middleware(['auth','status'])->group(function(){
     
     Route::get('/reports_page', [reportController::class, 'index']);
     Route::post('/upload_report', [reportController::class, 'upload']);
-    Route::get('/download/{id}', [reportController::class, 'download']);
-    Route::get('/view/{id}', [reportController::class, 'view']);
+    Route::post('/download/{id}', [reportController::class, 'download']);
+    Route::post('/view/{id}', [reportController::class, 'view']);
     Route::post('delete_report', [reportController::class, 'delete'])->name('delete_report');
     Route::delete('erase_report/{id}', [reportController::class, 'erase']);
     Route::get('/notifications', [reportController::class, 'getNotifications']);
