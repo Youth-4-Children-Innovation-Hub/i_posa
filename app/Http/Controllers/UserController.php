@@ -107,61 +107,47 @@ class UserController extends Controller
 
     public function Create(Request $request)
     {
-            $request->validate([
-                'email' => 'required|email',
-                'phone' => ['required', 'regex:/^0[67][0-9]{8}$/']
-            ]);
-           
-            try {
-                // Mail::to($request->email)
-                //     ->send(new HelloMail($firstName . 123456, $request->name));
-                    $user = new User();
-                    $user->name = $request->name;
-                    $user->phone_number = $request->phone;
-                    $user->email = $request->email;
-                    $user->password = Hash::make('12345678');
-                    $user->role_id = $request->input('role');
-                    $user->save();
-                    
-
-                    $userToEmail = User::where('email', $request->email)->first();
-
-                  
-                    $details = [
-                        'greeting'=>'hi ' . $userToEmail->name,
-                        'body'=>'You have been registered on the IPOSA system. Click the button below to set password
-                        for access.',
-                        'actiontext'=>'Set password',
-                        'actionurl'=> url('reports_page'),
-                        'lastline'=>'This is the last line',
-                    ];
-        
-                    Notification::send($userToEmail, new mailNotification($details));
-                    
-                   
-                return redirect('users')->with('sweet_success', "User {$user->name} added successfully.");
-            } catch (\Exception $e) {
-                return $e->getMessage();
-            }
-
-            
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => ['required', 'regex:/^0[67][0-9]{8}$/', 'unique:users,phone_number'],
+            'role' => 'required|integer|exists:roles,id',
+        ], [
+            'email.unique' => 'The email address is already registered.',
+            'phone.unique' => 'The phone number is already registered.',
+            'role.required' => 'Please select a valid role.',
+            'role.integer' => 'Please select a valid role.',
+            'role.exists' => 'Please select a valid role.',
+        ]);
+        $user = new User();
+        $user->name = $request->name;
+        $user->phone_number = $request->phone;
+        $user->email = $request->email;
+        $user->password = Hash::make('12345678');
+        $user->role_id = $request->input('role');
+        $user->save();
+        $userToEmail = User::where('email', $request->email)->first();
+        $details = [
+            'greeting'=>'hi ' . $userToEmail->name,
+            'body'=>'You have been registered on the IPOSA system. Click the button below to set password for access.',
+            'actiontext'=>'Set password',
+            'actionurl'=> url('reports_page'),
+            'lastline'=>'This is the last line',
+        ];
+        Notification::send($userToEmail, new mailNotification($details));
+        return redirect('users')->with('sweet_success', "User {$user->name} added successfully.");
     }
 
     public function setStatus($id){
-
         $user = DB::table('users')->find($id);
-
         if(!$user) {
-
-          return response()->json(['message' => 'User not found'], 404);
+            return redirect('users')->with('sweet_error', 'User not found');
         }
-
         $newStatus = $user->status == 1 ? 0 : 1;
         DB::table('users')->where('id', $id)->update(['status' => $newStatus]);
-
-        $message = $newStatus ? 'user activated' : 'user suspended';
-        return response()->json(['message' => $message]);
-
+        $message = $newStatus ? 'User activated successfully.' : 'User deactivated successfully.';
+        $type = $newStatus ? 'success' : 'info';
+        return redirect('users')->with('sweet_success', $message);
     }
 
     public function Search()

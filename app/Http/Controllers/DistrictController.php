@@ -67,7 +67,10 @@ class DistrictController extends Controller
         $district_cordinator_id = Role::select('id')
             ->where('role', 'district cordinator')
             ->first();
+        // Only users who are not assigned as a cordinator in any district
+        $assignedCordinatorIds = District::pluck('cordinator_id')->toArray();
         $users = User::where('role_id', 3)
+            ->whereNotIn('id', $assignedCordinatorIds)
             ->get();
         return view('district.district', [
             'cordinators' => $users,
