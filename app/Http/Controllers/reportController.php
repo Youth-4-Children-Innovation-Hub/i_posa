@@ -602,8 +602,8 @@ class reportController extends Controller
                           ->first();
 
             $districtTeachers = Teacher::select('teachers.*', 'teachers.name AS name', 'teachers.phone_number AS phone', 'teachers.email AS email', 'centers.name AS centerName')
-                ->leftJoin('centers', 'teachers.center_id', '=', 'centers.id')
-                ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+                ->Join('centers', 'centers.hod_id', '=', 'teachers.created_by')
+                ->Join('districts', 'centers.district_id', '=', 'districts.id')
                 ->where('districts.cordinator_id', '=', $userData->id)
                 ->get();
 
@@ -784,7 +784,7 @@ class reportController extends Controller
                               ->first();
     
                 $regionTeachers = Teacher::select('teachers.*', 'teachers.name AS name', 'teachers.phone_number AS phone', 'teachers.email AS email', 'centers.name AS center','districts.name AS district')
-                    ->leftJoin('centers', 'teachers.center_id', '=', 'centers.id')
+                    ->leftJoin('centers', 'centers.hod_id', '=', 'teachers.created_by')
                     ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
                     ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
                     ->where('regions.cordinator_id', '=', $userData->id)
@@ -903,7 +903,7 @@ class reportController extends Controller
             public function nationalTeachersReport(){
                 
                 $nationalTeachers = Teacher::select('teachers.*', 'teachers.name AS name', 'teachers.phone_number AS phone', 'teachers.email AS email', 'centers.name AS center','districts.name AS district','regions.name AS region')
-                    ->leftJoin('centers', 'teachers.center_id', '=', 'centers.id')
+                    ->leftJoin('centers', 'centers.hod_id', '=', 'teachers.created_by')
                     ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
                     ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
                     ->get();
