@@ -96,11 +96,18 @@
                         <td>{{ $inventory_list->code }}</td>
                         <td>{{ $inventory_list->course_name }}</td>
                         @can('is_hoc')
-                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
-                                data-bs-target="#EditModal" value="{{ $inventory_list->id }}">Update</button>
-                            <button type="button" value="{{ $inventory_list->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                        </td>
+                        <td>
+    <div class="d-flex align-items-center gap-2">
+        <!-- Update Icon Button -->
+        <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $inventory_list->id }}" title="Edit Inventory Item">
+            <i class="bi bi-pencil"></i>
+        </button>
+        <!-- Delete Icon Button -->
+        <button type="button" value="{{ $inventory_list->id }}" class="btn btn-outline-danger btn-sm delBtn" title="Delete Inventory Item">
+            <i class="bi bi-trash"></i>
+        </button>
+    </div>
+</td>
                         @endcan
 
 
@@ -455,3 +462,13 @@ $('.delBtn').on('click', function() {
 });
 </script>
 @endsection
+@push('styles')
+<style>
+    .table .btn i {
+        pointer-events: none;
+    }
+    .gap-2 > * + * {
+        margin-left: 0.5rem !important;
+    }
+</style>
+@endpush

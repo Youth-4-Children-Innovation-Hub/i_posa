@@ -79,11 +79,18 @@
                             <td>{{ $center->district }}, {{ $center->region }}</td>
                             <td>{{ $center->Ownership }}</td>
                             <td>{{ $center->Funders }}</td>
-                            <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal"
-                                    value="{{ $center->id }}" class="btn btn-outline-primary btn-sm editBtn">Edit</button>
-                                <button type="button" value="{{ $center->id }}"
-                                    class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                            </td>
+                            <td>
+    <div class="d-flex align-items-center gap-2">
+        <!-- Edit Icon Button -->
+        <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $center->id }}" class="btn btn-outline-primary btn-sm editBtn" title="Edit Center">
+            <i class="bi bi-pencil"></i>
+        </button>
+        <!-- Delete Icon Button -->
+        <button type="button" value="{{ $center->id }}" class="btn btn-outline-danger btn-sm delBtn" title="Delete Center">
+            <i class="bi bi-trash"></i>
+        </button>
+    </div>
+</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -382,3 +389,10 @@
         });
     </script>
 @endsection
+
+@push('styles')
+<style>
+    .table .btn i { pointer-events: none; }
+    .gap-2 > * + * { margin-left: 0.5rem !important; }
+</style>
+@endpush

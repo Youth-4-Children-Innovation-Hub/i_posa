@@ -62,16 +62,18 @@
 
                         <!-- updateform/{{$user->id}} -->
                         <td>
-                            <div class="">
-                            <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
-                                data-bs-target="#UpdateModal">Edit</button>
-                                
-                            <form action="{{route('userStatus',['id' => $user->id ])}}" method="post">
-                                @csrf
-                                <button class="btn btn-outline btn-sm py-0 {{$user->status == 1 ? 'btn-danger' : 'btn-success'}}">
-                                    {{ (int)$user->status === 1 ? 'Deactivate' : 'Activate'}}
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Edit Icon Button -->
+                                <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal" data-bs-target="#UpdateModal" title="Edit User">
+                                    <i class="bi bi-pencil"></i>
                                 </button>
-                            </form>
+                                <!-- Activate/Deactivate Icon Button -->
+                                <form action="{{route('userStatus',['id' => $user->id ])}}" method="post" class="m-0 p-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline btn-sm py-0 {{ $user->status == 1 ? 'btn-danger' : 'btn-success' }}" title="{{ (int)$user->status === 1 ? 'Deactivate' : 'Activate' }} User">
+                                        <i class="bi {{ (int)$user->status === 1 ? 'bi-lock' : 'bi-unlock' }}"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                       </tr>  
@@ -286,6 +288,17 @@ document.addEventListener('DOMContentLoaded', function () {
     @endif
 });
 </script>
+@endpush
+
+@push('styles')
+<style>
+    .table .btn i {
+        pointer-events: none;
+    }
+    .gap-2 > * + * {
+        margin-left: 0.5rem !important;
+    }
+</style>
 @endpush
 
 @section('scripts')

@@ -58,23 +58,22 @@
         <!-- Action Buttons -->
         <div class="text-center mt-4">
             @if($user_role->role == 'head of center')
-                <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal"
-                        data-bs-target="#EditModal" value="{{ $club_details->id }}">
-                    <i class="bi bi-pencil me-1"></i>Edit Club
+                <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $club_details->id }}" title="Edit Club">
+                    <i class="bi bi-pencil"></i>
                 </button>
             @endif
-
             <form action="{{ route('club_members', ['id' => $club_details->id]) }}" method="GET" class="d-inline">
                 @csrf
-                <button type="submit" class="btn btn-outline-info">
-                    <i class="bi bi-people me-1"></i>Members
+                <button type="submit" class="btn btn-outline-info btn-sm me-2" title="View Members">
+                    <i class="bi bi-people"></i>
                 </button>
             </form>
-
-            <form action="{{ route('delete_club', $club_details->id) }}" method="POST">
+            <form action="{{ route('delete_club', $club_details->id) }}" method="POST" class="d-inline">
                 @csrf
-                @method('DELETE') 
-                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="confirmAction(event, 'Are you sure you want to delete this club?')">Delete</button>
+                @method('DELETE')
+                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="confirmAction(event, 'Are you sure you want to delete this club?')" title="Delete Club">
+                    <i class="bi bi-trash"></i>
+                </button>
             </form>
         </div>
     </div>
@@ -211,3 +210,10 @@ $(document).on('click', '.editBtn', function() {
 
 </script>
 @endsection
+
+@push('styles')
+<style>
+    .btn i { pointer-events: none; }
+    .me-2 { margin-right: 0.5rem !important; }
+</style>
+@endpush

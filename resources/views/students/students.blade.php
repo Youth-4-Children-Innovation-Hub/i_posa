@@ -133,10 +133,17 @@
 
                         @can('is_hoc')
 
-                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $student->id }}"
-                                data-bs-toggle="modal" data-bs-target="#EditStudent">Edit</button>
-                            <button type="button" value="{{ $student->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                        <td> 
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Edit Icon Button -->
+                                <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $student->id }}" data-bs-toggle="modal" data-bs-target="#EditStudent" title="Edit Student">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <!-- Delete Icon Button -->
+                                <button type="button" value="{{ $student->id }}" class="btn btn-outline-danger btn-sm delBtn" title="Delete Student">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
                         </td>
                         @endcan
                     </tr>
@@ -316,12 +323,15 @@
                         </td>
                         @endif
                         <td>
-                            <a href="{{ url('student_details', ['id' => $students1->id]) }}" type="button" class="btn btn-outline-success btn-sm editBtn" value="">View</a>
-                        </td>
+                            <a href="{{ url('student_details', ['id' => $students1->id]) }}" class="btn btn-outline-success btn-sm editBtn" title="View Student">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        
                         @can('is_hoc')
 
-                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"
-                                data-bs-toggle="modal" data-bs-target="#EditStudent">Edit</button>
+                        
+                            <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $students1->id }}"
+                                data-bs-toggle="modal" data-bs-target="#EditStudent"><i class="bi bi-pencil"></i></button>
                             
                         </td>
                         @endcan
@@ -1368,3 +1378,9 @@ $('.delBtn').on('click', function() {
 });
 </script>
 @endsection
+
+@push('styles')
+<style>
+    .btn i { pointer-events: none; }
+</style>
+@endpush

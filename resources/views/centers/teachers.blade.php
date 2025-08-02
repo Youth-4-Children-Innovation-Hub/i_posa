@@ -82,11 +82,18 @@
                         <td>{{ $teacher->phone_number }}</td>
                         @can('is_hoc')
 
-                        <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teacher->id }}"
-                                class="btn btn-outline-primary btn-sm editBtn">Edit</button>
-                            <button type="button" value="{{ $teacher->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
-                        </td>
+                        <td>
+    <div class="d-flex align-items-center gap-2">
+        <!-- Edit Icon Button -->
+        <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teacher->id }}" class="btn btn-outline-primary btn-sm editBtn" title="Edit Teacher">
+            <i class="bi bi-pencil"></i>
+        </button>
+        <!-- Delete Icon Button -->
+        <button type="button" value="{{ $teacher->id }}" class="btn btn-outline-danger btn-sm delBtn" title="Delete Teacher">
+            <i class="bi bi-trash"></i>
+        </button>
+    </div>
+</td>
 
                         @endcan
                     </tr>
@@ -207,7 +214,7 @@
                         @can('is_hoc')
 
                         <td> <button type="button" data-bs-toggle="modal" data-bs-target="#EditModal" value="{{ $teachers1->id }}"
-                                class="btn btn-outline-primary btn-sm editBtn">Edit</button>
+                                class="btn btn-outline-primary btn-sm editBtn"><i class="bi bi-pencil"></i></button>
                             <!-- <button type="button" value="{{ $teachers1->id }}"
                                 class="btn btn-outline-danger btn-sm delBtn">Delete</button> -->
                         </td>
@@ -549,3 +556,10 @@ $('.delBtn').on('click', function() {
 });
 </script>
 @endsection
+
+@push('styles')
+<style>
+    .table .btn i { pointer-events: none; }
+    .gap-2 > * + * { margin-left: 0.5rem !important; }
+</style>
+@endpush

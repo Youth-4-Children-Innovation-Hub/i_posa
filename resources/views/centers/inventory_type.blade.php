@@ -44,10 +44,13 @@
                         <th scope="row">{{ $i }}</th>
                         <td>{{ $inventory->name }}</td>
                         @can('is_hoc')
-                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal"
-                                data-bs-target="#EditModal" onclick="populateEditModal('{{ $inventory->id }}', '{{ $inventory->name }}')">Edit</button>
-                            <!-- <button type="button" value="{{ $inventory->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button> -->
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Edit Icon Button -->
+                                <button type="button" class="btn btn-outline-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="populateEditModal('{{ $inventory->id }}', '{{ $inventory->name }}')" title="Edit Inventory Type">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
                         </td>
                         @endcan
 
@@ -216,3 +219,10 @@ $('.delBtn').on('click', function() {
 });
 </script>
 @endsection
+
+@push('styles')
+<style>
+    .table .btn i { pointer-events: none; }
+    .gap-2 > * + * { margin-left: 0.5rem !important; }
+</style>
+@endpush

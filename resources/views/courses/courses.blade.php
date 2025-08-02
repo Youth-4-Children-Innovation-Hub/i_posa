@@ -94,11 +94,17 @@
                         <td>{{ $course->name }}</td>
                         
                         @can('is_hoc')
-                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
-                                value="{{ $course->id }}" data-bs-toggle="modal"
-                                data-bs-target="#editCourse" onclick="populateEditModal('{{ $course->id }}', '{{ $course->name }}')">Edit</button>
-                            <button type="button" value="{{ $course->id }}"
-                                class="btn btn-outline-danger btn-sm delBtnAdmin">Delete</button>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Edit Icon Button -->
+                                <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $course->id }}" data-bs-toggle="modal" data-bs-target="#editCourse" onclick="populateEditModal('{{ $course->id }}', '{{ $course->name }}')" title="Edit Course">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <!-- Delete Icon Button -->
+                                <button type="button" value="{{ $course->id }}" class="btn btn-outline-danger btn-sm delBtnAdmin" title="Delete Course">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
                         </td>
                         @endcan
                     </tr>
@@ -142,7 +148,7 @@
                                 data-bs-toggle="modal" 
                                 data-bs-target="#viewCourseModal"
                                 data-course="{{ $course->course }}">
-                                View Details
+                                <i class="bi bi-eye"></i>
                             </button>
                         </td>
                       </tr>
@@ -190,7 +196,7 @@
                               data-bs-toggle="modal" 
                               data-bs-target="#viewCourseModal"
                               data-course="{{ $course->course }}">
-                              View Details
+                              <i class="bi bi-eye"></i>
                           </button>
                         </td>
                       </tr>
@@ -237,9 +243,9 @@
                         @can('is_hoc')
                         <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn"
                                 value="{{ $centercourses1->id }}" data-bs-toggle="modal"
-                                data-bs-target="#EditNewCenterCourseModal">Edit</button>
+                                data-bs-target="#EditNewCenterCourseModal"><i class="bi bi-pencil"></i></button>
                             <button type="button" value="{{ $centercourses1->id }}"
-                                class="btn btn-outline-danger btn-sm delBtn">Delete</button>
+                                class="btn btn-outline-danger btn-sm delBtn"><i class="bi bi-trash"></i></button>
                         </td>
                         @endcan
                     </tr>
@@ -758,3 +764,14 @@ function attachEventHandlers() {
 }
 </style>
 @endsection
+
+@push('styles')
+<style>
+    .table .btn i {
+        pointer-events: none;
+    }
+    .gap-2 > * + * {
+        margin-left: 0.5rem !important;
+    }
+</style>
+@endpush
