@@ -34,7 +34,10 @@ class RegionsController extends Controller
             ->where('users.id', $id)
             ->select('roles.role')
             ->first();
+        // Only users who are not assigned as a cordinator in any region
+        $assignedCordinatorIds = Region::pluck('cordinator_id')->toArray();
         $cordinators = User::where('role_id', 2)
+            ->whereNotIn('id', $assignedCordinatorIds)
             ->get();
         $mikoa = Mikoa::select('*')->get();
 

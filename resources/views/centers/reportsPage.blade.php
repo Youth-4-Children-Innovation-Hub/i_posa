@@ -65,9 +65,19 @@
                     @if( $reports->dist_approval == 2 && $reports->reg_approval == 2 )
                       <tr>
                         <th scope="row"><a href="#">{{ $key+1}}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
-                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
-                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                        <td>
+                            <form action="{{ url('/view', $reports->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-link text-primary" style="padding:0; border:none; background:none;">
+                                    {{ $reports->report_name }}
+                                </button>
+                            </form>
+                        <form action="{{ url('/download', $reports->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-arrow-down-circle-fill fs-15"></i>
+                            </button>
+                        </form>
                         </td>
                         @if( $reports->nat_status == 'new' )
                         <td>{{ $reports->hoc_name }} on {{ $reports->date }} <span class="badge bg-success">new</span></td>
@@ -120,9 +130,19 @@
                     @if($reports->dist_id == auth()->user()->id)
                       <tr>
                         <th scope="row"><a href="#">{{ $key+1}}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
-                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
-                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                        <td>
+                            <form action="{{ url('/view', $reports->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-link text-primary" style="padding:0; border:none; background:none;">
+                                    {{ $reports->report_name }}
+                                </button>
+                            </form>
+                        <form action="{{ url('/download', $reports->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-arrow-down-circle-fill fs-15"></i>
+                            </button>
+                        </form>
                       </td>
                         <td>{{ $reports->hoc_name }} on {{ $reports->date }}</td>
                         @if( $reports->dist_approval == 1 )
@@ -183,9 +203,19 @@
                     @if($reports->reg_id == auth()->user()->id && $reports->dist_approval == 2)
                     <tr>
                         <th scope="row"><a href="#">{{ $key+1}}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
-                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
-                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                        <td>
+                            <form action="{{ url('/view', $reports->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-link text-primary" style="padding:0; border:none; background:none;">
+                                    {{ $reports->report_name }}
+                                </button>
+                            </form>
+                        <form action="{{ url('/download', $reports->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-arrow-down-circle-fill fs-15"></i>
+                            </button>
+                        </form>
                       </td>
                         <td>{{ $reports->hoc_name }} on {{ $reports->date }}</td>
                         @if( $reports->dist_approval == 2 && $reports->reg_approval == 1 )
@@ -239,9 +269,19 @@
                     @if($reports->hod_id == auth()->user()->id)
                       <tr>
                         <th scope="row"><a href="#">{{ $key+1 }}</a></th>
-                        <td><a href="{{ url('/view',$reports->id) }}" class="text-primary">{{ $reports->report_name }}</a>
-                        <a href="{{ url('/download',$reports->id) }}" class="btn btn-primary">
-                         <i class="bi bi-arrow-down-circle-fill fs-15"></i></a>
+                        <td>
+                            <form action="{{ url('/view', $reports->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-link text-primary" style="padding:0; border:none; background:none;">
+                                    {{ $reports->report_name }}
+                                </button>
+                            </form>
+                        <form action="{{ url('/download', $reports->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-arrow-down-circle-fill fs-15"></i>
+                            </button>
+                        </form>
                       </td>
                         <td>{{ $reports->date }}</td>
                         @if( ($reports->dist_approval == 1 && $reports->reg_approval == 2) || ($reports->dist_approval == 2 && $reports->reg_approval == 1) || 

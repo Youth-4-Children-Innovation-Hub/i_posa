@@ -366,8 +366,10 @@ class CourseController extends Controller
     public function getCourseDetails(Request $request)
     {
         $courseName = $request->course_name;
-        
-        $details = CourseCenter::select(
+        $user = Auth::user();
+        $role = $user->role->role;
+
+        $query = CourseCenter::select(
             'centers.name as center',
             'districts.name as district',
             'regions.name as region',
@@ -378,8 +380,16 @@ class CourseController extends Controller
         ->join('districts', 'centers.district_id', '=', 'districts.id')
         ->join('regions', 'districts.region_id', '=', 'regions.id')
         ->join('teachers', 'course_centers.teacher_id', '=', 'teachers.id')
-        ->where('courses.name', $courseName)
-        ->get();
+        ->where('courses.name', $courseName);
+
+        if ($user->role_id == 3) {
+            $query->where('districts.cordinator_id','=', $user->id);
+        } elseif ($user->role_id == 2                                                           ) {
+            $query->where('regions.cordinator_id', $user->id);
+        }
+        // else, admin or other roles see all
+
+        $details = $query->get();
 
         return response()->json([
             'status' => true,

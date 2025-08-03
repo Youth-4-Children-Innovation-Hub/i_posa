@@ -46,11 +46,18 @@
                         <td>{{ $region->name }}</td>
                         @can('is_admin')
 
-                        <td> <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $region->id }}"
-                                data-bs-toggle="modal" data-bs-target="#EditModal">Edit</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm delBtn"
-                                value="{{ $region->id }}">Delete</button>
-                        </td>
+                        <td>
+    <div class="d-flex align-items-center gap-2">
+        <!-- Edit Icon Button -->
+        <button type="button" class="btn btn-outline-primary btn-sm editBtn" value="{{ $region->id }}" data-bs-toggle="modal" data-bs-target="#EditModal" title="Edit Region">
+            <i class="bi bi-pencil"></i>
+        </button>
+        <!-- Delete Icon Button -->
+        <button type="button" class="btn btn-outline-danger btn-sm delBtn" value="{{ $region->id }}" title="Delete Region">
+            <i class="bi bi-trash"></i>
+        </button>
+    </div>
+</td>
                         @endcan
 
                     </tr>
@@ -231,3 +238,14 @@ $('.delBtn').on('click', function() {
 });
 </script>
 @endsection
+
+@push('styles')
+<style>
+    .table .btn i {
+        pointer-events: none;
+    }
+    .gap-2 > * + * {
+        margin-left: 0.5rem !important;
+    }
+</style>
+@endpush

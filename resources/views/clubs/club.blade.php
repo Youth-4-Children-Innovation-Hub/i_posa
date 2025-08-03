@@ -84,8 +84,9 @@
                         <td>{{ $clubs->Chairperson }}</td>
                         <td>{{ $clubs->Contact }}</td>
                         <td>
-                            <a href="{{ url('club_details', ['id' => $clubs->id]) }}" type="button" class="btn btn-outline-success btn-sm editBtn" value="">View</a>
-                            
+                            <a href="{{ url('club_details', ['id' => $clubs->id]) }}" class="btn btn-outline-success btn-sm editBtn" title="View Club">
+                                <i class="bi bi-eye"></i>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
@@ -309,3 +310,9 @@ $(document).on('click', '.editBtn', function() {
 
 </script>
 @endsection
+
+@push('styles')
+<style>
+    .btn i { pointer-events: none; }
+</style>
+@endpush

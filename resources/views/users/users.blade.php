@@ -62,16 +62,18 @@
 
                         <!-- updateform/{{$user->id}} -->
                         <td>
-                            <div class="">
-                            <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal"
-                                data-bs-target="#UpdateModal">Edit</button>
-                                
-                            <form action="{{route('userStatus',['id' => $user->id ])}}" method="post">
-                                @csrf
-                                <button class="btn btn-outline btn-sm py-0 {{$user->status == 1 ? 'btn-danger' : 'btn-success'}}">
-                                    {{ (int)$user->status === 1 ? 'Deactivate' : 'Activate'}}
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Edit Icon Button -->
+                                <button type="button" class="btn btn-outline-primary btn-sm py-0 editBtn" value="{{ $user->id }}" data-bs-toggle="modal" data-bs-target="#UpdateModal" title="Edit User">
+                                    <i class="bi bi-pencil"></i>
                                 </button>
-                            </form>
+                                <!-- Activate/Deactivate Icon Button -->
+                                <form action="{{route('userStatus',['id' => $user->id ])}}" method="post" class="m-0 p-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline btn-sm py-0 {{ $user->status == 1 ? 'btn-danger' : 'btn-success' }}" title="{{ (int)$user->status === 1 ? 'Deactivate' : 'Activate' }} User">
+                                        <i class="bi {{ (int)$user->status === 1 ? 'bi-lock' : 'bi-unlock' }}"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                       </tr>  
@@ -97,9 +99,16 @@
             </div>
             <form method="POST" action="{{route('create_user')}}">
                 @csrf
-
                 <div class="modal-body">
-
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="" id="add_region">
                         <div class="card-body">
 
@@ -107,7 +116,7 @@
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="name" required>
+                                    <input type="text" class="form-control" name="name" required value="{{ old('name') }}">
                                 </div>
                                
                             </div>
@@ -115,7 +124,7 @@
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
                                 <div class="col-sm-10">
-                                    <input type="text" placeholder="Start with 07 or 06" class="form-control" name="phone" required>
+                                    <input type="text" placeholder="Start with 07 or 06" class="form-control" name="phone" required value="{{ old('phone') }}">
                                    
                                 </div>
                             </div>
@@ -123,7 +132,7 @@
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="email" required>
+                                    <input type="text" class="form-control" name="email" required value="{{ old('email') }}">
                                     
                                 </div>
                             </div>
@@ -133,10 +142,9 @@
                                 <div class="col-sm-10">
                                     <select class="selectpicker" aria-label="Default select example" name="role"
                                         required data-width=100% data-live-search="true">
-                                        <option selected="selected" hidden="hidden">
-                                            Open this select menu</option>
+                                        <option value="" disabled selected>Open this select menu</option>
                                         @foreach($roles as $role)
-                                        <option value="{{$role->id}}">
+                                        <option value="{{$role->id}}" {{ old('role') == $role->id ? 'selected' : '' }}>
                                             {{ $role->role }}</option>
                                         @endforeach
                                     </select>
@@ -243,6 +251,55 @@
 
 
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Intercept all user status forms
+    document.querySelectorAll('form[action*="userStatus"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let btn = form.querySelector('button[type="submit"]');
+            let action = btn.textContent.trim();
+            Swal.fire({
+                title: `Are you sure you want to ${action.toLowerCase()} this user?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: `Yes, ${action.toLowerCase()}!`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // Show feedback if present in session
+    @if(session('user_status_feedback'))
+        Swal.fire({
+            icon: '{{ session('user_status_feedback_type', 'success') }}',
+            title: '{{ session('user_status_feedback') }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+});
+</script>
+@endpush
+
+@push('styles')
+<style>
+    .table .btn i {
+        pointer-events: none;
+    }
+    .gap-2 > * + * {
+        margin-left: 0.5rem !important;
+    }
+</style>
+@endpush
 
 @section('scripts')
     <script>

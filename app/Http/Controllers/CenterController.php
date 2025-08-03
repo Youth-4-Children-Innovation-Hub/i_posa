@@ -17,7 +17,11 @@ class CenterController extends Controller
     public function GetCenters()
     {   
         $roleId = DB::table('roles')->where('role', 'head of center')->value('id');
-        $hods = User::where('role_id', $roleId)->get();
+        // Only users who are not assigned as a head of center in any center
+        $assignedHodIds = Center::pluck('hod_id')->toArray();
+        $hods = User::where('role_id', $roleId)
+            ->whereNotIn('id', $assignedHodIds)
+            ->get();
         // $districts = District::all();
         $userData = auth()->user();
         $id = $userData->id;

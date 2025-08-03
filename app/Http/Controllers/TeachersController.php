@@ -22,7 +22,7 @@ class TeachersController extends Controller
         ->first();
 
         $userData = Auth::user();
-        $teachers = Teacher::orderBy('created_at', 'DESC')
+        $teachers = Teacher::orderBy('name', 'ASC')
         ->get();
 
         $districtTeachers = Teacher::select('teachers.*', 'centers.name as centerName')
