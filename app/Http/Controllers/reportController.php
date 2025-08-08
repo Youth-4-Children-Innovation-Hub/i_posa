@@ -393,9 +393,12 @@ class reportController extends Controller
         $students = Student::select('students.id',
                                     'students.name AS name',
                                     'students.phone_number AS phone',
+                                    'courses.name AS course',
                                     'students.disability AS disability',
                                     'students.gender',
                                     'students.status')
+                                    ->leftJoin('student_courses', 'student_courses.student_id', '=', 'students.id')
+                                    ->leftJoin('courses', 'courses.id', '=', 'student_courses.course_id') 
                                     ->join('centers', 'students.center_id', '=' , 'centers.id')
                                     ->WHERE('centers.hod_id', '=', Auth::user()->id)
                                     ->get();

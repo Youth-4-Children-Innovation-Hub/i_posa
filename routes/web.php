@@ -59,7 +59,7 @@ Route::middleware(['auth','status'])->group(function(){
     Route::get('/home', [App\Http\Controllers\DashboardController::class,'GetDashboard'])->name('home');
     //Route::view('regions','regions.regions');
     Route::get('users',[UserController::class,'GetUsers']);
-    Route::post('/addusers',[UserController::class,'Create'])->name('create_user');
+    Route::post('/create_user', [UserController::class, 'Create'])->name('create_user');
     Route::get('updateform/{id}',[UserController::class,'UpdateForm']);
     Route::post('updateuser',[UserController::class,'Update'])->name('update_user');
     Route::get('search_user',[UserController::class,'Search']);

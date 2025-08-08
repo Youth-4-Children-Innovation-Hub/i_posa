@@ -76,6 +76,7 @@ class userProfileController extends Controller
     
     // Store the path
     $path = 'assets/img/' . $photo_name;
+    // dd($path);
     
     // Update the database
     DB::update('update users set profile_photo = ? where id = ?', [$path, $user_id]);

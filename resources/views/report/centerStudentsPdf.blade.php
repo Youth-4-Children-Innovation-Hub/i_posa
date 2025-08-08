@@ -3,237 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPOSA Implementation Report</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Center Students Report</title>
     <style>
         body {
             font-family: 'Times New Roman', serif;
-            line-height: 1.4;
-            color: #333;
-            background-color: #fafafa;
+            color: #222;
+            background: #fff;
+            font-size: 15px;
+            margin: 15px 20px; /* Slimmer margins */
         }
-        
-        .official-header {
-            padding: 20px;
-            margin-bottom: 30px;
+        .letter-header {
+            width: 100%;
+            margin-bottom: 10px;
         }
-        
-        .logo-section {
-            text-align: center;
-            margin: 20px 0 30px 0;
-        }
-        
-        .logo-placeholder {
-            width: 90px;
-            height: 85px;
-            display: inline-block;
-            color: #003366;
-            font-weight: bold;
-            font-size: 11px;
-            text-align: center;
-            background: #f8f9fa;
-            padding-top: 32px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-            border: 1px solid #dee2e6;
-        }
-        
-        .header-text-center {
-            text-align: center;
-        }
-        
-        .header-title {
-            color: #003366;
-            font-weight: bold;
-            font-size: 17px;
-            text-align: center;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .header-subtitle {
-            color: #666;
-            font-size: 13px;
-            text-align: center;
-            font-style: italic;
-            margin-bottom: 15px;
-        }
-        
-        .report-title {
-            color: #003366;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 20px;
-            margin: 25px 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .intro-section {
-            background: #ffffff;
-            padding: 25px;
-            margin: 30px 0;
-            line-height: 1.6;
-            font-size: 14px;
-            text-align: justify;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            
-            padding-left: 40px;
-        }
-        
-        .intro-section p {
-            margin-bottom: 18px;
-            
-        }
-
-        .paras {
-            
-            border-left: 2px solid #003366;
-            padding-left: 10px;
-        }
-        
-        .intro-title {
-            color: #003366;
+        .header-center .gov {
             font-weight: bold;
             font-size: 16px;
-            margin-bottom: 15px;
-            text-align: center;
+            text-transform: uppercase;
         }
-        
-        .table-plain {
-            background: white;
-            margin: 20px 0;
-        }
-        
-        .table-plain thead th {
-            background: transparent;
-            color: #003366;
+        .header-center .inst {
             font-weight: bold;
-            text-align: center;
-            border: none;
-            border-bottom: 1px solid #333;
-            padding: 12px 8px;
+            font-size: 15px;
+            text-transform: uppercase;
+        }
+        .header-center .est {
+            font-size: 13px;
+            font-style: italic;
+            font-weight: normal;
+        }
+        .ref-date-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0 10px 0;
+        }
+        .ref-block {
+            font-weight: bold;
             font-size: 13px;
         }
-        
-        .table-plain tbody td {
-            padding: 10px 8px;
-            font-size: 12px;
-            border: none;
+        .date-block {
+            font-size: 13px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: -15px;
+        }
+        .recipient-block {
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+        .subject-block {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            font-size: 15px;
+            text-decoration: underline;
             text-align: center;
         }
-        
-        .table-plain tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .letter-body {
+            margin-bottom: 25px;
+            text-align: justify;
+            font-size: 14px;
         }
-        
-        .official-footer {
-            margin-top: 50px;
-            padding: 20px;
-            /* background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); */
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            position: relative;
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 30px 0;
+            font-size: 13px;
         }
-        
+        .students-table th, .students-table td {
+            border: 1px solid #222;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        .students-table th {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
         .signature-section {
-            margin: 30px 0;
-            text-align: left;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
         }
-        
+        .signature-left {
+            max-width: 65%;
+        }
         .signature-line {
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #222;
             width: 200px;
             margin: 20px 0 5px 0;
         }
-        
-        .footer-contact {
-            background: #003366;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            font-size: 11px;
-            line-height: 1.3;
+        .signature-img {
+            height: 50px;
+            margin-bottom: 1px;
         }
-        
-        .footer-address {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        
-        .footer-slogan {
-            text-align: center;
-            font-weight: bold;
-            color: #ffd700;
+        .stamp-img {
+            height: 100px;
+            width: auto;
             margin-top: 10px;
         }
-        
-        .generation-info {
-            position: absolute;
-            bottom: -25px;
-            right: 10px;
-            font-size: 10px;
-            color: #666;
-            background: white;
-            padding: 5px 10px;
-            border-radius: 3px;
-            border: 1px solid #ddd;
-        }
-        
-        @media print {
-            body { background-color: white; }
-            .official-header, .report-title, .table-plain { box-shadow: none; }
+        .footer-contact {
+            font-size: 12px;
+            color: #222;
+            position: fixed; /* Always at bottom */
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <!-- Official Header -->
-    <div class="official-header">
-        <div class="logo-section">
-            
-                <img src="{{ public_path('assets/img/iae.png') }}" width="125" height="120" style="display: block; border: 0px;">
-            
-            
-            <div class="header-text-center">
-                <div class="header-title">THE UNITED REPUBLIC OF TANZANIA</div>
-                <div class="header-title">INSTITUTE OF ADULT EDUCATION</div>
-                <div class="header-subtitle">(ESTABLISHED IN 1960)</div>
-            </div>
+    <!-- Header -->
+    <div class="letter-header">
+        <table width="100%" style="border-collapse:collapse; margin-bottom:0;">
+            <tr>
+                <td style="width:20%; text-align:left; vertical-align:top;">
+                    <img src="{{ public_path('assets/img/coatofarms.png') }}" alt="Coat of Arms" style="height:80px;">
+                </td>
+                <td style="width:60%; text-align:center; vertical-align:top;" class="header-center">
+                    <div class="gov">THE UNITED REPUBLIC OF TANZANIA</div>
+                    <div class="inst">INSTITUTE OF ADULT EDUCATION</div>
+                    <div class="est">(ESTABLISHED IN 1960)</div>
+                </td>
+                <td style="width:20%; text-align:right; vertical-align:top;">
+                    <img src="{{ public_path('assets/img/iae.png') }}" alt="IAE Logo" style="height:80px;">
+                </td>
+            </tr>
+        </table>
+        <!-- Decorative lines -->
+        <div style="height:4px; background:#0a2a66; margin:0 0 2px 0; border-radius:2px;"></div>
+        <div style="height:4px; background:#e6b800; margin:0 0 2px 0; border-radius:2px;"></div>
+        <div style="height:4px; background:#3c8dbc; margin:0 0 18px 0; border-radius:2px;"></div>
+    </div>
+
+    <!-- Reference & Date -->
+    <div class="ref-date-row">
+        <div class="ref-block">
+            Our Ref: IPOSA/{{ now()->format('Y') }}/{{ strtoupper(substr($center->name,0,3)) }}/{{ date('His') }}
+        </div>
+        <div class="date-block">
+            Date: {{ now()->format('F d, Y') }}
         </div>
     </div>
-    
-    <!-- Report Title -->
-    <div class="report-title">
-        IMPLEMENTATION REPORT FOR IPOSA PROGRAMME
+
+    <!-- Recipient -->
+    <div class="recipient-block">
+        MANAGER.<br>
+        {{ strtoupper($center->name) }} CENTER<br>
+        {{ $center->address ?? 'P.O. Box ______,' }}<br>
+        {{ $center->district ?? 'District' }}, TANZANIA.<br><br>
+        Dear Sir/Madam,
     </div>
-    
-    <!-- Introduction Section -->
-    <div class="intro-section">
-         <div class="intro-title">REPORT INTRODUCTION</div>
-           <div class="paras">
-               <p>This report presents a detailed overview of student enrollment and participation under the IPOSA (Integrated Post-School Adult Education) Programme at <strong>{{ strtoupper($center->name) }} Center</strong>. It has been compiled by <strong>{{ strtoupper(Auth::user()->name) }}</strong>, serving as the Head of Center.</p>
-               
-               <p>As of the date of this report generation (<strong>{{ now()->format('F j, Y') }}</strong>), the center is serving a total of <strong>{{ $studentsCount }} students</strong>. This includes <strong>{{ $maleCount }} male</strong> and <strong>{{ $femaleCount }} female</strong> learners. The report also records <strong>{{ $dropoutCount }} dropouts</strong>, highlighting the need for continuous efforts in student retention and support.</p>
-               
-               <p>The data contained in this report reflects the current learner demographics and engagement at the center, providing a basis for informed decision-making and programme improvement in alignment with IPOSA objectives.</p>
-               
-               <p>The following table summarizes the student statistics at the center, serving as an important reference for planning, monitoring, and evaluation of adult education initiatives at the community level.</p>
-           </div>
+
+    <!-- Subject -->
+    <div class="subject-block">
+        RE: IPOSA PROGRAMME <strong> {{ strtoupper($center->name) }} </strong> CENTER STUDENTS REPORT
     </div>
-    
-    <!-- centers Details Table -->
-    <div>
-        <table class="table table-plain">
-           <thead>
+
+    <!-- Letter Body -->
+    <div class="letter-body">
+        <p>
+            The Institute of Adult Education requires regular reporting on student enrollment and participation to ensure effective monitoring and evaluation of the IPOSA (Integrated Post-School Adult Education) Programme. This report provides a summary of the current status at <strong>{{ strtoupper($center->name) }} Center</strong> as compiled by <strong>{{ strtoupper(Auth::user()->name) }}</strong>, Head of Center.
+        </p>
+        <p>
+            As of <strong>{{ now()->format('F j, Y') }}</strong>, the center serves a total of <strong>{{ $studentsCount }} students</strong> ({{ $maleCount }} male, {{ $femaleCount }} female). The report also records <strong>{{ $dropoutCount }} dropouts</strong>, highlighting the need for continuous efforts in student retention and support.
+        </p>
+        <p>
+            The following table summarizes the student statistics at the center, serving as an important reference for planning, monitoring, and evaluation of adult education initiatives at the community level.
+        </p>
+    </div>
+
+    <!-- Students Table -->
+    <table class="students-table">
+        <thead>
             <tr>
                 <th>No</th>
                 <th>Name</th>
                 <th>Course</th>
-                <th>Phone </th> 
+                <th>Phone</th>
                 <th>Gender</th>
-                <th>Disability</th> 
+                <th>Disability</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -248,55 +199,36 @@
                 <td>{{ $student->disability }}</td>
                 <td>{{ ucfirst($student->status) }}</td>
             </tr>
-            @endforeach   
+            @endforeach
         </tbody>
-    </div>
-    
-    <!-- Official Footer -->
-    <div class="official-footer">
-        <!-- Signature Section -->
-        <div class="signature-section">
+    </table>
+
+    <!-- Signature & Stamp -->
+    <div class="signature-section">
+        <div class="signature-left">
             <p><strong>Sincerely,</strong></p>
-            <br>
+            <img src="{{ public_path('assets/img/signature.png') }}" alt="Signature" class="signature-img">
             <div class="signature-line"></div>
             <p><strong>{{ strtoupper(Auth::user()->name) }}</strong><br>
             Head of Center<br>
             IPOSA Programme</p>
         </div>
-        
-        <!-- Contact Information -->
-        <div class="footer-contact">
-            <div class="footer-address">
-                <strong>For more information please contact:</strong><br>
-                The Institute  Coordinator<br>
-                Mobile: +255783229535 or +255735016335<br>
-                Email: field.coordinator@iae.ac.tz
-            </div>
-            
-            <hr style="border-color: #ffffff40; margin: 10px 0;">
-            
-            <div class="footer-address">
-                All correspondence should be addressed to the Rector<br>
-                10 Bibi Titi Mohammed St, Postal Code: 11101, P. O. Box 20679, Dar es Salaam - Tanzania<br>
-                Tel: +255 22 2150838, Fax: +255 22 2150836<br>
-                Email: rector@iae.ac.tz, Website: www.iae.ac.tz
-            </div>
-            
-            <div class="footer-slogan">ELIMU KWA WOTE</div>
-        </div>
-        
-        <!-- Generation Info 
-        <div class="generation-info">
-            <strong>Generated on:</strong> {{ now()->format('Y-m-d H:i:s') }} by {{ Auth::user()->name }}
-        </div> -->
+       
+
+    <!-- Footer -->
+    <div class="footer-contact">
+        <hr style="border-color: #0a4d8c30; margin: 5px 0;">
+        All correspondence should be addressed to the Rector<br>
+        10 Bibi Titi Mohammed St, Postal Code: 11101, P. O. Box 20679, Dar es Salaam - Tanzania<br>
+        Tel: +255 22 2150838, Fax: +255 22 2150836<br>
+        Email: rector@iae.ac.tz, Website: www.iae.ac.tz
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Page Numbers for DOMPDF -->
+    <script type="text/php">
+    if ( isset($pdf) ) {
+        $pdf->page_text(520, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0,0,0));
+    }
+    </script>
 </body>
 </html>
-
-
-
-

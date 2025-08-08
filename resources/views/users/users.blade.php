@@ -19,16 +19,6 @@
                         User</button>
 
                 </li>
-                @if ($errors->has('phone'))
-                    <div style="color: red;">
-                        {{ $errors->first('phone') }}
-                    </div>
-                @endif
-                @if ($errors->has('email'))
-                <div style="color: red;">
-                    {{ $errors->first('email') }}
-                </div>
-                @endif
     </div>
     </ol>
     </nav>
@@ -97,18 +87,10 @@
                 <h5 class="modal-title">Add User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{route('create_user')}}">
+            <form method="POST" action="{{ route('create_user') }}" id="createUserForm">
                 @csrf
-                <div class="modal-body">
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                <div class="modal-body" id="createUserModalBody">
+                    <div id="createUserErrors"></div>
                     <div class="" id="add_region">
                         <div class="card-body">
 
@@ -251,41 +233,54 @@
 
 
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Intercept all user status forms
-    document.querySelectorAll('form[action*="userStatus"]').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            let btn = form.querySelector('button[type="submit"]');
-            let action = btn.textContent.trim();
-            Swal.fire({
-                title: `Are you sure you want to ${action.toLowerCase()} this user?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: `Yes, ${action.toLowerCase()}!`
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
+$(document).ready(function() {
+    $('#createUserForm').on('submit', function(e) {
+        e.preventDefault();
+        let form = $(this);
+        let url = form.attr('action');
+        let formData = form.serialize();
+
+        $('#createUserErrors').html('');
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#CreateModal').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'User created successfully!',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    let errorHtml = '<div class="alert alert-danger"><ul>';
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li>' + value[0] + '</li>';
+                    });
+                    errorHtml += '</ul></div>';
+                    $('#createUserErrors').html(errorHtml);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'An error occurred!',
+                        text: 'Please try again.'
+                    });
                 }
-            });
+            }
         });
     });
-
-    // Show feedback if present in session
-    @if(session('user_status_feedback'))
-        Swal.fire({
-            icon: '{{ session('user_status_feedback_type', 'success') }}',
-            title: '{{ session('user_status_feedback') }}',
-            showConfirmButton: false,
-            timer: 2000
-        });
-    @endif
 });
 </script>
 @endpush
