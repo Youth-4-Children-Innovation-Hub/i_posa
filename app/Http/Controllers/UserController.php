@@ -17,12 +17,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-
-
-
-
-
-
 class UserController extends Controller
 {
 
@@ -105,9 +99,10 @@ class UserController extends Controller
 
     
 
+    // Only keep the Create method for user creation
     public function Create(Request $request)
     {
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => ['required', 'regex:/^0[67][0-9]{8}$/', 'unique:users,phone_number'],
@@ -119,6 +114,14 @@ class UserController extends Controller
             'role.integer' => 'Please select a valid role.',
             'role.exists' => 'Please select a valid role.',
         ]);
+
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $user = new User();
         $user->name = $request->name;
         $user->phone_number = $request->phone;
@@ -126,15 +129,11 @@ class UserController extends Controller
         $user->password = Hash::make('12345678');
         $user->role_id = $request->input('role');
         $user->save();
-        $userToEmail = User::where('email', $request->email)->first();
-        $details = [
-            'greeting'=>'hi ' . $userToEmail->name,
-            'body'=>'You have been registered on the IPOSA system. Click the button below to set password for access.',
-            'actiontext'=>'Set password',
-            'actionurl'=> url('reports_page'),
-            'lastline'=>'This is the last line',
-        ];
-        Notification::send($userToEmail, new mailNotification($details));
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+
         return redirect('users')->with('sweet_success', "User {$user->name} added successfully.");
     }
 
