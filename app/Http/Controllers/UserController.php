@@ -110,31 +110,36 @@ class UserController extends Controller
         ], [
             'email.unique' => 'The email address is already registered.',
             'phone.unique' => 'The phone number is already registered.',
+            'phone.regex' => 'Phone number must start with 06 or 07 and be 10 digits.',
             'role.required' => 'Please select a valid role.',
             'role.integer' => 'Please select a valid role.',
             'role.exists' => 'Please select a valid role.',
         ]);
 
         if ($validator->fails()) {
-            if ($request->ajax()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-            return redirect()->back()->withErrors($validator)->withInput();
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = new User();
-        $user->name = $request->name;
-        $user->phone_number = $request->phone;
-        $user->email = $request->email;
-        $user->password = Hash::make('12345678');
-        $user->role_id = $request->input('role');
-        $user->save();
+        try {
+            $user = new User();
+            $user->name = $request->name;
+            $user->phone_number = $request->phone;
+            $user->email = $request->email;
+            $user->password = Hash::make('12345678');
+            $user->role_id = $request->input('role');
+            $user->save();
 
-        if ($request->ajax()) {
-            return response()->json(['success' => true]);
+            return response()->json([
+                'success' => true,
+                'message' => "User {$user->name} added successfully."
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create user. Please try again.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return redirect('users')->with('sweet_success', "User {$user->name} added successfully.");
     }
 
     public function setStatus($id){

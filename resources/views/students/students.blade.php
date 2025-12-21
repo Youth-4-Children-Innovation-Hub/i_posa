@@ -357,10 +357,11 @@
                     <h5 class="modal-title">Add Student</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('create_student') }}" enctype="multipart/form-data" id="studentForm">
+                <form method="POST" action="{{ route('create_student') }}" enctype="multipart/form-data" id="studentForm" class="js-ajax-form">
                     @csrf
 
                     <div class="modal-body">
+                        <div class="alert alert-danger js-form-errors" style="display:none;"></div>
 
                         <div class="" id="add_region">
                             <div class="card-body ">
@@ -637,9 +638,10 @@
                     <h5 class="modal-title">Edit Student</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('update_student') }}" enctype="multipart/form-data" id="editForm">
+                <form method="POST" action="{{ route('update_student') }}" enctype="multipart/form-data" id="editForm" class="js-ajax-form">
                     @csrf
                     <div class="modal-body">
+                        <div class="alert alert-danger js-form-errors" style="display:none;"></div>
                         <input type="hidden" name="student_id" id="student_id">
                         <input type="hidden" name="parent_id" id="gid">
                         <div class="" id="add_region">

@@ -151,6 +151,196 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
+    <script>
+        // Global AJAX form handler (opt-in via class="js-ajax-form")
+        // - Prevents full page reload
+        // - Supports multipart/form-data via FormData
+        // - Displays Laravel validation errors (422) either per-field (#error-field) or as a list (.js-form-errors)
+        (function () {
+            function setSubmitting($form, isSubmitting) {
+                var $btn = $form.find('button[type="submit"], input[type="submit"]').first();
+                if (!$btn.length) return;
+
+                if (isSubmitting) {
+                    $btn.data('original-text', $btn.is('button') ? $btn.html() : $btn.val());
+                    $btn.prop('disabled', true);
+                    if ($btn.is('button')) {
+                        $btn.html('<span class="spinner-border spinner-border-sm me-2"></span>Saving...');
+                    } else {
+                        $btn.val('Saving...');
+                    }
+                } else {
+                    var original = $btn.data('original-text');
+                    $btn.prop('disabled', false);
+                    if (original !== undefined) {
+                        if ($btn.is('button')) $btn.html(original);
+                        else $btn.val(original);
+                    }
+                }
+            }
+
+            function clearErrors($form) {
+                $form.find('.js-form-errors').hide().empty();
+                $form.find('.is-invalid').removeClass('is-invalid');
+
+                // Clear per-field containers
+                $form.find('[id^="error-"]').each(function () {
+                    $(this).text('').hide();
+                });
+            }
+
+            function showErrors($form, errors) {
+                var firstField = null;
+                var listItems = [];
+
+                $.each(errors, function (field, messages) {
+                    var msg = Array.isArray(messages) ? messages[0] : messages;
+                    listItems.push('<li>' + String(msg) + '</li>');
+
+                    var $input = $form.find('[name="' + field + '"]');
+                    var $error = $form.find('#error-' + field);
+
+                    if ($input.length) {
+                        $input.addClass('is-invalid');
+                        if (!firstField) firstField = $input;
+
+                        // bootstrap-select support
+                        if ($input.hasClass('selectpicker') && $input.selectpicker) {
+                            try { $input.selectpicker('setStyle', 'is-invalid', 'add'); } catch (e) {}
+                        }
+                    }
+
+                    if ($error.length) {
+                        $error.text(msg).show();
+                    }
+                });
+
+                // If there are no per-field error slots, show a list container if present
+                var $list = $form.find('.js-form-errors');
+                if ($list.length && listItems.length) {
+                    $list.html('<ul class="m-0 ps-3">' + listItems.join('') + '</ul>').show();
+                } else if (typeof Swal !== 'undefined' && listItems.length) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        html: '<ul style="text-align:left; margin:0; padding-left:18px;">' + listItems.join('') + '</ul>'
+                    });
+                }
+
+                if (firstField && firstField[0]) {
+                    firstField[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            function buildAjaxOptions($form) {
+                var formEl = $form[0];
+                var isMultipart = ($form.attr('enctype') || '').toLowerCase().indexOf('multipart/form-data') !== -1;
+                var hasFileInput = $form.find('input[type="file"]').length > 0;
+                var useFormData = isMultipart || hasFileInput;
+
+                var options = {
+                    url: $form.attr('action'),
+                    type: ($form.attr('method') || 'POST').toUpperCase(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    dataType: 'json'
+                };
+
+                if (useFormData) {
+                    options.data = new FormData(formEl);
+                    options.processData = false;
+                    options.contentType = false;
+                } else {
+                    options.data = $form.serialize();
+                }
+
+                return options;
+            }
+
+            // Intercept submit for opt-in AJAX forms
+            $(document).on('submit', 'form.js-ajax-form', function (e) {
+                e.preventDefault();
+
+                var $form = $(this);
+                clearErrors($form);
+                setSubmitting($form, true);
+
+                var ajaxOptions = buildAjaxOptions($form);
+
+                $.ajax($.extend({}, ajaxOptions, {
+                    success: function (response) {
+                        setSubmitting($form, false);
+
+                        if (response && response.success) {
+                            // If this form is in a Bootstrap modal, hide it
+                            var $modal = $form.closest('.modal');
+                            if ($modal.length) {
+                                // Bootstrap 4 (jQuery)
+                                if ($modal.modal) {
+                                    try { $modal.modal('hide'); } catch (e) {}
+                                }
+
+                                // Bootstrap 5
+                                if (window.bootstrap && window.bootstrap.Modal && $modal[0]) {
+                                    try {
+                                        var instance = window.bootstrap.Modal.getInstance($modal[0]);
+                                        if (instance) instance.hide();
+                                    } catch (e) {}
+                                }
+                            }
+
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response.message || 'Saved successfully!',
+                                    showConfirmButton: false,
+                                    timer: 1200
+                                }).then(function () {
+                                    if (response.redirect) window.location.href = response.redirect;
+                                    else window.location.reload();
+                                });
+                            } else {
+                                if (response.redirect) window.location.href = response.redirect;
+                                else window.location.reload();
+                            }
+                        } else {
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({ icon: 'error', title: 'Error', text: (response && response.message) ? response.message : 'Unexpected response.' });
+                            }
+                        }
+                    },
+                    error: function (xhr) {
+                        setSubmitting($form, false);
+
+                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                            showErrors($form, xhr.responseJSON.errors);
+                            return;
+                        }
+
+                        var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Please try again later.';
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({ icon: 'error', title: 'Error', text: msg });
+                        }
+                    }
+                }));
+            });
+
+            // Clear field error on typing
+            $(document).on('input change', 'form.js-ajax-form input, form.js-ajax-form select, form.js-ajax-form textarea', function () {
+                var $field = $(this);
+                $field.removeClass('is-invalid');
+                var name = $field.attr('name');
+                if (name) {
+                    var $error = $field.closest('form').find('#error-' + name);
+                    if ($error.length) $error.text('').hide();
+                }
+            });
+        })();
+    </script>
+
     @yield('scripts')
 
     <script>

@@ -93,13 +93,13 @@
 
                                 <!-- General Form Elements -->
                                 <div class=" row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                                    <label for="inputText" class="col-sm-2 col-form-label">Mkoa</label>
                                     <div class="col-sm-10">
                                     <select class="selectpicker" aria-label="Default select example"
                                             name="name" data-width=100% data-live-search="true">
-                                            <option selected>Open this select menu</option>
-                                            @foreach ($mikoa as $mkoa)
-                                            <option value="{{ $mkoa->name }}">{{ $mkoa->name }}</option>
+                                            <option selected>Open  select menu</option>
+                                            @foreach ($regions as $mkoa)
+                                            <option value="{{ $mkoa->region }}">{{ $mkoa->region }}</option>
                                             @endforeach
 
                                         </select>

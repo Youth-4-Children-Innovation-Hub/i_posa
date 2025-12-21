@@ -43,7 +43,7 @@ class RegionsController extends Controller
 
         $regions = Region::select('regions.id AS id', 'regions.name AS region', 'users.name', 'regions.created_at AS start_date')
             ->leftJoin('users', 'users.id', '=', 'regions.cordinator_id')
-            ->get();
+            ->get(); 
         return view('regions.regions', ['mikoa' => $mikoa, 'cordinators' => $cordinators, 'regions' => $regions, 'userData' => $userData, 'userRole' => $userRole, 'paginate' => $request->session()->get('pagination_number')]);
     }
 

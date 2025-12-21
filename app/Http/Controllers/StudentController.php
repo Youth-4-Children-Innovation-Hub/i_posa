@@ -216,7 +216,10 @@ class StudentController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
         }
         // Store files using the public disk and save only the relative path
         $path_passport = $request->file('passport')->store('students/passports', 'public');
@@ -296,8 +299,21 @@ class StudentController extends Controller
                 $student_courses->state = "not complete";
                 $student_courses->save();
             }
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Student created successfully'
+                ]);
+            }
+
             return redirect()->back();
         } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to create student'
+                ], 500);
+            }
             return $e->getMessage();
         }
     }
@@ -306,6 +322,7 @@ class StudentController extends Controller
     public function update(Request $request)
 {
     $rules = [
+            'student_id' => 'required|integer|exists:students,id',
         'name' => 'required',
         'reg_no' => 'required',
         'gender' => 'required',
@@ -328,7 +345,7 @@ class StudentController extends Controller
         'name.required' => 'Student name field is required',
         'reg_no.required' => 'Registration number field is required',
         'gender.required' => 'Gender field is required',
-        'disability.required' => 'Student dissability field is required',
+        'dissability.required' => 'Student dissability field is required',
         'dob.required' => 'Date of birth field is required',
         'ward.required' => 'Ward field is required',
         'street.required' => 'Street field is required',
@@ -343,7 +360,10 @@ class StudentController extends Controller
     ];
     $validator = Validator::make($request->all(), $rules, $messages);
     if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator);
+        if ($request->expectsJson()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        return redirect()->back()->withErrors($validator)->withInput();
     }   
     $user_role = Role::select('role')
     ->join('users', 'roles.id', '=', 'users.role_id')
@@ -424,10 +444,21 @@ class StudentController extends Controller
                     $student_courses->save();
                 }
         }
-        // Fix: Changed success message to be more appropriate for update
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Student updated successfully.'
+            ]);
+        }
+
         return redirect('students')->with('success', 'Student updated successfully.');
     } catch (\Exception $e) {
-        // Fix: Better error handling - redirect back with error message instead of showing raw error
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update student'
+            ], 500);
+        }
         return redirect()->back()->with('error', 'Failed to update student: ' . $e->getMessage());
     }
 }

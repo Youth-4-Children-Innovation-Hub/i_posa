@@ -241,9 +241,10 @@
                     <h5 class="modal-title">Add Teacher</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('create_teacher') }}" id="teacherForm">
+                <form method="POST" action="{{ route('create_teacher') }}" id="teacherForm" class="js-ajax-form">
                     @csrf
                     <div class="modal-body">
+                        <div class="alert alert-danger js-form-errors" style="display:none;"></div>
                         <div class="" id="add_region">
                             <div class="card-body">
                                 <!-- General Form Elements -->
@@ -284,7 +285,7 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="email" id="email1" placeholder="optional" class="form-control" name="email">
+                                        <input type="email" id="email1" class="form-control" name="email" required>
                                     </div>
                                     <div id="email-error" style="color: red;"></div>
                                 </div>
@@ -317,9 +318,10 @@
                     <h5 class="modal-title">Edit Teacher</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('update_teacher') }}" id="teacherEditForm">
+                <form method="POST" action="{{ route('update_teacher') }}" id="teacherEditForm" class="js-ajax-form">
                     @csrf
                     <div class="modal-body">
+                        <div class="alert alert-danger js-form-errors" style="display:none;"></div>
                         <div class="" id="add_region">
                             <input type="hidden" name="teacher_id" id="teacher_id">
                             <div class="card-body">
@@ -362,7 +364,7 @@
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="email" class="form-control" placeholder="optional" name="email" id="email">
+                                        <input type="email" class="form-control" name="email" id="email" required>
                                     </div>
                                     <div id="email-edit-error" style="color: red;"></div>
                                 </div>

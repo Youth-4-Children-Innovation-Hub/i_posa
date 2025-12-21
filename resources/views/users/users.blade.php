@@ -58,7 +58,7 @@
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <!-- Activate/Deactivate Icon Button -->
-                                <form action="{{route('userStatus',['id' => $user->id ])}}" method="post" class="m-0 p-0">
+                                <form action="{{route('userStatus',['id' => $user->id ])}}" method="post" class="m-0 p-0 status-form" data-user-name="{{ $user->name }}" data-action="{{ (int)$user->status === 1 ? 'deactivate' : 'activate' }}">
                                     @csrf
                                     <button type="submit" class="btn btn-outline btn-sm py-0 {{ $user->status == 1 ? 'btn-danger' : 'btn-success' }}" title="{{ (int)$user->status === 1 ? 'Deactivate' : 'Activate' }} User">
                                         <i class="bi {{ (int)$user->status === 1 ? 'bi-lock' : 'bi-unlock' }}"></i>
@@ -90,58 +90,54 @@
             <form method="POST" action="{{ route('create_user') }}" id="createUserForm">
                 @csrf
                 <div class="modal-body" id="createUserModalBody">
-                    <div id="createUserErrors"></div>
                     <div class="" id="add_region">
                         <div class="card-body">
 
                             <!-- General Form Elements -->
                             <div class="row mb-3">
-                                <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                                <label for="create_name" class="col-sm-2 col-form-label">Name</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="name" required value="{{ old('name') }}">
-                                </div>
-                               
-                            </div>
-
-                            <div class="row mb-3">
-                                <label for="inputText" class="col-sm-2 col-form-label">Phone number</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="Start with 07 or 06" class="form-control" name="phone" required value="{{ old('phone') }}">
-                                   
+                                    <input type="text" class="form-control" id="create_name" name="name" required>
+                                    <div class="invalid-feedback" id="error-name"></div>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label for="inputText" class="col-sm-2 col-form-label">Email</label>
+                                <label for="create_phone" class="col-sm-2 col-form-label">Phone number</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="email" required value="{{ old('email') }}">
-                                    
+                                    <input type="text" placeholder="Start with 07 or 06" class="form-control" id="create_phone" name="phone" required>
+                                    <div class="invalid-feedback" id="error-phone"></div>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">Role</label>
+                                <label for="create_email" class="col-sm-2 col-form-label">Email</label>
                                 <div class="col-sm-10">
-                                    <select class="selectpicker" aria-label="Default select example" name="role"
+                                    <input type="email" class="form-control" id="create_email" name="email" required>
+                                    <div class="invalid-feedback" id="error-email"></div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="create_role" class="col-sm-2 col-form-label">Role</label>
+                                <div class="col-sm-10">
+                                    <select class="selectpicker" id="create_role" aria-label="Default select example" name="role"
                                         required data-width=100% data-live-search="true">
                                         <option value="" disabled selected>Open this select menu</option>
                                         @foreach($roles as $role)
-                                        <option value="{{$role->id}}" {{ old('role') == $role->id ? 'selected' : '' }}>
-                                            {{ $role->role }}</option>
+                                        <option value="{{$role->id}}">{{ $role->role }}</option>
                                         @endforeach
                                     </select>
+                                    <div class="invalid-feedback" id="error-role"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-
+                    <button type="submit" class="btn btn-primary" id="saveUserBtn">Save</button>
                 </div>
             </form><!-- End General Form Elements -->
 
@@ -233,120 +229,188 @@
 
 
 @endsection
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section('scripts')
 <script>
-$(document).ready(function() {
-    $('#createUserForm').on('submit', function(e) {
-        e.preventDefault();
-        let form = $(this);
-        let url = form.attr('action');
-        let formData = form.serialize();
+$(document).ready(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    });
 
-        $('#createUserErrors').html('');
+    function clearFormErrors() {
+        $('#createUserForm .invalid-feedback').text('').css('display', 'none');
+        $('#createUserForm .form-control, #createUserForm .selectpicker').removeClass('is-invalid');
+    }
+
+    function clearFieldError(fieldName) {
+        $('#error-' + fieldName).text('').css('display', 'none');
+        $('#createUserForm [name="' + fieldName + '"]').removeClass('is-invalid');
+    }
+
+    function displayFormErrors(errors) {
+        let firstErrorField = null;
+
+        $.each(errors, function (field, messages) {
+            const message = Array.isArray(messages) ? messages[0] : messages;
+            const errorDiv = $('#error-' + field);
+            const inputField = $('#createUserForm [name="' + field + '"]');
+
+            if (firstErrorField === null && inputField.length) {
+                firstErrorField = inputField;
+            }
+
+            errorDiv.text(message).css('display', 'block');
+            inputField.addClass('is-invalid');
+
+            // bootstrap-select: highlight button too
+            if (inputField.hasClass('selectpicker')) {
+                inputField.selectpicker('setStyle', 'is-invalid', 'add');
+            }
+        });
+
+        if (firstErrorField && firstErrorField[0]) {
+            firstErrorField[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // Reset create modal state
+    $('#CreateModal').on('show.bs.modal', function () {
+        clearFormErrors();
+        const formEl = $('#createUserForm')[0];
+        if (formEl) formEl.reset();
+        $('.selectpicker').selectpicker('refresh');
+        $('#saveUserBtn').prop('disabled', false).text('Save');
+    });
+
+    // Clear individual field error on change
+    $(document).on('input change', '#createUserForm input, #createUserForm select', function () {
+        const fieldName = $(this).attr('name');
+        if (fieldName) clearFieldError(fieldName);
+    });
+
+    // Create user (AJAX)
+    $(document).on('submit', '#createUserForm', function (e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const url = form.attr('action');
+        const formData = form.serialize();
+        const submitBtn = $('#saveUserBtn');
+
+        clearFormErrors();
+
+        submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Saving...');
 
         $.ajax({
             url: url,
-            method: 'POST',
+            type: 'POST',
             data: formData,
-            success: function(response) {
-                $('#CreateModal').modal('hide');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'User created successfully!',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    location.reload();
-                });
-            },
-            error: function(xhr) {
-                if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-                    let errorHtml = '<div class="alert alert-danger"><ul>';
-                    $.each(errors, function(key, value) {
-                        errorHtml += '<li>' + value[0] + '</li>';
-                    });
-                    errorHtml += '</ul></div>';
-                    $('#createUserErrors').html(errorHtml);
-                } else {
+            dataType: 'json',
+            success: function (response) {
+                if (response && response.success) {
+                    $('#CreateModal').modal('hide');
                     Swal.fire({
-                        icon: 'error',
-                        title: 'An error occurred!',
-                        text: 'Please try again.'
-                    });
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message || 'User created successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => location.reload());
+                } else {
+                    submitBtn.prop('disabled', false).text('Save');
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Unexpected response.' });
                 }
+            },
+            error: function (xhr) {
+                submitBtn.prop('disabled', false).text('Save');
+
+                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                    displayFormErrors(xhr.responseJSON.errors);
+                    return;
+                }
+
+                const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Please try again later.';
+                Swal.fire({ icon: 'error', title: 'Error', text: msg });
+            }
+        });
+    });
+
+    // Edit user (existing)
+    $(document).on('click', '.editBtn', function () {
+        var id = $(this).val();
+        $.ajax({
+            type: 'GET',
+            url: '/edit_user/' + id,
+            success: function (response) {
+                $('#user_id').val(id);
+                $('#name').val(response.user.name);
+                $('#phone').val(response.user.phone_number);
+                $('#email').val(response.user.email);
+                $('#role').val(response.user.role_id);
+                $('#role').selectpicker('refresh');
+            }
+        });
+    });
+
+    // Delete user (existing)
+    $(document).on('click', '.delBtn', function () {
+        var confirmation = confirm('Are you sure you want to delete this user?');
+        if (!confirmation) return;
+
+        var user = $(this).val();
+        $.ajax({
+            type: 'POST',
+            url: '/delete_user',
+            data: { id: user },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to delete user.' });
+            }
+        });
+    });
+
+    // Activate/Deactivate user confirmation
+    $(document).on('submit', '.status-form', function (e) {
+        e.preventDefault();
+        const form = this;
+        const $form = $(form);
+        const userName = ($form.data('user-name') || '').toString();
+        const action = ($form.data('action') || '').toString().toLowerCase();
+        const isDeactivate = action === 'deactivate';
+
+        // Fallback if SweetAlert is unavailable
+        if (typeof Swal === 'undefined') {
+            const ok = window.confirm('Are you sure you want to ' + (isDeactivate ? 'deactivate' : 'activate') + (userName ? ' "' + userName + '"' : ' this user') + '?');
+            if (ok) form.submit();
+            return;
+        }
+
+        Swal.fire({
+            icon: 'warning',
+            title: (isDeactivate ? 'Deactivate' : 'Activate') + ' User?',
+            text: 'Are you sure you want to ' + (isDeactivate ? 'deactivate' : 'activate') + (userName ? ' "' + userName + '"' : ' this user') + '?',
+            showCancelButton: true,
+            confirmButtonColor: isDeactivate ? '#d33' : '#198754',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, ' + (isDeactivate ? 'deactivate' : 'activate'),
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
             }
         });
     });
 });
 </script>
-@endpush
 
-@push('styles')
 <style>
-    .table .btn i {
-        pointer-events: none;
-    }
-    .gap-2 > * + * {
-        margin-left: 0.5rem !important;
-    }
+    .table .btn i { pointer-events: none; }
+    .gap-2 > * + * { margin-left: 0.5rem !important; }
+    .invalid-feedback { color: #dc3545; font-size: 0.875em; margin-top: 0.25rem; font-weight: 500; }
 </style>
-@endpush
-
-@section('scripts')
-    <script>
-        $(document).on('click', '.editBtn', function() {
-            var id = $(this).val();
-            console.log(id);
-            $.ajax({
-                type: "GET",
-                url: "/edit_user/" + id,
-                success: function(response) {
-                    console.log(response);
-                    $('#user_id').val(id);
-                    $('#name').val(response.user.name);
-                    $('#phone').val(response.user.phone_number);
-                    $('#email').val(response.user.email);
-                    $('#role').val(response.user.role_id);
-                    $('#role').selectpicker('refresh');
-
-                    },
-
-            });
-        });
-
-        $('.delBtn').on('click', function() {
-            var confirmation = confirm('Are you sure you want to delete this user?');
-            if (confirmation) {
-                // delete it
-                var user = $(this).val();
-                console.log(user);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/delete_user',
-                    data: {
-                        id: user
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr);
-                        console.log(status);
-                        console.log(error);
-                    }
-                });
-            } else {
-                //canceled
-            }
-        });
-    </script>
 @endsection

@@ -74,13 +74,22 @@ class TeachersController extends Controller
 
     public function Create(Request $request)
     {
-        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:F,M',
+            'employer' => 'nullable|string|max:255',
+            'anfe' => 'required|in:Yes,No',
+            'email' => 'required|email|unique:teachers,email',
+            'phone_number' => 'required|string|max:50',
+        ]);
+
         try {
             
             $centerId = Center::select('centers.id')->where('centers.hod_id', '=', auth()->user()->id)->first();
             $teacher = new Teacher();
             $teacher->name = $request->name;
             $teacher->gender = $request->gender;
+            $teacher->employer = $request->employer;
             $teacher->qualification = 'qualified';
             $teacher->ANFE_training = $request->anfe;
             $teacher->email = $request->email;
@@ -88,9 +97,22 @@ class TeachersController extends Controller
             $teacher->created_by = auth()->user()->id;
             $teacher->center_id = $centerId->id;
             $teacher->save();
-            
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Teacher created successfully'
+                ]);
+            }
+
             return redirect('teachers')->with('sweet_success', 'Teacher created successfully');
         } catch (Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to create teacher'
+                ], 500);
+            }
             return $e->getMessage();
         }
     }
@@ -109,6 +131,16 @@ class TeachersController extends Controller
 
     public function update(Request $request)
     {
+        $request->validate([
+            'teacher_id' => 'required|integer|exists:teachers,id',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:F,M',
+            'employer' => 'nullable|string|max:255',
+            'anfe' => 'required|in:Yes,No',
+            'email' => 'required|email|unique:teachers,email,' . $request->teacher_id,
+            'phone_number' => 'required|string|max:50',
+        ]);
+
         $teacher = Teacher::find($request->teacher_id);
 
         $teacher->name = $request->name;
@@ -119,11 +151,23 @@ class TeachersController extends Controller
         $teacher->phone_number = $request->phone_number;
         $teacher->employer = $request->employer;
 
-        if($teacher->save()) {
+        if ($teacher->save()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Teacher updated successfully'
+                ]);
+            }
             return redirect('teachers')->with('sweet_success', 'Teacher Updated Successufil');
-        }else {
-            return redirect()->back()->with('sweet_error', 'Failed to Update Teacher');
         }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update teacher'
+            ], 500);
+        }
+        return redirect()->back()->with('sweet_error', 'Failed to Update Teacher');
     }
 
     public function delete(Request $request)
