@@ -36,15 +36,26 @@ class RegionsController extends Controller
             ->first();
         // Only users who are not assigned as a cordinator in any region
         $assignedCordinatorIds = Region::pluck('cordinator_id')->toArray();
-        $cordinators = User::where('role_id', 2)
+        $cordinatorsCreate = User::where('role_id', 2)
             ->whereNotIn('id', $assignedCordinatorIds)
             ->get();
-        $mikoa = Mikoa::select('*')->get();
+        $usedRegionNames = Region::pluck('name')->filter()->toArray();
+        $mikoa = Mikoa::query()
+            ->when(count($usedRegionNames) > 0, fn($q) => $q->whereNotIn('name', $usedRegionNames))
+            ->orderBy('name')
+            ->get();
 
         $regions = Region::select('regions.id AS id', 'regions.name AS region', 'users.name', 'regions.created_at AS start_date')
             ->leftJoin('users', 'users.id', '=', 'regions.cordinator_id')
             ->get(); 
-        return view('regions.regions', ['mikoa' => $mikoa, 'cordinators' => $cordinators, 'regions' => $regions, 'userData' => $userData, 'userRole' => $userRole, 'paginate' => $request->session()->get('pagination_number')]);
+        return view('regions.regions', [
+            'mikoa' => $mikoa,
+            'cordinatorsCreate' => $cordinatorsCreate,
+            'regions' => $regions,
+            'userData' => $userData,
+            'userRole' => $userRole,
+            'paginate' => $request->session()->get('pagination_number'),
+        ]);
     }
 
     public function Create(Request $request)
@@ -72,7 +83,15 @@ class RegionsController extends Controller
                 ->where('users.id', $id)
                 ->select('roles.role')
                 ->first();
-            $cordinators = User::where('role_id', 2)
+            $assignedCordinatorIds = Region::pluck('cordinator_id')->toArray();
+            $cordinatorsCreate = User::where('role_id', 2)
+                ->whereNotIn('id', $assignedCordinatorIds)
+                ->get();
+
+            $usedRegionNames = Region::pluck('name')->filter()->toArray();
+            $mikoa = Mikoa::query()
+                ->when(count($usedRegionNames) > 0, fn($q) => $q->whereNotIn('name', $usedRegionNames))
+                ->orderBy('name')
                 ->get();
 
             $regions = Region::select('regions.id AS id', 'regions.name AS region', 'users.name', 'regions.created_at AS start_date')
@@ -80,7 +99,13 @@ class RegionsController extends Controller
                 ->where('regions.name', 'LIKE', '%' . $querry . '%')
                 ->orWhere('users.name', 'LIKE', '%' . $querry . '%')
                 ->paginate(10);
-            return view('regions.regions', ['cordinators' => $cordinators, 'regions' => $regions, 'userData' => $userData, 'userRole' => $userRole]);
+            return view('regions.regions', [
+                'mikoa' => $mikoa,
+                'cordinatorsCreate' => $cordinatorsCreate,
+                'regions' => $regions,
+                'userData' => $userData,
+                'userRole' => $userRole,
+            ]);
         } else {
             return redirect('regions');
         }
@@ -89,24 +114,64 @@ class RegionsController extends Controller
     public function editRegion($id) {
 
         $region = Region::find($id);
+        if (!$region) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Region not found.',
+            ], 404);
+        }
+
+        $currentCoordinatorId = $region->cordinator_id;
+
+        // Coordinators already assigned to OTHER regions
+        $assignedOtherCoordinatorIds = Region::query()
+            ->whereNotNull('cordinator_id')
+            ->where('id', '!=', $region->id)
+            ->pluck('cordinator_id')
+            ->toArray();
+
+        $cordinators = User::query()
+            ->where('role_id', 2)
+            ->when(count($assignedOtherCoordinatorIds) > 0, function ($q) use ($assignedOtherCoordinatorIds, $currentCoordinatorId) {
+                $q->where(function ($qq) use ($assignedOtherCoordinatorIds, $currentCoordinatorId) {
+                    $qq->whereNotIn('id', $assignedOtherCoordinatorIds);
+                    if ($currentCoordinatorId) {
+                        $qq->orWhere('id', $currentCoordinatorId);
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
         return response()->json([
-            "status" => 200,
-            "region" => $region,
+            'status' => 200,
+            'region' => $region,
+            'cordinators' => $cordinators,
         ]);
 
     }
 
     public function updateRegion(Request $request) {
 
-        $update = Region::find($request->region_id);
-        $update->name = $request->name;
+        try {
+            $update = Region::find($request->region_id);
+            if (!$update) {
+                return redirect('regions')->with('sweet_error', 'Region not found.');
+            }
 
-        if($request->cordinaor) {
-            $update->cordinator_id = $request->cordinator;
-        }
+            $update->name = $request->name;
 
-        if($update->save()) {
-            return redirect('regions')->with('success', 'Region Updated Successfully.');
+            if ($request->filled('cordinator')) {
+                $update->cordinator_id = $request->cordinator;
+            }
+
+            if ($update->save()) {
+                return redirect('regions')->with('sweet_success', 'Region Updated Successfully.');
+            }
+
+            return redirect('regions')->with('sweet_error', 'Failed to update region.');
+        } catch (Exception $e) {
+            return redirect('regions')->with('sweet_error', 'Failed to update region.');
         }
 
     }

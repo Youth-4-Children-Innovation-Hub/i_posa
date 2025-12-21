@@ -75,7 +75,7 @@
 
 
 
-    <!-- model add district -->
+    <!-- model add region -->
     <div class="modal fade" id="CreateModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -98,8 +98,8 @@
                                     <select class="selectpicker" aria-label="Default select example"
                                             name="name" data-width=100% data-live-search="true">
                                             <option selected>Open  select menu</option>
-                                            @foreach ($regions as $mkoa)
-                                            <option value="{{ $mkoa->region }}">{{ $mkoa->region }}</option>
+                                            @foreach ($mikoa as $mkoa)
+                                            <option value="{{ $mkoa->name }}">{{ $mkoa->name }}</option>
                                             @endforeach
 
                                         </select>
@@ -113,7 +113,7 @@
                                         <select class="selectpicker" aria-label="Default select example"
                                             name="cordinator" data-width=100% data-live-search="true">
                                             <option selected>Open this select menu</option>
-                                            @foreach ($cordinators as $cordinator)
+                                            @foreach ($cordinatorsCreate as $cordinator)
                                             <option value="{{ $cordinator->id }}">{{ $cordinator->name }}</option>
                                             @endforeach
 
@@ -164,11 +164,7 @@
                                     <div class="col-sm-10">
                                         <select class="selectpicker" id="reg_select" aria-label="Default select example"
                                             name="cordinator" data-width=100% data-live-search="true">
-                                            <option selected>Open this select menu</option>
-                                            @foreach ($cordinators as $cordinator)
-                                            <option value="{{ $cordinator->id }}">{{ $cordinator->name }}
-                                            </option>
-                                            @endforeach
+                                            <option value="" disabled>Open this select menu</option>
 
                                         </select>
                                     </div>
@@ -204,37 +200,105 @@ $(document).on('click', '.editBtn', function() {
             console.log(response);
             $('#region_id').val(response.region.id);
             $('#name').val(response.region.name);
-            $('#reg_select').val(response.region.cordinator_id);
-            $('#reg_select').selectpicker('refresh');
+
+            var $select = $('#reg_select');
+            $select.empty();
+            $select.append('<option value="" disabled>Open this select menu</option>');
+
+            if (response && response.cordinators && response.cordinators.length) {
+                response.cordinators.forEach(function(c) {
+                    $select.append('<option value="' + c.id + '">' + c.name + '</option>');
+                });
+            }
+
+            $select.selectpicker('refresh');
+            $select.selectpicker('val', response.region.cordinator_id);
         },
+        error: function() {
+            if (typeof Swal === 'undefined') {
+                alert('Failed to load region details.');
+                return;
+            }
+            Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load region details.' });
+        }
 
     });
 });
 
-$('.delBtn').on('click', function() {
-    var confirmation = confirm('Are you sure you want to delete this region?');
-    if (confirmation) {
-        // delete it
-        var regid = $(this).val();
-        console.log(regid);
+$(document).on('click', '.delBtn', function() {
+    var regid = $(this).val();
+
+    if (typeof Swal === 'undefined') {
+        var confirmation = confirm('Are you sure you want to delete this region?');
+        if (!confirmation) return;
 
         $.ajax({
             type: 'POST',
             url: '/delete_region',
-            data: {
-                id: regid
-            },
+            data: { id: regid },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                console.log(response);
-                location.reload();
+                if (response && response.status) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete region.');
+                }
+            },
+            error: function() {
+                alert('Failed to delete region.');
             }
         });
-    } else {
-        //canceled
+
+        return;
     }
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'Delete Region?',
+        text: 'Are you sure you want to delete this region?',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (!result.isConfirmed) return;
+
+        $.ajax({
+            type: 'POST',
+            url: '/delete_region',
+            data: { id: regid },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response && response.status) {
+                    if (typeof Swal === 'undefined') {
+                        location.reload();
+                        return;
+                    }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Region deleted successfully.',
+                        showConfirmButton: false,
+                        timer: 1200
+                    }).then(() => location.reload());
+                } else {
+                    if (typeof Swal === 'undefined') {
+                        alert('Failed to delete region.');
+                        return;
+                    }
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to delete region.' });
+                }
+            },
+            error: function() {
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to delete region.' });
+            }
+        });
+    });
 });
 </script>
 @endsection
