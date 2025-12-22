@@ -33,9 +33,7 @@ class DistrictController extends Controller
             }
         }
         $userData = Auth::user();
-        
-        // Debug information
-        \Log::info('User ID: ' . auth()->user()->id);
+
         
         $districts = District::select('districts.id', 'districts.name', 'regions.name AS region', 'users.name AS cordinator')
             ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
@@ -47,34 +45,60 @@ class DistrictController extends Controller
             ->leftJoin('users', 'districts.cordinator_id', '=', 'users.id')
             // ->where('regions.cordinator_id', '=', auth()->user()->id)
             ->get();
-            
-        // Debug information
-        \Log::info('Region Districts Count: ' . $regionDistricts->count());
-        \Log::info('Region Districts: ' . $regionDistricts->toJson());
 
-         $query = Region::select('regions.name as name', 'mikoa.id as id')
-        ->join('mikoa', 'mikoa.name', '=', 'regions.name')
-        ->leftJoin('users', 'regions.cordinator_id', '=', 'users.id');
+        // ADD modal: Regions dropdown should be sourced from `mikoa`.
+        // Requirement:
+        // - Admin: only show mikoa names that are NOT yet in `regions`
+        // - Region coordinator: show only their assigned region(s)
+        $addMikoaQuery = Mikoa::query()
+            ->select('mikoa.id as id', 'mikoa.name as name');
 
-          if(auth()->user()->role_id == 1){
-            $regions = $query->get();
-          }
-          else{
-              $regions =$query->where('regions.cordinator_id', '=', auth()->user()->id)
-              ->get();
-            }
+        if (auth()->user()->role_id == 1) {
+            $addMikoaQuery->whereNotIn('mikoa.name', Region::query()->select('name'));
+
+            // Only include mikoa that have at least one wilaya not already used in districts
+            $addMikoaQuery->whereExists(function ($q) {
+                $q->select(DB::raw(1))
+                    ->from('wilaya')
+                    ->whereColumn('wilaya.region_id', 'mikoa.id')
+                    ->whereNotIn('wilaya.name', District::query()->select('name'));
+            });
+        } else {
+            $addMikoaQuery
+                ->join('regions', 'regions.name', '=', 'mikoa.name')
+                ->where('regions.cordinator_id', '=', auth()->user()->id);
+        }
+
+        $regions = $addMikoaQuery->get();
+
+        // EDIT modal: allow selecting from already-registered regions only (update-only behavior)
+        $editMikoaQuery = Mikoa::query()->select('mikoa.id as id', 'mikoa.name as name');
+        if (auth()->user()->role_id == 1) {
+            $editMikoaQuery->whereIn('mikoa.name', Region::query()->select('name'));
+        } else {
+            $editMikoaQuery
+                ->join('regions', 'regions.name', '=', 'mikoa.name')
+                ->where('regions.cordinator_id', '=', auth()->user()->id);
+        }
+        $editRegions = $editMikoaQuery->get();
 
         $district_cordinator_id = Role::select('id')
             ->where('role', 'district cordinator')
             ->first();
-        // Only users who are not assigned as a cordinator in any district
+        // Add modal: only users who are not assigned as a coordinator in any district
         $assignedCordinatorIds = District::pluck('cordinator_id')->toArray();
-        $users = User::where('role_id', 3)
+        $addCordinators = User::where('role_id', 3)
             ->whereNotIn('id', $assignedCordinatorIds)
             ->get();
+
+        // Edit modal: include all coordinators so the current assignment is selectable.
+        // Uniqueness is enforced on updateDistrict.
+        $editCordinators = User::where('role_id', 3)->get();
         return view('district.district', [
-            'cordinators' => $users,
+            'cordinators' => $addCordinators,
+            'editCordinators' => $editCordinators,
             'regions' => $regions,
+            'editRegions' => $editRegions,
             'districts' => $districts,
             'userData' =>   $userData,
             'regionDistricts' =>  $regionDistricts,
@@ -84,23 +108,58 @@ class DistrictController extends Controller
 
     public function Create(Request $request)
     {
-        $mkoa = Mikoa::select('name')->where('id', '=', $request->region)->first();  
-        $region_id = Region::select('regions.id as id')->where('name', '=', $mkoa->name)->first();
+        $request->validate([
+            'region' => ['required'],
+            'wilaya_id' => ['required'],
+            'cordinator_id' => ['required'],
+        ]);
+
+        $mkoa = Mikoa::select('id', 'name')->where('id', '=', $request->region)->firstOrFail();
+        $wilaya = Wilaya::select('id', 'name', 'region_id')->where('id', '=', $request->wilaya_id)->firstOrFail();
+
+        if ((int) $wilaya->region_id !== (int) $mkoa->id) {
+            return redirect()->back()
+                ->with('sweet_error', 'Selected district does not belong to the selected region.')
+                ->withInput();
+        }
+
+        // Ensure a matching Region row exists for this mkoa name.
+        // (Needed because districts.region_id references regions.id)
+        $region = Region::firstOrCreate(
+            ['name' => $mkoa->name],
+            ['cordinator_id' => auth()->user()->id]
+        );
         try {
             $district = new District();
-            $district->name = $request->name;
+            $district->name = $wilaya->name;
             $district->cordinator_id = $request->cordinator_id;
-            $district->region_id = $region_id->id;
+            $district->region_id = $region->id;
             $district->save();
-            return redirect('districts')->with('swweet_success', 'User added successfully.');
+            return redirect('districts')->with('sweet_success', 'District added successfully.');
         } catch (Exception $e) {
             dd($e);
         }
     }
 
-    public function getRegionDistricts($region_id)
+    public function getRegionDistricts(Request $request, $region_id)
     {
-        $wilaya = Wilaya::where('region_id', $region_id)->get();
+        // `wilaya.region_id` references `mikoa.id`
+        // Exclude wilaya names already present in `districts.name`
+        $districtId = $request->query('district_id');
+        $existingDistrictNames = District::query()
+            ->when($districtId, function ($q) use ($districtId) {
+                $q->where('id', '!=', $districtId);
+            })
+            ->pluck('name')
+            ->toArray();
+
+        $wilaya = Wilaya::query()
+            ->select('id', 'name')
+            ->where('region_id', $region_id)
+            ->whereNotIn('name', $existingDistrictNames)
+            ->orderBy('name')
+            ->get();
+
         return response()->json($wilaya);
     }
 
@@ -130,26 +189,62 @@ class DistrictController extends Controller
 
     public function updateDistrict(Request $request)
     {
-        $district = District::find($request->district_id);
+        $request->validate([
+            'district_id' => ['required'],
+            'region' => ['required'],
+            'wilaya_id' => ['required'],
+            'cordinator_id' => ['required'],
+        ]);
+
+        $district = District::findOrFail($request->district_id);
+
+        // Prevent assigning a coordinator already used by another district
+        $cordinatorInUse = District::query()
+            ->where('cordinator_id', '=', $request->cordinator_id)
+            ->where('id', '!=', $district->id)
+            ->exists();
+        if ($cordinatorInUse) {
+            return redirect()->back()
+                ->with('sweet_error', 'Selected coordinator is already assigned to another district.')
+                ->withInput();
+        }
+
+        $mkoa = Mikoa::select('id', 'name')->where('id', '=', $request->region)->firstOrFail();
+        $wilaya = Wilaya::select('id', 'name', 'region_id')->where('id', '=', $request->wilaya_id)->firstOrFail();
+
+        if ((int) $wilaya->region_id !== (int) $mkoa->id) {
+            return redirect()->back()
+                ->with('sweet_error', 'Selected district does not belong to the selected region.')
+                ->withInput();
+        }
+
+        // Update-only: do NOT create a new Region row here.
+        $region = Region::where('name', '=', $mkoa->name)->first();
+        if (!$region) {
+            return redirect()->back()
+                ->with('sweet_error', 'Selected region is not registered yet. Please add it first.')
+                ->withInput();
+        }
+
         try {
-            $district->name = $request->name;
-            $district->region_id = $request->region_id;
+            $district->name = $wilaya->name;
+            $district->region_id = $region->id;
             $district->cordinator_id = $request->cordinator_id;
 
-            if($district->save()) {
-                return redirect('districts')->with('success', 'Data updated Succesiful');
-
+            if ($district->save()) {
+                return redirect('districts')->with('sweet_success', 'District updated successfully.');
             }
+
+            return redirect()->back()->with('sweet_error', 'Failed to update district.')->withInput();
         } catch (\Throwable $th) {
-            // Log the error for debugging
-        \Log::error('Course creation failed: ' . $th->getMessage());
-        
-        return redirect()->back()
-            ->with('sweet_error', 'Failed to update center course. Please try again.')
-            ->withInput();
-    }
+            \Log::error('District update failed: ' . $th->getMessage());
+
+            return redirect()->back()
+                ->with('sweet_error', 'Failed to update district. Please try again.')
+                ->withInput();
         }
-    
+
+    }
 
     public function deleteDistrict(Request $request)
     {
@@ -165,10 +260,29 @@ class DistrictController extends Controller
 
     public function editDistrict($id)
     {
-        $district = District::find($id);
+        $district = District::findOrFail($id);
+
+        $mikoaId = null;
+        $wilayaId = null;
+        $region = Region::find($district->region_id);
+        if ($region) {
+            $mkoa = Mikoa::where('name', '=', $region->name)->first();
+            if ($mkoa) {
+                $mikoaId = $mkoa->id;
+                $wilaya = Wilaya::where('region_id', '=', $mkoa->id)
+                    ->where('name', '=', $district->name)
+                    ->first();
+                if ($wilaya) {
+                    $wilayaId = $wilaya->id;
+                }
+            }
+        }
+
         return response()->json([
             "status" => 200,
             "district" => $district,
+            "mikoa_id" => $mikoaId,
+            "wilaya_id" => $wilayaId,
         ]);
 
     }
