@@ -177,14 +177,23 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label">Region</label>
+                                        <div class="col-sm-10">
+                                            <select class="selectpicker" aria-label="Select region" name="region" id="region_select"
+                                                data-width=100% data-live-search="true" required>
+                                                <option selected="selected" hidden="hidden" value="">Select Region</option>
+                                                @foreach ($regions as $region)
+                                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">District</label>
                                         <div class="col-sm-10">
-                                            <select class="selectpicker" aria-label="Default select example"
-                                                name="district" data-width=100% data-live-search="true" required>
-                                                <option selected>Open this select menu</option>
-                                                @foreach ($districts as $district)
-                                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
-                                                @endforeach
+                                            <select class="selectpicker" aria-label="Select district" id="district_select"
+                                                name="district" data-width=100% data-live-search="true" required disabled>
+                                                <option selected="selected" hidden="hidden" value="">Select District</option>
                                             </select>
                                         </div>
                                     </div>
@@ -252,14 +261,23 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label">Region</label>
+                                        <div class="col-sm-10">
+                                            <select class="selectpicker" aria-label="Select region" id="edit_region_select"
+                                                name="region" data-width=100% data-live-search="true" required>
+                                                <option selected="selected" hidden="hidden" value="">Select Region</option>
+                                                @foreach ($regions as $region)
+                                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">District</label>
                                         <div class="col-sm-10">
-                                            <select class="selectpicker" aria-label="Default select example" id=district
-                                                name="district" data-width=100% data-live-search="true">
-                                                <option selected>Open this select menu</option>
-                                                @foreach ($districts as $district)
-                                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
-                                                @endforeach
+                                            <select class="selectpicker" aria-label="Select district" id="edit_district_select"
+                                                name="district" data-width=100% data-live-search="true" required disabled>
+                                                <option selected="selected" hidden="hidden" value="">Select District</option>
                                             </select>
                                         </div>
                                     </div>
@@ -299,34 +317,92 @@
 
 @section('scripts')
     <script>
-        $(document).on('click', '.editBtn', function() {
-            var id = $(this).val();
-            console.log(id);
-            $.ajax({
-                type: "GET",
-                url: "/edit_center/" + id,
-                success: function(response) {
-                    console.log(response);
-                    $('#center_id').val(id);
-                    $('#name').val(response.center.name);
-                    $('#hod').val(response.center.hod_id);
-                    $('#ownership').val(response.center.Ownership);
-                    $('#funders').val(response.center.Funders);
-                    $('#hod').selectpicker('refresh');
+        $(document).ready(function() {
+            const districtEndpoint = (regionId) => `/centers/regions/${regionId}/districts`;
 
-                    $('#district').val(response.center.district_id);
-                    $('#center').selectpicker('refresh');
-                },
+            const resetDistrictSelect = ($select) => {
+                $select.empty();
+                $select.append('<option selected="selected" hidden="hidden" value="">Select District</option>');
+                $select.prop('disabled', true);
+                $select.selectpicker('refresh');
+            };
 
+            const populateDistricts = (regionId, $select, selectedDistrictId = null) => {
+                if (!regionId) {
+                    resetDistrictSelect($select);
+                    return;
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: districtEndpoint(regionId),
+                    dataType: 'json',
+                    success: function(data) {
+                        $select.prop('disabled', false);
+                        $select.empty();
+                        $select.append('<option selected="selected" hidden="hidden" value="">Select District</option>');
+
+                        $.each(data, function(_, district) {
+                            $select.append('<option value="' + district.id + '">' + district.name + '</option>');
+                        });
+
+                        if (selectedDistrictId) {
+                            $select.val(selectedDistrictId);
+                        }
+
+                        $select.selectpicker('refresh');
+                    },
+                    error: function() {
+                        resetDistrictSelect($select);
+                    }
+                });
+            };
+
+            resetDistrictSelect($('#district_select'));
+            resetDistrictSelect($('#edit_district_select'));
+
+            $('#region_select').on('change', function() {
+                populateDistricts($(this).val(), $('#district_select'));
             });
-        });
 
-        $('.delBtn').on('click', function() {
-            var confirmation = confirm('Are you sure you want to delete this center?');
-            if (confirmation) {
-                // delete it
-                var center = $(this).val();
-                console.log(center);
+            $('#edit_region_select').on('change', function() {
+                populateDistricts($(this).val(), $('#edit_district_select'));
+            });
+
+            $(document).on('click', '.editBtn', function() {
+                const id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/edit_center/' + id,
+                    success: function(response) {
+                        if (response.status !== 200) {
+                            return;
+                        }
+
+                        $('#center_id').val(id);
+                        $('#name').val(response.center.name);
+                        $('#hod').val(response.center.hod_id);
+                        $('#ownership').val(response.center.Ownership);
+                        $('#funders').val(response.center.Funders);
+                        $('#hod').selectpicker('refresh');
+
+                        $('#edit_region_select').val(response.center.region_id);
+                        $('#edit_region_select').selectpicker('refresh');
+
+                        populateDistricts(response.center.region_id, $('#edit_district_select'), response.center.district_id);
+                    },
+
+                });
+            });
+
+            $('.delBtn').on('click', function() {
+                const confirmation = confirm('Are you sure you want to delete this center?');
+                if (!confirmation) {
+                    return;
+                }
+
+                const center = $(this).val();
 
                 $.ajax({
                     type: 'POST',
@@ -347,9 +423,7 @@
                         console.log(error);
                     }
                 });
-            } else {
-                //canceled
-            }
+            });
         });
     </script>
 @endsection

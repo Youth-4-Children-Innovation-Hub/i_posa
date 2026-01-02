@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function(){
     
     
     Route::get('centers',[CenterController::class,'GetCenters']);
+    Route::get('centers/regions/{region}/districts', [CenterController::class, 'districtsByRegion'])->name('centers.regionDistricts');
     Route::post('/addcenter',[CenterController::class,'Create'])->name('create_center');
     Route::get('edit_center/{id}', [CenterController::class, 'edit']);
     Route::post('update_center', [CenterController::class, 'update_center'])->name('update_center');

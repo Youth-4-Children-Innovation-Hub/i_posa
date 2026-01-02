@@ -19,6 +19,7 @@ class CenterController extends Controller
         $roleId = DB::table('roles')->where('role', 'head of center')->value('id');
         $hods = User::where('role_id', $roleId)->get();
         $districts = District::all();
+        $regions = Region::orderBy('name')->get();
         $userData = auth()->user();
         $id = $userData->id;
         $userRole = DB::table('users')
@@ -49,17 +50,22 @@ class CenterController extends Controller
         ->orderBy('centers.created_at', 'DESC')
         ->get();
         return view('centers.centers', ['heads' => $hods, 'districts' => $districts, 'centers' => $centers, 'userData' => $userData, 'userRole' => $userRole, 
-    'regionCenters' => $regionCenters, 'districtCenters' =>  $districtCenters]);
+    'regionCenters' => $regionCenters, 'districtCenters' =>  $districtCenters, 'regions' => $regions]);
     }
 
     public function Create(Request $request)
     {
         $request->validate([
             'name' => 'required',
+            'region' => 'required|exists:regions,id',
             'district' => 'required',
             'hod' => 'required',
             'ownership' => 'required'
         ]);
+
+        if (!District::where('id', $request->district)->where('region_id', $request->region)->exists()) {
+            return redirect()->back()->withErrors(['district' => 'Selected district does not belong to the chosen region.'])->withInput();
+        }
 
         try{
             $center = new Center();
@@ -78,24 +84,34 @@ class CenterController extends Controller
 
     public function edit($id)
     {
-        $center = Center::find($id);
+        $center = Center::select('centers.*', 'districts.region_id as region_id')
+            ->leftJoin('districts', 'centers.district_id', '=', 'districts.id')
+            ->where('centers.id', $id)
+            ->first();
 
-        return response()->json(
-            [
-                'status' => 200,
-                'center' => $center
-            ]
-        );
+        if (!$center) {
+            return response()->json(['status' => 404]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'center' => $center
+        ]);
     }
 
     public function update_center(Request $request)
     { 
         $request->validate([
             'name' => 'required',
+            'region' => 'required|exists:regions,id',
             'district' => 'required',
             'hod' => 'required',
             'ownership' => 'required'
         ]);
+
+        if (!District::where('id', $request->district)->where('region_id', $request->region)->exists()) {
+            return redirect()->back()->withErrors(['district' => 'Selected district does not belong to the chosen region.'])->withInput();
+        }
 
         try{
             $center = Center::find($request->center_id);
@@ -138,6 +154,7 @@ class CenterController extends Controller
         $roleId = DB::table('roles')->where('role', 'head of center')->value('id');
         $hods = User::where('role_id', $roleId)->get();
         $districts = District::all();
+        $regions = Region::orderBy('name')->get();
         $userData = auth()->user();
         $id = $userData->id;
         $userRole = DB::table('users')
@@ -156,10 +173,20 @@ class CenterController extends Controller
             ->orWhere('districts.name', 'LIKE', '%' . $querry . '%')
             ->orderBy('centers.created_at', 'DESC')
             ->paginate(10);
-        return view('centers.centers', ['heads' => $hods, 'districts' => $districts, 'centers' => $centers, 'userData' => $userData, 'userRole' => $userRole]);
+        return view('centers.centers', ['heads' => $hods, 'districts' => $districts, 'centers' => $centers, 'userData' => $userData, 'userRole' => $userRole, 'regions' => $regions]);
         } else {
             return redirect('centers');
         }
+    }
+
+    public function districtsByRegion($regionId)
+    {
+        $districts = District::select('id', 'name')
+            ->where('region_id', $regionId)
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($districts);
     }
 
     public function districtCenters($id)
